@@ -1,6 +1,6 @@
 import { Stage, Sprite, Graphics as GraphicsComp } from '@pixi/react';
-import { Graphics, Rectangle } from 'pixi.js';
-import { useCallback, useState } from 'react';
+import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js';
+import { useCallback, useRef, useState } from 'react';
 
 export interface IGameBoardProps {
   cellsWide: number,
@@ -19,9 +19,10 @@ export interface IGameBoardTheme {
 
 export const GameBoard = (props: IGameBoardProps) =>
 {
-  const [board, setBoard] = useState<boolean[]>([]);
+  const [board, setBoard] = useState<boolean[]>(Array(props.cellsWide * props.cellsHigh).fill(false));
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isMouseIn, setIsMouseIn] = useState(false);
+  const isMouseDown = useRef(false);
 
   const width = 800;
   const height = 800;
@@ -37,33 +38,42 @@ export const GameBoard = (props: IGameBoardProps) =>
   const cellWidth = width / props.cellsWide;
   const cellHeight = height / props.cellsHigh;
 
+  const mouseOver = (e: FederatedPointerEvent) => {
+    setIsMouseIn(true);
+  };
+
+  const mouseOut = (e: FederatedPointerEvent) => {
+    setIsMouseIn(false);
+  };
+
+  const mouseMove = (e: FederatedPointerEvent) => {
+    if (isMouseIn) {
+      setCursorPosition({ 
+        x: Math.floor(e.global.x / cellWidth), 
+        y: Math.floor(e.global.y / cellHeight) 
+      });
+    }
+  };
+
+  const mouseDown = (e: FederatedPointerEvent) => {
+    if (isMouseIn && !isMouseDown.current) {
+      const modifiedBoard = board.slice();
+      const cursorToCellIndex = cursorPosition.x + (cursorPosition.y * props.cellsWide);
+      modifiedBoard[cursorToCellIndex] = !modifiedBoard[cursorToCellIndex];
+      setBoard(modifiedBoard);
+
+      isMouseDown.current = true;
+    }
+  };
+
+  const mouseUp = (e: FederatedPointerEvent) => {
+    if (isMouseDown) {
+      isMouseDown.current = false;
+    }
+  };
+
   const draw = useCallback(
     (g: Graphics) => {
-      // Setup Interaction
-      g.hitArea = new Rectangle(0, 0, width, height);
-      g.interactive = true;
-
-      let mouseIn = false;
-
-      g.on("mouseover", function(e) {
-        mouseIn = true;
-        setIsMouseIn(mouseIn);
-      });
-      
-      g.on("mouseout", function(e) {
-        mouseIn = false;
-        setIsMouseIn(mouseIn);
-      });
-      
-      g.on("mousemove", function(e) {
-        if (mouseIn) {
-          setCursorPosition({ 
-            x: Math.floor(e.global.x / cellWidth), 
-            y: Math.floor(e.global.y / cellHeight) 
-          })
-        }
-      });
-
       // Render
       g.clear();
 
@@ -86,10 +96,17 @@ export const GameBoard = (props: IGameBoardProps) =>
           const x = i % props.cellsWide;
           const y = Math.floor(i / props.cellsWide);
 
-          g.lineStyle(0);
-          g.beginFill(props.theme.filledBox, 1);
-          g.drawRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
-          g.endFill();
+          if (props.boardGoal[i]) {
+            g.lineStyle(0);
+            g.beginFill(props.theme.filledBox, 1);
+            g.drawRect((x * cellWidth) + 2, (y * cellHeight) + 2, cellWidth - 4, cellHeight - 4);
+            g.endFill();
+          } else {
+            g.lineStyle(0);
+            g.beginFill(props.theme.filledBox, 1);
+            g.drawRect((x * cellWidth) + 6, (y * cellHeight) + 6, cellWidth - 12, cellHeight - 12);
+            g.endFill();
+          }
         }
       }
 
@@ -110,12 +127,21 @@ export const GameBoard = (props: IGameBoardProps) =>
         g.drawRect((cursorPosition.x * cellWidth) + 8, (cursorPosition.y * cellHeight) + 8, cellWidth - 16, cellHeight - 16);
       }
     },
-    [props, cursorPosition, isMouseIn],
+    [props, cursorPosition, isMouseIn, board],
   );
 
   return (
     <Stage {...stageProps}>
-      <GraphicsComp draw={draw} />
+      <GraphicsComp 
+        draw={draw} 
+        eventMode={'static'}
+        hitArea={new Rectangle(0, 0, width, height)}
+        mouseover={mouseOver}
+        mouseout={mouseOut}
+        mousemove={mouseMove}
+        mousedown={mouseDown}
+        mouseup={mouseUp}
+      />
     </Stage>
   );
 };
