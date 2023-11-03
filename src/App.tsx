@@ -12,10 +12,18 @@ function App() {
     potentialShapeLines: 0xdce2ef
   }
 
+  const boardGoalTest = [
+    false, false, false, false, false,
+    false, true, true, true, false,
+    false, true, false, true, false,
+    false, true, true, true, false,
+    false, false, false, false, false,
+  ];
+
   return (
     <div className="App">
       <header className="App-header">
-        <GameBoard cellsWide={10} cellsHigh={10} theme={defaultTheme}/>
+        <GameBoard cellsWide={5} cellsHigh={5} boardGoal={boardGoalTest} theme={defaultTheme}/>
         {/* <img src={logo} className="App-logo" alt="logo" /> */}
         <p>
           Edit <code>src/App.tsx</code> and save to reload.

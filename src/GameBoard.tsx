@@ -1,10 +1,11 @@
 import { Stage, Sprite, Graphics as GraphicsComp } from '@pixi/react';
-import { Graphics } from 'pixi.js';
-import { useCallback } from 'react';
+import { Graphics, Rectangle } from 'pixi.js';
+import { useCallback, useState } from 'react';
 
 export interface IGameBoardProps {
   cellsWide: number,
   cellsHigh: number,
+  boardGoal: boolean[],
   theme: IGameBoardTheme
 }
 
@@ -18,6 +19,10 @@ export interface IGameBoardTheme {
 
 export const GameBoard = (props: IGameBoardProps) =>
 {
+  const [board, setBoard] = useState<boolean[]>([]);
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [isMouseIn, setIsMouseIn] = useState(false);
+
   const width = 800;
   const height = 800;
   const stageProps = {
@@ -34,7 +39,35 @@ export const GameBoard = (props: IGameBoardProps) =>
 
   const draw = useCallback(
     (g: Graphics) => {
+      // Setup Interaction
+      g.hitArea = new Rectangle(0, 0, width, height);
+      g.interactive = true;
+
+      let mouseIn = false;
+
+      g.on("mouseover", function(e) {
+        mouseIn = true;
+        setIsMouseIn(mouseIn);
+      });
+      
+      g.on("mouseout", function(e) {
+        mouseIn = false;
+        setIsMouseIn(mouseIn);
+      });
+      
+      g.on("mousemove", function(e) {
+        if (mouseIn) {
+          setCursorPosition({ 
+            x: Math.floor(e.global.x / cellWidth), 
+            y: Math.floor(e.global.y / cellHeight) 
+          })
+        }
+      });
+
+      // Render
       g.clear();
+
+      // Draw background lines
       g.lineStyle(2, props.theme.backgroundLines, 1);
 
       for (let x = 0; x <= props.cellsWide; x++) {
@@ -47,45 +80,37 @@ export const GameBoard = (props: IGameBoardProps) =>
         g.lineTo(width, y * cellHeight);
       }
 
-      g.lineStyle(0);
-      g.beginFill(props.theme.filledBox, 1);
-      g.drawRect((3 * cellWidth) + 4, (4 * cellHeight) + 4, cellWidth - 8, cellHeight - 8);
-      g.endFill();
+      // Draw state of each cell
+      for (let i = 0; i < board.length; i++) {
+        if (board[i]) {
+          const x = i % props.cellsWide;
+          const y = Math.floor(i / props.cellsWide);
 
-      g.lineStyle(0);
-      g.beginFill(props.theme.filledBox, 1);
-      g.drawRect((5 * cellWidth) + 4, (2 * cellHeight) + 4, cellWidth - 8, cellHeight - 8);
-      g.endFill();
+          g.lineStyle(0);
+          g.beginFill(props.theme.filledBox, 1);
+          g.drawRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+          g.endFill();
+        }
+      }
 
-      g.lineStyle(3, props.theme.targetBoxLines, 1);
-      g.drawRect(2 * cellWidth, 4 * cellHeight, cellWidth, cellHeight);
+      // Draw goal of each cell
+      for (let i = 0; i < props.boardGoal.length; i++) {
+        if (props.boardGoal[i]) {
+          const x = i % props.cellsWide;
+          const y = Math.floor(i / props.cellsWide);
 
-      g.lineStyle(0);
-      g.beginFill(props.theme.filledBox, 1);
-      g.drawRect(4 * cellWidth, 4 * cellHeight, cellWidth, cellHeight);
-      g.endFill();
+          g.lineStyle(4, props.theme.targetBoxLines, 1);
+          g.drawRect((x * cellWidth) + 3, (y * cellHeight) + 3, cellWidth - 6, cellHeight - 6);
+        }
+      }
 
-      g.lineStyle(3, props.theme.targetBoxLines, 1);
-      g.drawRect(4 * cellWidth, 4 * cellHeight, cellWidth, cellHeight);
-
-      g.lineStyle(0);
-      g.beginFill(props.theme.filledBox, 1);
-      g.drawRect(5 * cellWidth, 4 * cellHeight, cellWidth, cellHeight);
-      g.endFill();
-
-      g.lineStyle(3, props.theme.targetBoxLines, 1);
-      g.drawRect(5 * cellWidth, 4 * cellHeight, cellWidth, cellHeight);
-
-      g.lineStyle(3, props.theme.targetBoxLines, 1);
-      g.drawRect(5 * cellWidth, 3 * cellHeight, cellWidth, cellHeight);
-
-      g.lineStyle(3, props.theme.potentialShapeLines, 1);
-      g.drawRect((5 * cellWidth) + 5, (1 * cellHeight) + 5, cellWidth - 10, cellHeight - 10);
-      g.drawRect((5 * cellWidth) + 5, (2 * cellHeight) + 5, cellWidth - 10, cellHeight - 10);
-      g.drawRect((5 * cellWidth) + 5, (3 * cellHeight) + 5, cellWidth - 10, cellHeight - 10);
-      g.drawRect((5 * cellWidth) + 5, (4 * cellHeight) + 5, cellWidth - 10, cellHeight - 10);
+      // Draw cursor cells
+      if (isMouseIn) {
+        g.lineStyle(4, props.theme.potentialShapeLines, 1);
+        g.drawRect((cursorPosition.x * cellWidth) + 8, (cursorPosition.y * cellHeight) + 8, cellWidth - 16, cellHeight - 16);
+      }
     },
-    [props],
+    [props, cursorPosition, isMouseIn],
   );
 
   return (
