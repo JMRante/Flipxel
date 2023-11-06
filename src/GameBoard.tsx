@@ -1,4 +1,4 @@
-import { Stage, Graphics as GraphicsComp, useTick } from '@pixi/react';
+import { Graphics as GraphicsComp, useTick } from '@pixi/react';
 import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js';
 import { useCallback, useRef, useState } from 'react';
 
@@ -158,7 +158,7 @@ export const GameBoard = (props: IGameBoardProps) =>
         g.drawRect((cursorPosition.x * cellWidth) + 8, (cursorPosition.y * cellHeight) + 8, cellWidth - 16, cellHeight - 16);
       }
     },
-    [props, cursorPosition, isMouseIn, board, cellWidth, cellHeight, flipTimer],
+    [props, cursorPosition, isMouseIn, board, cellWidth, cellHeight, flipTimer, flipCoordinates],
   );
 
   return (
