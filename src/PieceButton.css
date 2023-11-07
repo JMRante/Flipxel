@@ -1,0 +1,35 @@
+.pieceButton {
+  background-color: #8697aa;
+  border: none;
+  display: flex;
+  flex-wrap: wrap;
+  width: 104px;
+  height: 104px;
+  padding: 2px;
+  margin: 5px;
+  cursor: pointer;
+}
+
+.pieceButton:hover {
+  border-style: solid;
+  border-color: #e5e8ec;
+  border-width: 2px;
+  padding: 0px;
+}
+
+.pieceCellFilled {
+  border: none;
+  background-color: #414e5e;
+  width: 20px;
+  height: 20px;
+  padding: 0px;
+}
+
+.pieceCellUnfilled {
+  border-color: #9eacbc;
+  border-style: solid;
+  border-width: 1px;
+  width: 18px;
+  height: 18px;
+  padding: 0px;
+}

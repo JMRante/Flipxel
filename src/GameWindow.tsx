@@ -37,5 +37,5 @@ export const GameWindow = () => {
     <Stage {...stageProps}>
       <GameBoard cellsWide={cellsWide} cellsHigh={cellsHigh} windowWidth={width} windowHeight={height} boardGoal={boardGoalTest} theme={defaultTheme}/>
     </Stage>
-  )
+  );
 }
