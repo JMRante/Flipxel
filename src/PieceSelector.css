@@ -1,0 +1,7 @@
+.PieceSelector {
+  width: 800px;
+  height: 125px;
+  display: flex;
+  flex-wrap: no-wrap;
+  overflow-x: auto;
+}

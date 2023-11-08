@@ -8,8 +8,9 @@ export interface IGameBoardProps {
   windowWidth: number,
   windowHeight: number,
   boardGoal: boolean[],
-  theme: IGameTheme
-}
+  theme: IGameTheme,
+  currentPiece: boolean[]
+};
 
 export interface IGameTheme {
   backgroundBase: number,
@@ -17,7 +18,7 @@ export interface IGameTheme {
   targetBoxLines: number,
   filledBox: number,
   potentialShapeLines: number
-}
+};
 
 class Coordinate {
   x: number;
@@ -27,11 +28,11 @@ class Coordinate {
     this.x = x;
     this.y = y;
   }
-}
+};
 
 function lerp(start: number, end: number, t: number){
   return (1 - t) * start + t * end;
-}
+};
 
 export const GameBoard = (props: IGameBoardProps) =>
 {
@@ -67,13 +68,33 @@ export const GameBoard = (props: IGameBoardProps) =>
   const mouseDown = (e: FederatedPointerEvent) => {
     if (isMouseIn && !isMouseDown.current && flipTimer === 0) {
       const modifiedBoard = board.slice();
-      const cursorToCellIndex = cursorPosition.x + (cursorPosition.y * props.cellsWide);
-      modifiedBoard[cursorToCellIndex] = !modifiedBoard[cursorToCellIndex];
+      const newFlipCoordinates: Coordinate[] = [];
+
+      for (let cursorCellX = -2; cursorCellX <= 2; cursorCellX++) {
+        for (let cursorCellY = -2; cursorCellY <= 2; cursorCellY++) {
+          const pieceCursorCellX = cursorCellX + cursorPosition.x;
+          const pieceCursorCellY = cursorCellY + cursorPosition.y;
+
+          const currentPieceIndex = (cursorCellX + 2) + ((cursorCellY + 2) * 5);
+
+          if (props.currentPiece[currentPieceIndex] 
+            && pieceCursorCellX >= 0 
+            && pieceCursorCellX < props.cellsWide 
+            && pieceCursorCellY >= 0 
+            && pieceCursorCellY < props.cellsHigh) {
+            const cursorToCellIndex = pieceCursorCellX + (pieceCursorCellY * props.cellsWide);
+            modifiedBoard[cursorToCellIndex] = !modifiedBoard[cursorToCellIndex];
+
+            newFlipCoordinates.push(new Coordinate(pieceCursorCellX, pieceCursorCellY));
+          }
+        }
+      }
+
       setBoard(modifiedBoard);
 
       setFlipTimer(flipTime);
 
-      setFlipCoordinates([new Coordinate(cursorPosition.x, cursorPosition.y)]);
+      setFlipCoordinates(newFlipCoordinates);
 
       isMouseDown.current = true;
     }
@@ -154,8 +175,23 @@ export const GameBoard = (props: IGameBoardProps) =>
 
       // Draw cursor cells
       if (isMouseIn) {
-        g.lineStyle(4, props.theme.potentialShapeLines, 1);
-        g.drawRect((cursorPosition.x * cellWidth) + 8, (cursorPosition.y * cellHeight) + 8, cellWidth - 16, cellHeight - 16);
+        for (let cursorCellX = -2; cursorCellX <= 2; cursorCellX++) {
+          for (let cursorCellY = -2; cursorCellY <= 2; cursorCellY++) {
+            const pieceCursorCellX = cursorCellX + cursorPosition.x;
+            const pieceCursorCellY = cursorCellY + cursorPosition.y;
+
+            const currentPieceIndex = (cursorCellX + 2) + ((cursorCellY + 2) * 5);
+            
+            if (props.currentPiece[currentPieceIndex] 
+              && pieceCursorCellX >= 0 
+              && pieceCursorCellX < props.cellsWide 
+              && pieceCursorCellY >= 0 
+              && pieceCursorCellY < props.cellsHigh) {
+              g.lineStyle(4, props.theme.potentialShapeLines, 1);
+              g.drawRect((pieceCursorCellX * cellWidth) + 8, (pieceCursorCellY * cellHeight) + 8, cellWidth - 16, cellHeight - 16);
+            }
+          }
+        }
       }
     },
     [props, cursorPosition, isMouseIn, board, cellWidth, cellHeight, flipTimer, flipCoordinates],

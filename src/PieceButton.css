@@ -1,4 +1,4 @@
-.pieceButton {
+.PieceButton {
   background-color: #8697aa;
   border: none;
   display: flex;
@@ -8,16 +8,17 @@
   padding: 2px;
   margin: 5px;
   cursor: pointer;
+  flex: 0 0 auto;
 }
 
-.pieceButton:hover {
+.PieceButton:hover {
   border-style: solid;
   border-color: #e5e8ec;
   border-width: 2px;
   padding: 0px;
 }
 
-.pieceCellFilled {
+.PieceButton-cell-filled {
   border: none;
   background-color: #414e5e;
   width: 20px;
@@ -25,7 +26,15 @@
   padding: 0px;
 }
 
-.pieceCellUnfilled {
+.PieceButton-cell-filled-selected {
+  border: none;
+  background-color: #e5e8ec;
+  width: 20px;
+  height: 20px;
+  padding: 0px;
+}
+
+.PieceButton-cell-unfilled {
   border-color: #9eacbc;
   border-style: solid;
   border-width: 1px;

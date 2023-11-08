@@ -1,7 +1,14 @@
 import { Stage } from "@pixi/react";
 import { GameBoard, IGameTheme } from "./GameBoard";
+import { useState } from "react";
 
-export const GameWindow = () => {
+export interface IGameWindowProps {
+  boardGoal: boolean[],
+  pieces: Array<boolean[]>,
+  currentPieceIndex: number
+};
+
+export const GameWindow = (props: IGameWindowProps) => {
   const defaultTheme: IGameTheme = {
     backgroundBase: 0x9eacbc,
     backgroundLines: 0x8697aa,
@@ -9,14 +16,6 @@ export const GameWindow = () => {
     filledBox: 0x414e5e,
     potentialShapeLines: 0xdce2ef
   }
-
-  const boardGoalTest = [
-    false, false, false, false, false,
-    false, true, true, true, false,
-    false, true, false, true, false,
-    false, true, true, true, false,
-    false, false, false, false, false,
-  ];
 
   const width = 800;
   const height = 800;
@@ -35,7 +34,7 @@ export const GameWindow = () => {
 
   return (
     <Stage {...stageProps}>
-      <GameBoard cellsWide={cellsWide} cellsHigh={cellsHigh} windowWidth={width} windowHeight={height} boardGoal={boardGoalTest} theme={defaultTheme}/>
+      <GameBoard cellsWide={cellsWide} cellsHigh={cellsHigh} windowWidth={width} windowHeight={height} boardGoal={props.boardGoal} currentPiece={props.pieces[props.currentPieceIndex]} theme={defaultTheme}/>
     </Stage>
   );
 }

@@ -1,15 +1,25 @@
+import './PieceSelector.css';
 import { PieceButton } from "./PieceButton";
 
-export const PieceSelector = () => {
-  const pieceTest = [
-    false, false, false, false, false,
-    false, false, true, false, false,
-    false, true, true, true, false,
-    false, false, true, false, false,
-    false, false, false, false, false,
-  ];
+export interface IPieceSelectorProps {
+  pieces: Array<boolean[]>,
+  currentPieceIndex: number,
+  setCurrentPieceIndex: Function
+};
+
+export const PieceSelector = (props: IPieceSelectorProps) => {
+  const generatePieceButtons = () => {
+    return props.pieces.map((x, i) => {
+      const clickEvent = (e: React.MouseEvent<HTMLButtonElement>) => {
+        props.setCurrentPieceIndex(i);
+      };
+      return <PieceButton key={`PieceButton${i}`} piece={x} selected={i === props.currentPieceIndex} clickEvent={clickEvent}></PieceButton>
+    });
+  };
 
   return (
-    <PieceButton piece={pieceTest}></PieceButton>
+    <div className="PieceSelector">
+      {generatePieceButtons()}
+    </div>
   );
 };
