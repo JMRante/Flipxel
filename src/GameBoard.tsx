@@ -1,23 +1,21 @@
 import { Graphics as GraphicsComp, useTick } from '@pixi/react';
 import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js';
 import { useCallback, useRef, useState } from 'react';
+import { IGameTheme } from './Game';
 
 export interface IGameBoardProps {
   cellsWide: number,
   cellsHigh: number,
+  board: boolean[],
+  setBoard: Function,
   windowWidth: number,
   windowHeight: number,
   boardGoal: boolean[],
   theme: IGameTheme,
-  currentPiece: boolean[]
-};
-
-export interface IGameTheme {
-  backgroundBase: number,
-  backgroundLines: number,
-  targetBoxLines: number,
-  filledBox: number,
-  potentialShapeLines: number
+  pieces: Array<boolean[]>,
+  currentPieceIndex: number,
+  playedPieces: number[],
+  setPlayedPieces: Function
 };
 
 class Coordinate {
@@ -36,7 +34,6 @@ function lerp(start: number, end: number, t: number){
 
 export const GameBoard = (props: IGameBoardProps) =>
 {
-  const [board, setBoard] = useState<boolean[]>(Array(props.cellsWide * props.cellsHigh).fill(false));
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
   const [isMouseIn, setIsMouseIn] = useState(false);
   const isMouseDown = useRef(false);
@@ -45,6 +42,8 @@ export const GameBoard = (props: IGameBoardProps) =>
 
   const cellWidth = props.windowWidth / props.cellsWide;
   const cellHeight = props.windowHeight / props.cellsHigh;
+
+  const currentPiece = props.currentPieceIndex !== undefined ? props.pieces[props.currentPieceIndex] : undefined;
 
   const flipTime = 10;
 
@@ -66,8 +65,8 @@ export const GameBoard = (props: IGameBoardProps) =>
   };
 
   const mouseDown = (e: FederatedPointerEvent) => {
-    if (isMouseIn && !isMouseDown.current && flipTimer === 0) {
-      const modifiedBoard = board.slice();
+    if (isMouseIn && !isMouseDown.current && flipTimer === 0 && currentPiece !== undefined) {
+      const modifiedBoard = props.board.slice();
       const newFlipCoordinates: Coordinate[] = [];
 
       for (let cursorCellX = -2; cursorCellX <= 2; cursorCellX++) {
@@ -77,7 +76,7 @@ export const GameBoard = (props: IGameBoardProps) =>
 
           const currentPieceIndex = (cursorCellX + 2) + ((cursorCellY + 2) * 5);
 
-          if (props.currentPiece[currentPieceIndex] 
+          if (currentPiece[currentPieceIndex] 
             && pieceCursorCellX >= 0 
             && pieceCursorCellX < props.cellsWide 
             && pieceCursorCellY >= 0 
@@ -90,11 +89,15 @@ export const GameBoard = (props: IGameBoardProps) =>
         }
       }
 
-      setBoard(modifiedBoard);
+      props.setBoard(modifiedBoard);
 
       setFlipTimer(flipTime);
 
       setFlipCoordinates(newFlipCoordinates);
+
+      const newPlayedPieces = props.playedPieces.slice();
+      newPlayedPieces.push(props.currentPieceIndex);
+      props.setPlayedPieces(newPlayedPieces);
 
       isMouseDown.current = true;
     }
@@ -138,7 +141,7 @@ export const GameBoard = (props: IGameBoardProps) =>
       }
 
       // Draw state of each cell + flipping animation
-      for (let i = 0; i < board.length; i++) {
+      for (let i = 0; i < props.board.length; i++) {
         const x = i % props.cellsWide;
         const y = Math.floor(i / props.cellsWide);
 
@@ -151,10 +154,10 @@ export const GameBoard = (props: IGameBoardProps) =>
         const goalFilledYStart = (y * cellHeight) + 2;
         const notGoalFilledYStart = (y * cellHeight) + 6;
 
-        const normalizedFlipTimer = board[i] ? 1 - (flipTimer / flipTime) : flipTimer / flipTime;
+        const normalizedFlipTimer = props.board[i] ? 1 - (flipTimer / flipTime) : flipTimer / flipTime;
 
-        const fillX = lerp((x * cellWidth) + (cellWidth / 2), props.boardGoal[i] ? goalFilledXStart : notGoalFilledXStart, isFlipping ? normalizedFlipTimer : (board[i] ? 1 : 0));
-        const fillWidth = lerp(0, props.boardGoal[i] ? goalFilledDimension : notGoalFilledDimension, isFlipping ? normalizedFlipTimer : (board[i] ? 1 : 0));
+        const fillX = lerp((x * cellWidth) + (cellWidth / 2), props.boardGoal[i] ? goalFilledXStart : notGoalFilledXStart, isFlipping ? normalizedFlipTimer : (props.board[i] ? 1 : 0));
+        const fillWidth = lerp(0, props.boardGoal[i] ? goalFilledDimension : notGoalFilledDimension, isFlipping ? normalizedFlipTimer : (props.board[i] ? 1 : 0));
 
         g.lineStyle(0);
         g.beginFill(props.theme.filledBox, 1);
@@ -174,7 +177,7 @@ export const GameBoard = (props: IGameBoardProps) =>
       }
 
       // Draw cursor cells
-      if (isMouseIn) {
+      if (isMouseIn && currentPiece !== undefined) {
         for (let cursorCellX = -2; cursorCellX <= 2; cursorCellX++) {
           for (let cursorCellY = -2; cursorCellY <= 2; cursorCellY++) {
             const pieceCursorCellX = cursorCellX + cursorPosition.x;
@@ -182,7 +185,7 @@ export const GameBoard = (props: IGameBoardProps) =>
 
             const currentPieceIndex = (cursorCellX + 2) + ((cursorCellY + 2) * 5);
             
-            if (props.currentPiece[currentPieceIndex] 
+            if (currentPiece[currentPieceIndex] 
               && pieceCursorCellX >= 0 
               && pieceCursorCellX < props.cellsWide 
               && pieceCursorCellY >= 0 
@@ -194,7 +197,7 @@ export const GameBoard = (props: IGameBoardProps) =>
         }
       }
     },
-    [props, cursorPosition, isMouseIn, board, cellWidth, cellHeight, flipTimer, flipCoordinates],
+    [props, cursorPosition, isMouseIn, cellWidth, cellHeight, flipTimer, flipCoordinates, currentPiece],
   );
 
   return (

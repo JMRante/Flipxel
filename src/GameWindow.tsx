@@ -1,40 +1,53 @@
 import { Stage } from "@pixi/react";
-import { GameBoard, IGameTheme } from "./GameBoard";
-import { useState } from "react";
+import { GameBoard } from "./GameBoard";
+import { IGameTheme } from "./Game";
+import { Color } from "pixi.js";
 
 export interface IGameWindowProps {
+  theme: IGameTheme,
+  cellsWide: number,
+  cellsHigh: number,
+  board: boolean[],
+  setBoard: Function,
   boardGoal: boolean[],
   pieces: Array<boolean[]>,
-  currentPieceIndex: number
+  currentPieceIndex: number,
+  playedPieces: number[],
+  setPlayedPieces: Function
 };
 
 export const GameWindow = (props: IGameWindowProps) => {
-  const defaultTheme: IGameTheme = {
-    backgroundBase: 0x9eacbc,
-    backgroundLines: 0x8697aa,
-    targetBoxLines: 0x232b35,
-    filledBox: 0x414e5e,
-    potentialShapeLines: 0xdce2ef
-  }
 
   const width = 800;
   const height = 800;
-
-  const cellsWide = 5;
-  const cellsHigh = 5;
 
   const stageProps = {
     height,
     width,
     options: {
-      backgroundColor: defaultTheme.backgroundBase,
+      backgroundColor: new Color(props.theme.backgroundBase).toNumber(),
       antialias: true,
     },
   };
 
   return (
-    <Stage {...stageProps}>
-      <GameBoard cellsWide={cellsWide} cellsHigh={cellsHigh} windowWidth={width} windowHeight={height} boardGoal={props.boardGoal} currentPiece={props.pieces[props.currentPieceIndex]} theme={defaultTheme}/>
-    </Stage>
+    <div style={{cursor: props.currentPieceIndex !== undefined ? 'pointer' : 'default', width: `${width}px` , height: `${height}px`}}>
+      <Stage {...stageProps}>
+        <GameBoard 
+          cellsWide={props.cellsWide} 
+          cellsHigh={props.cellsHigh} 
+          board={props.board} 
+          setBoard={props.setBoard} 
+          windowWidth={width} 
+          windowHeight={height} 
+          boardGoal={props.boardGoal} 
+          theme={props.theme}
+          pieces={props.pieces}
+          currentPieceIndex={props.currentPieceIndex}
+          playedPieces={props.playedPieces}
+          setPlayedPieces={props.setPlayedPieces}
+        />
+      </Stage>
+    </div>
   );
 }

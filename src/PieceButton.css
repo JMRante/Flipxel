@@ -18,27 +18,9 @@
   padding: 0px;
 }
 
-.PieceButton-cell-filled {
-  border: none;
-  background-color: #414e5e;
-  width: 20px;
-  height: 20px;
-  padding: 0px;
-}
-
-.PieceButton-cell-filled-selected {
-  border: none;
-  background-color: #e5e8ec;
-  width: 20px;
-  height: 20px;
-  padding: 0px;
-}
-
-.PieceButton-cell-unfilled {
-  border-color: #9eacbc;
-  border-style: solid;
-  border-width: 1px;
-  width: 18px;
-  height: 18px;
-  padding: 0px;
+.PieceButton:disabled {
+  opacity: 0.25;
+  border-style: none;
+  padding: 2px;
+  cursor: default;
 }
