@@ -1,6 +1,6 @@
 import { Stage } from "@pixi/react";
 import { GameBoard } from "./GameBoard";
-import { IGameTheme } from "./Game";
+import { IGameTheme, IPieceInstruction } from "./Game";
 import { Color } from "pixi.js";
 
 export interface IGameWindowProps {
@@ -12,8 +12,11 @@ export interface IGameWindowProps {
   boardGoal: boolean[],
   pieces: Array<boolean[]>,
   currentPieceIndex: number,
-  playedPieces: number[],
-  setPlayedPieces: Function
+  playedPieces: IPieceInstruction[],
+  setPlayedPieces: Function,
+  setPieceFutureHistory: Function,
+  nextPieceToPlay: IPieceInstruction | undefined,
+  setNextPieceToPlay: Function
 };
 
 export const GameWindow = (props: IGameWindowProps) => {
@@ -46,6 +49,9 @@ export const GameWindow = (props: IGameWindowProps) => {
           currentPieceIndex={props.currentPieceIndex}
           playedPieces={props.playedPieces}
           setPlayedPieces={props.setPlayedPieces}
+          setPieceFutureHistory={props.setPieceFutureHistory}
+          nextPieceToPlay={props.nextPieceToPlay}
+          setNextPieceToPlay={props.setNextPieceToPlay}
         />
       </Stage>
     </div>

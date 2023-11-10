@@ -16,6 +16,12 @@ export interface IGameTheme {
   potentialShapeLines: string
 };
 
+export interface IPieceInstruction {
+  index: number,
+  x: number,
+  y: number
+}
+
 export const Game = () => {
   const [cellsWide, setCellsWide] = useState(5);
   const [cellsHigh, setCellsHigh] = useState(5);
@@ -62,9 +68,10 @@ export const Game = () => {
   ]);
 
   const [currentPieceIndex, setCurrentPieceIndex] = useState(0);
-  const [playedPieces, setPlayedPieces] = useState<number[]>([]);
-  const [pieceFutureHistory, setPieceFutureHistory] = useState<number[]>([]);
+  const [playedPieces, setPlayedPieces] = useState<IPieceInstruction[]>([]);
+  const [pieceFutureHistory, setPieceFutureHistory] = useState<IPieceInstruction[]>([]);
   const [gameState, setGameState] = useState(GameState.Playing);
+  const [nextPieceToPlay, setNextPieceToPlay] = useState<IPieceInstruction | undefined>(undefined);
 
   const [theme, setTheme] = useState<IGameTheme>({
     backgroundBase: '9eacbc',
@@ -75,11 +82,31 @@ export const Game = () => {
   });
 
   const undo = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const newPlayedPieces = playedPieces.slice();
+    const cutPiece = newPlayedPieces.pop();
+    setPlayedPieces(newPlayedPieces);
 
+    if (cutPiece !== undefined) {
+      setNextPieceToPlay(cutPiece);
+
+      const newPieceFutureHistory = pieceFutureHistory.slice();
+      newPieceFutureHistory.unshift(cutPiece);
+      setPieceFutureHistory(newPieceFutureHistory);
+    }
   };
 
   const redo = (e: React.MouseEvent<HTMLButtonElement>) => {
+    const newPieceFutureHistory = pieceFutureHistory.slice();
+    const reusedPiece = newPieceFutureHistory.shift();
+    setPieceFutureHistory(newPieceFutureHistory);
 
+    if (reusedPiece !== undefined) {
+      setNextPieceToPlay(reusedPiece);
+
+      const newPlayedPieces = playedPieces.slice();
+      newPlayedPieces.push(reusedPiece);
+      setPlayedPieces(newPlayedPieces);
+    }
   };
 
   return (
@@ -95,6 +122,9 @@ export const Game = () => {
         currentPieceIndex={currentPieceIndex}
         playedPieces={playedPieces} 
         setPlayedPieces={setPlayedPieces}
+        setPieceFutureHistory={setPieceFutureHistory}
+        nextPieceToPlay={nextPieceToPlay}
+        setNextPieceToPlay={setNextPieceToPlay}
       />
       <PieceSelector 
         theme={theme}

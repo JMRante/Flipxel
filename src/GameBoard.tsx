@@ -1,7 +1,7 @@
 import { Graphics as GraphicsComp, useTick } from '@pixi/react';
 import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js';
 import { useCallback, useRef, useState } from 'react';
-import { IGameTheme } from './Game';
+import { IGameTheme, IPieceInstruction } from './Game';
 
 export interface IGameBoardProps {
   cellsWide: number,
@@ -14,18 +14,16 @@ export interface IGameBoardProps {
   theme: IGameTheme,
   pieces: Array<boolean[]>,
   currentPieceIndex: number,
-  playedPieces: number[],
+  playedPieces: IPieceInstruction[],
   setPlayedPieces: Function
+  setPieceFutureHistory: Function,
+  nextPieceToPlay: IPieceInstruction | undefined,
+  setNextPieceToPlay: Function
 };
 
-class Coordinate {
-  x: number;
-  y: number;
-
-  constructor(x: number, y: number) {
-    this.x = x;
-    this.y = y;
-  }
+interface ICoordinate {
+  x: number,
+  y: number
 };
 
 function lerp(start: number, end: number, t: number){
@@ -38,7 +36,7 @@ export const GameBoard = (props: IGameBoardProps) =>
   const [isMouseIn, setIsMouseIn] = useState(false);
   const isMouseDown = useRef(false);
   const [flipTimer, setFlipTimer] = useState(0);
-  const [flipCoordinates, setFlipCoordinates] = useState<Coordinate[]>([]);
+  const [flipCoordinates, setFlipCoordinates] = useState<ICoordinate[]>([]);
 
   const cellWidth = props.windowWidth / props.cellsWide;
   const cellHeight = props.windowHeight / props.cellsHigh;
@@ -66,39 +64,12 @@ export const GameBoard = (props: IGameBoardProps) =>
 
   const mouseDown = (e: FederatedPointerEvent) => {
     if (isMouseIn && !isMouseDown.current && flipTimer === 0 && currentPiece !== undefined) {
-      const modifiedBoard = props.board.slice();
-      const newFlipCoordinates: Coordinate[] = [];
-
-      for (let cursorCellX = -2; cursorCellX <= 2; cursorCellX++) {
-        for (let cursorCellY = -2; cursorCellY <= 2; cursorCellY++) {
-          const pieceCursorCellX = cursorCellX + cursorPosition.x;
-          const pieceCursorCellY = cursorCellY + cursorPosition.y;
-
-          const currentPieceIndex = (cursorCellX + 2) + ((cursorCellY + 2) * 5);
-
-          if (currentPiece[currentPieceIndex] 
-            && pieceCursorCellX >= 0 
-            && pieceCursorCellX < props.cellsWide 
-            && pieceCursorCellY >= 0 
-            && pieceCursorCellY < props.cellsHigh) {
-            const cursorToCellIndex = pieceCursorCellX + (pieceCursorCellY * props.cellsWide);
-            modifiedBoard[cursorToCellIndex] = !modifiedBoard[cursorToCellIndex];
-
-            newFlipCoordinates.push(new Coordinate(pieceCursorCellX, pieceCursorCellY));
-          }
-        }
-      }
-
-      props.setBoard(modifiedBoard);
-
-      setFlipTimer(flipTime);
-
-      setFlipCoordinates(newFlipCoordinates);
-
-      const newPlayedPieces = props.playedPieces.slice();
-      newPlayedPieces.push(props.currentPieceIndex);
-      props.setPlayedPieces(newPlayedPieces);
-
+      props.setNextPieceToPlay({
+        index: props.currentPieceIndex, 
+        x: cursorPosition.x, 
+        y: cursorPosition.y
+      });
+      props.setPieceFutureHistory([]);
       isMouseDown.current = true;
     }
   };
@@ -108,6 +79,56 @@ export const GameBoard = (props: IGameBoardProps) =>
       isMouseDown.current = false;
     }
   };
+
+  if (props.nextPieceToPlay !== undefined) {
+    if (flipTimer !== 0) {
+      props.setNextPieceToPlay(undefined);
+    } else {
+      const nextPiece = props.pieces[props.nextPieceToPlay.index];
+
+      if (nextPiece !== undefined) {
+        const modifiedBoard = props.board.slice();
+        const newFlipCoordinates: ICoordinate[] = [];
+  
+        for (let cursorCellX = -2; cursorCellX <= 2; cursorCellX++) {
+          for (let cursorCellY = -2; cursorCellY <= 2; cursorCellY++) {
+            const pieceCursorCellX: number = cursorCellX + props.nextPieceToPlay.x;
+            const pieceCursorCellY: number = cursorCellY + props.nextPieceToPlay.y;
+  
+            const currentPieceIndex = (cursorCellX + 2) + ((cursorCellY + 2) * 5);
+  
+            if (nextPiece[currentPieceIndex] 
+              && pieceCursorCellX >= 0 
+              && pieceCursorCellX < props.cellsWide 
+              && pieceCursorCellY >= 0 
+              && pieceCursorCellY < props.cellsHigh) {
+              const cursorToCellIndex = pieceCursorCellX + (pieceCursorCellY * props.cellsWide);
+              modifiedBoard[cursorToCellIndex] = !modifiedBoard[cursorToCellIndex];
+  
+              newFlipCoordinates.push({
+                x: pieceCursorCellX, 
+                y: pieceCursorCellY
+              });
+            }
+          }
+        }
+  
+        props.setBoard(modifiedBoard);
+  
+        setFlipTimer(flipTime);
+  
+        setFlipCoordinates(newFlipCoordinates);
+  
+        if (isMouseDown.current) {
+          const newPlayedPieces = props.playedPieces.slice();
+          newPlayedPieces.push(props.nextPieceToPlay);
+          props.setPlayedPieces(newPlayedPieces);
+        }
+
+        props.setNextPieceToPlay(undefined);
+      }
+    }
+  }
 
   useTick(delta => {
     if (flipTimer > 0) {
