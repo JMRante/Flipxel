@@ -1,7 +1,7 @@
 import { Graphics as GraphicsComp, useTick } from '@pixi/react';
 import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js';
 import { useCallback, useRef, useState } from 'react';
-import { IGameTheme, IPieceInstruction } from './Game';
+import { GameState, IGameTheme, IPieceInstruction } from './Game';
 
 export interface IGameBoardProps {
   cellsWide: number,
@@ -18,7 +18,8 @@ export interface IGameBoardProps {
   setPlayedPieces: Function
   setPieceFutureHistory: Function,
   nextPieceToPlay: IPieceInstruction | undefined,
-  setNextPieceToPlay: Function
+  setNextPieceToPlay: Function,
+  gameState: GameState
 };
 
 interface ICoordinate {
@@ -198,7 +199,7 @@ export const GameBoard = (props: IGameBoardProps) =>
       }
 
       // Draw cursor cells
-      if (isMouseIn && currentPiece !== undefined) {
+      if (isMouseIn && currentPiece !== undefined && props.gameState === GameState.Playing) {
         for (let cursorCellX = -2; cursorCellX <= 2; cursorCellX++) {
           for (let cursorCellY = -2; cursorCellY <= 2; cursorCellY++) {
             const pieceCursorCellX = cursorCellX + cursorPosition.x;

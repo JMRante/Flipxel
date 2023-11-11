@@ -125,44 +125,46 @@ export const Game = () => {
     }
   }, [board]);
 
-  if (gameState === GameState.Won) {
+  const renderWinModal = () => {
     return (
-      <div>
-        <h1>Your Winner!</h1>
+      <div className="Game-win-modal-background">
+        <h1 className="Game-win-text">Complete!</h1>
       </div>
     );
-  } else {
-    return (
-      <div>
-        <GameWindow 
-          theme={theme}
-          cellsWide={cellsWide} 
-          cellsHigh={cellsHigh} 
-          board={board} 
-          boardGoal={boardGoal} 
-          setBoard={setBoard} 
-          pieces={pieces} 
-          currentPieceIndex={currentPieceIndex}
-          playedPieces={playedPieces} 
-          setPlayedPieces={setPlayedPieces}
-          setPieceFutureHistory={setPieceFutureHistory}
-          nextPieceToPlay={nextPieceToPlay}
-          setNextPieceToPlay={setNextPieceToPlay}
-        />
-        <PieceSelector 
-          theme={theme}
-          pieces={pieces} 
-          currentPieceIndex={currentPieceIndex} 
-          setCurrentPieceIndex={setCurrentPieceIndex} 
-          playedPieces={playedPieces}
-        />
-        <div className="Game-button-container">
-          <button className="Game-button" disabled={playedPieces.length === 0} onClick={undo}>Undo</button>
-          <button className="Game-button" disabled={pieceFutureHistory.length === 0} onClick={redo}>Redo</button>
-          <button className="Game-button">Restart</button>
-          <button className="Game-button">Menu</button>
-        </div>
+  };
+
+  return (
+    <div>
+      {gameState === GameState.Won && renderWinModal()}
+      <GameWindow 
+        theme={theme}
+        cellsWide={cellsWide} 
+        cellsHigh={cellsHigh} 
+        board={board} 
+        boardGoal={boardGoal} 
+        setBoard={setBoard} 
+        pieces={pieces} 
+        currentPieceIndex={currentPieceIndex}
+        playedPieces={playedPieces} 
+        setPlayedPieces={setPlayedPieces}
+        setPieceFutureHistory={setPieceFutureHistory}
+        nextPieceToPlay={nextPieceToPlay}
+        setNextPieceToPlay={setNextPieceToPlay}
+        gameState={gameState}
+      />
+      <PieceSelector 
+        theme={theme}
+        pieces={pieces} 
+        currentPieceIndex={currentPieceIndex} 
+        setCurrentPieceIndex={setCurrentPieceIndex} 
+        playedPieces={playedPieces}
+      />
+      <div className="Game-button-container">
+        <button className="Game-button" disabled={playedPieces.length === 0} onClick={undo}>Undo</button>
+        <button className="Game-button" disabled={pieceFutureHistory.length === 0} onClick={redo}>Redo</button>
+        <button className="Game-button">Restart</button>
+        <button className="Game-button">Menu</button>
       </div>
-    );
-  }
+    </div>
+  );
 };
