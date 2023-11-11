@@ -116,6 +116,10 @@ export const Game = () => {
       }
     }
 
+    if (playedPieces.length !== pieces.length) {
+      return false;
+    }
+
     return true;
   };
 
