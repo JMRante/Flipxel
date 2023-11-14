@@ -2,27 +2,25 @@ import { useEffect, useState } from "react";
 import { GameWindow } from "./GameWindow";
 import { PieceSelector } from "./PieceSelector";
 import './Game.css';
+import { IGameTheme } from "../App";
+import { GameButton } from "../menus/GameButton";
 
 export enum GameState {
   Playing,
   Won
 };
 
-export interface IGameTheme {
-  backgroundBase: string,
-  backgroundLines: string,
-  targetBoxLines: string,
-  filledBox: string,
-  potentialShapeLines: string
-};
-
 export interface IPieceInstruction {
   index: number,
   x: number,
   y: number
-}
+};
 
-export const Game = () => {
+export interface IGameProps {
+  theme: IGameTheme
+};
+
+export const Game = (props: IGameProps) => {
   const [cellsWide, setCellsWide] = useState(5);
   const [cellsHigh, setCellsHigh] = useState(5);
 
@@ -72,14 +70,6 @@ export const Game = () => {
   const [pieceFutureHistory, setPieceFutureHistory] = useState<IPieceInstruction[]>([]);
   const [gameState, setGameState] = useState(GameState.Playing);
   const [nextPieceToPlay, setNextPieceToPlay] = useState<IPieceInstruction | undefined>(undefined);
-
-  const [theme, setTheme] = useState<IGameTheme>({
-    backgroundBase: '9eacbc',
-    backgroundLines: '8697aa',
-    targetBoxLines: '232b35',
-    filledBox: '414e5e',
-    potentialShapeLines: 'dce2ef'
-  });
 
   const undo = (e: React.MouseEvent<HTMLButtonElement>) => {
     const newPlayedPieces = playedPieces.slice();
@@ -141,7 +131,7 @@ export const Game = () => {
     <div>
       {gameState === GameState.Won && renderWinModal()}
       <GameWindow 
-        theme={theme}
+        theme={props.theme}
         cellsWide={cellsWide} 
         cellsHigh={cellsHigh} 
         board={board} 
@@ -157,17 +147,17 @@ export const Game = () => {
         gameState={gameState}
       />
       <PieceSelector 
-        theme={theme}
+        theme={props.theme}
         pieces={pieces} 
         currentPieceIndex={currentPieceIndex} 
         setCurrentPieceIndex={setCurrentPieceIndex} 
         playedPieces={playedPieces}
       />
       <div className="Game-button-container">
-        <button className="Game-button" disabled={playedPieces.length === 0} onClick={undo}>Undo</button>
-        <button className="Game-button" disabled={pieceFutureHistory.length === 0} onClick={redo}>Redo</button>
-        <button className="Game-button">Restart</button>
-        <button className="Game-button">Menu</button>
+        <GameButton theme={props.theme} disabled={playedPieces.length === 0} onClick={undo}>Undo</GameButton>
+        <GameButton theme={props.theme} disabled={pieceFutureHistory.length === 0} onClick={redo}>Redo</GameButton>
+        <GameButton theme={props.theme}>Restart</GameButton>
+        <GameButton theme={props.theme}>Menu</GameButton>
       </div>
     </div>
   );

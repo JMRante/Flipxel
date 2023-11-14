@@ -1,5 +1,4 @@
-import { IGameTheme } from './Game';
-import './PieceButton.css'
+import { IGameTheme } from '../App';
 import styled from 'styled-components'
 
 export interface IPieceButtonProps {
@@ -27,6 +26,33 @@ const ButtonInnerCellUnfilled = styled.div<{ color?: string; }>`
   padding: 0px;
 `;
 
+const InnerPieceButton = styled.button<{ theme?: IGameTheme; }>`
+  background-color: #${props => props.theme.backgroundLines};
+  border: none;
+  display: flex;
+  flex-wrap: wrap;
+  width: 104px;
+  height: 104px;
+  padding: 2px;
+  margin: 5px;
+  cursor: pointer;
+  flex: 0 0 auto;
+
+  &: hover {
+    border-style: solid;
+    border-color: #${props => props.theme.potentialShapeLines};
+    border-width: 2px;
+    padding: 0px;
+  }
+
+  &: disabled {
+    opacity: 0.25;
+    border-style: none;
+    padding: 2px;
+    cursor: default;
+  }
+`;
+
 export const PieceButton = (props: IPieceButtonProps) => {
   const generateCells = () => {
     return props.piece.map((pieceCell, index) => {
@@ -43,8 +69,8 @@ export const PieceButton = (props: IPieceButtonProps) => {
   };
 
   return (
-    <button onClick={props.clickEvent} className='PieceButton' disabled={props.used}>
+    <InnerPieceButton theme={props.theme} onClick={props.clickEvent} disabled={props.used}>
       {generateCells()}
-    </button>
+    </InnerPieceButton>
   )
 };

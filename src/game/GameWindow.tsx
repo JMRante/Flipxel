@@ -1,7 +1,8 @@
 import { Stage } from "@pixi/react";
 import { GameBoard } from "./GameBoard";
-import { GameState, IGameTheme, IPieceInstruction } from "./Game";
+import { GameState, IPieceInstruction } from "./Game";
 import { Color } from "pixi.js";
+import { IGameTheme } from "../App";
 
 export interface IGameWindowProps {
   theme: IGameTheme,
@@ -58,4 +59,4 @@ export const GameWindow = (props: IGameWindowProps) => {
       </Stage>
     </div>
   );
-}
+};

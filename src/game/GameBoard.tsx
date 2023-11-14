@@ -1,7 +1,8 @@
 import { Graphics as GraphicsComp, useTick } from '@pixi/react';
 import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js';
 import { useCallback, useRef, useState } from 'react';
-import { GameState, IGameTheme, IPieceInstruction } from './Game';
+import { GameState, IPieceInstruction } from './Game';
+import { IGameTheme } from '../App';
 
 export interface IGameBoardProps {
   cellsWide: number,

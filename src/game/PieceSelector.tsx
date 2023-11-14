@@ -1,6 +1,7 @@
 import './PieceSelector.css';
 import { PieceButton } from "./PieceButton";
-import { IGameTheme, IPieceInstruction } from './Game';
+import { IPieceInstruction } from './Game';
+import { IGameTheme } from '../App';
 
 export interface IPieceSelectorProps {
   theme: IGameTheme,
