@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { GameWindow } from "./GameWindow";
 import { PieceSelector } from "./PieceSelector";
 import './Game.css';
-import { IGameTheme } from "../App";
+import { AppPage, IGameTheme } from "../App";
 import { GameButton } from "../menus/GameButton";
 
 export enum GameState {
@@ -17,7 +17,8 @@ export interface IPieceInstruction {
 };
 
 export interface IGameProps {
-  theme: IGameTheme
+  theme: IGameTheme,
+  setPage: Function
 };
 
 export const Game = (props: IGameProps) => {
@@ -99,6 +100,10 @@ export const Game = (props: IGameProps) => {
     }
   };
 
+  const goBackToLevelSelectMenu = () => {
+    props.setPage(AppPage.LevelSelectMenu);
+  };
+
   const checkBoardMeetsGoal = () => {
     for (let i = 0; i < board.length; i++) {
       if (board[i] !== boardGoal[i]) {
@@ -157,7 +162,7 @@ export const Game = (props: IGameProps) => {
         <GameButton theme={props.theme} disabled={playedPieces.length === 0} onClick={undo}>Undo</GameButton>
         <GameButton theme={props.theme} disabled={pieceFutureHistory.length === 0} onClick={redo}>Redo</GameButton>
         <GameButton theme={props.theme}>Restart</GameButton>
-        <GameButton theme={props.theme}>Menu</GameButton>
+        <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu}>Back</GameButton>
       </div>
     </div>
   );

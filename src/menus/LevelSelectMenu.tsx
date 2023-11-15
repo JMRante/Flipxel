@@ -53,6 +53,7 @@ const testLevelNames = [
 
 export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
   const clickOnLevel = (index: number) => {
+    props.setPage(AppPage.Game);
   };
 
   const goBackToMainMenu = () => {
@@ -65,7 +66,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
       <LevelSelectPackTitle color={props.theme.potentialShapeLines}>{props.levelPackName}</LevelSelectPackTitle>
       <ScrollSelector theme={props.theme} items={testLevelNames} itemClickHandler={clickOnLevel}/>
       <div className="LevelSelectMenu-button-container">
-        <GameButton theme={props.theme} onClick={goBackToMainMenu}>Menu</GameButton>
+        <GameButton theme={props.theme} onClick={goBackToMainMenu}>Back</GameButton>
       </div>
     </div>
   )

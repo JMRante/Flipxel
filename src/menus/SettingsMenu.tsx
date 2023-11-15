@@ -54,7 +54,7 @@ export const SettingsMenu = (props: ISettingsMenuProps) => {
       <ScrollSelector theme={props.theme} items={themeNameList} itemClickHandler={clickOnTheme}/>
       <div className="SettingsMenu-button-container">
         <GameButton theme={props.theme}>Clear Save Data</GameButton>
-        <GameButton theme={props.theme} onClick={goBackToMainMenu}>Menu</GameButton>
+        <GameButton theme={props.theme} onClick={goBackToMainMenu}>Back</GameButton>
       </div>
     </div>
   )
