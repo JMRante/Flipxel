@@ -1,0 +1,8 @@
+.SettingsMenu {
+  width: 800px;
+}
+
+.SettingsMenu-button-container {
+  margin-top: 10px;
+  display: flex;
+}

@@ -4,8 +4,10 @@ import styled from 'styled-components';
 import { SettingsMenu } from './menus/SettingsMenu';
 import { MainMenu } from './menus/MainMenu';
 import { LevelSelectMenu } from './menus/LevelSelectMenu';
+import themes from './data/themes.json';
 
 export interface IGameTheme {
+  name: string,
   trueBackground: string,
   backgroundBase: string,
   backgroundLines: string,
@@ -48,14 +50,7 @@ const App = () => {
   */
   const [page, setPage] = useState<AppPage>(AppPage.MainMenu);
 
-  const [theme, setTheme] = useState<IGameTheme>({
-    trueBackground: '161e28',
-    backgroundBase: '9eacbc',
-    backgroundLines: '8697aa',
-    targetBoxLines: '232b35',
-    filledBox: '414e5e',
-    potentialShapeLines: 'dce2ef'
-  });
+  const [theme, setTheme] = useState<IGameTheme>(themes.themes[0]);
 
   switch (page) {
     default:
@@ -86,7 +81,7 @@ const App = () => {
     case AppPage.SettingsMenu:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <SettingsMenu theme={theme}/>
+          <SettingsMenu theme={theme} setPage={setPage} setTheme={setTheme}/>
         </GameWrapper>
       );
   }

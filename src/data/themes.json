@@ -1,0 +1,31 @@
+{
+  "themes": [
+    {
+      "name": "Mecha Blue",
+      "trueBackground": "161e28",
+      "backgroundBase": "9eacbc",
+      "backgroundLines": "8697aa",
+      "targetBoxLines": "232b35",
+      "filledBox": "414e5e",
+      "potentialShapeLines": "dce2ef"
+    },
+    {
+      "name": "Rusty Red",
+      "trueBackground": "531a1a",
+      "backgroundBase": "c45d5d",
+      "backgroundLines": "a03d3d",
+      "targetBoxLines": "651919",
+      "filledBox": "902b2b",
+      "potentialShapeLines": "e3c5c5"
+    },
+    {
+      "name": "Grotto Green",
+      "trueBackground": "072812",
+      "backgroundBase": "67cd8b",
+      "backgroundLines": "52b374",
+      "targetBoxLines": "0e4421",
+      "filledBox": "1a6c37",
+      "potentialShapeLines": "c0e2cc"
+    }
+  ]
+}

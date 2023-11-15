@@ -15,6 +15,7 @@ const LevelSelectTitle = styled.h1<{ color?: string; }>`
   font-weight: bold;
   font-family: 'Courier New', monospace;
   font-size: 64px;
+  margin-top: 20px;
   margin-bottom: 5px;
 `;
 
@@ -24,7 +25,7 @@ const LevelSelectPackTitle = styled.h1<{ color?: string; }>`
   font-family: 'Courier New', monospace;
   font-size: 40px;
   margin-top: 5px;
-  margin-bottom: 32px;
+  margin-bottom: 26px;
 `;
 
 const testLevelNames = [

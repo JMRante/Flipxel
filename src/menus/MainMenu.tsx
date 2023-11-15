@@ -35,13 +35,17 @@ export const MainMenu = (props: IMainMenuProps) => {
     props.setPage(AppPage.LevelSelectMenu);
   };
 
+  const goToSettings = () => {
+    props.setPage(AppPage.SettingsMenu);
+  };
+
   return (
     <div className="MainMenu">
       <MainMenuTitle color={props.theme.potentialShapeLines}>Flipxel</MainMenuTitle>
       <ScrollSelector theme={props.theme} items={testLevelPackNames} itemClickHandler={goToLevelPack}/>
       <div className="MainMenu-button-container">
         <GameButton theme={props.theme}>Load Pack</GameButton>
-        <GameButton theme={props.theme}>Settings</GameButton>
+        <GameButton theme={props.theme} onClick={goToSettings}>Settings</GameButton>
         <GameButton theme={props.theme}>Editor</GameButton>
       </div>
     </div>
