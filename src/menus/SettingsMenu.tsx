@@ -31,7 +31,13 @@ const SettingsMenuSubTitle = styled.h1<{ color?: string; }>`
 
 export const SettingsMenu = (props: ISettingsMenuProps) => {
   const themeList = themes.themes;
-  const themeNameList = themes.themes.map(x => x.name);
+  const themeNameList = themes.themes.map(x => {
+    if (x.name === props.theme.name) {
+      return `> ${x.name}`;
+    } else {
+      return x.name;
+    }
+  });
 
   const clickOnTheme = (index: number) => {
     props.setTheme(themeList[index]);
