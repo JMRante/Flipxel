@@ -4,6 +4,8 @@ import { PieceSelector } from "./PieceSelector";
 import './Game.css';
 import { AppPage, IGameTheme, ILevel } from "../App";
 import { GameButton } from "../menus/GameButton";
+import { Modal } from "../menus/Modal";
+import styled from "styled-components";
 
 export enum GameState {
   Playing,
@@ -22,6 +24,26 @@ export interface IGameProps {
   level?: ILevel
 };
 
+const GameWinBox = styled.div<{ color?: string; }>`
+  background-color: #${props => props.color};
+  padding: 15px;
+  width: 600px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+`;
+
+const GameWinText = styled.h1<{ color?: string; }>`
+  color: #${props => props.color};
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  font-size: 60px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+`;
+
 export const Game = (props: IGameProps) => {
   let dimension = 5;
 
@@ -29,22 +51,18 @@ export const Game = (props: IGameProps) => {
     dimension = props.level.dimension;
   }
 
-  const [cellsWide, setCellsWide] = useState(dimension);
-  const [cellsHigh, setCellsHigh] = useState(dimension);
+  const cellsWide = dimension;
+  const cellsHigh = dimension;
 
   const [board, setBoard] = useState<boolean[]>(Array(cellsWide * cellsHigh).fill(false));
 
-  let boardGoalDefault = Array(cellsWide * cellsHigh).fill(false);
-  let piecesDefault: Array<boolean[]> = [];
+  let boardGoal = Array(cellsWide * cellsHigh).fill(false);
+  let pieces: Array<boolean[]> = [];
 
   if (props.level) {
-    boardGoalDefault = props.level.goal.map(x => x == 0 ? false : true);
-    piecesDefault = props.level.pieces.map(x => x.layout.map(y => y == 0 ? false : true));
+    boardGoal = props.level.goal.map(x => x === 0 ? false : true);
+    pieces = props.level.pieces.map(x => x.layout.map(y => y === 0 ? false : true));
   }
-
-  const [boardGoal, setBoardGoal] = useState(boardGoalDefault);
-  const [pieces, setPieces] = useState(piecesDefault);
-
   const [currentPieceIndex, setCurrentPieceIndex] = useState(0);
   const [playedPieces, setPlayedPieces] = useState<IPieceInstruction[]>([]);
   const [pieceFutureHistory, setPieceFutureHistory] = useState<IPieceInstruction[]>([]);
@@ -83,31 +101,34 @@ export const Game = (props: IGameProps) => {
     props.setPage(AppPage.LevelSelectMenu);
   };
 
-  const checkBoardMeetsGoal = () => {
-    for (let i = 0; i < board.length; i++) {
-      if (board[i] !== boardGoal[i]) {
+  useEffect(() => {
+    const checkBoardMeetsGoal = () => {
+      for (let i = 0; i < board.length; i++) {
+        if (board[i] !== boardGoal[i]) {
+          return false;
+        }
+      }
+  
+      if (playedPieces.length !== pieces.length) {
         return false;
       }
-    }
+  
+      return true;
+    };
 
-    if (playedPieces.length !== pieces.length) {
-      return false;
-    }
-
-    return true;
-  };
-
-  useEffect(() => {
     if (checkBoardMeetsGoal()) {
       setGameState(GameState.Won);
     }
-  }, [board]);
+  }, [board, boardGoal, playedPieces.length, pieces.length]);
 
   const renderWinModal = () => {
     return (
-      <div className="Game-win-modal-background">
-        <h1 className="Game-win-text">Complete!</h1>
-      </div>
+      <Modal>
+        <GameWinBox color={props.theme.trueBackground}>
+          <GameWinText  color={props.theme.potentialShapeLines}>Complete!</GameWinText>
+          <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu}>Back to Level Select</GameButton>
+        </GameWinBox>
+      </Modal>
     );
   };
 
