@@ -5,6 +5,7 @@ import { SettingsMenu } from './menus/SettingsMenu';
 import { MainMenu } from './menus/MainMenu';
 import { LevelSelectMenu } from './menus/LevelSelectMenu';
 import themes from './data/themes.json';
+import EasyLevelPack5x5 from './data/5x5EasyLevelPack.json';
 
 export interface IGameTheme {
   name: string,
@@ -14,6 +15,22 @@ export interface IGameTheme {
   targetBoxLines: string,
   filledBox: string,
   potentialShapeLines: string
+};
+
+export interface ILevelPack {
+  name: string,
+  levels: ILevel[]
+};
+
+export interface ILevel {
+  name: string,
+  dimension: number,
+  goal: number[],
+  pieces: ILevelPiece[]
+};
+
+export interface ILevelPiece {
+  layout: number[]
 };
 
 const GameWrapper = styled.div<{ color?: string; }>`
@@ -35,41 +52,33 @@ export enum AppPage {
 };
 
 const App = () => {
-
-  /*
-  Main Menu
-    Title
-    Scrolling Level Pack Selector
-      Scrolling Level Selector
-      Back
-    Load Level Pack Button
-    Settings Button
-      Change Theme
-      Clear Save Data
-    Level Editor Button
-  */
   const [page, setPage] = useState<AppPage>(AppPage.MainMenu);
 
   const [theme, setTheme] = useState<IGameTheme>(themes.themes[0]);
+
+  const [levelPacks, setLevelPacks] = useState<Array<ILevelPack>>([EasyLevelPack5x5]);
+
+  const [currentLevelPack, setCurrentLevelPack] = useState<ILevelPack>(levelPacks[0]);
+  const [currentLevel, setCurrentLevel] = useState<ILevel>(currentLevelPack.levels[0]);
 
   switch (page) {
     default:
     case AppPage.MainMenu:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <MainMenu theme={theme} setPage={setPage}/>
+          <MainMenu theme={theme} setPage={setPage} levelPacks={levelPacks} setCurrentLevelPack={setCurrentLevelPack}/>
         </GameWrapper>
       );
     case AppPage.LevelSelectMenu:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <LevelSelectMenu theme={theme} setPage={setPage} levelPackName='5x5 Easy'/>
+          <LevelSelectMenu theme={theme} setPage={setPage} levelPack={currentLevelPack} setCurrentLevel={setCurrentLevel}/>
         </GameWrapper>
       );
     case AppPage.Game:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <Game theme={theme} setPage={setPage}/>
+          <Game theme={theme} setPage={setPage} level={currentLevel}/>
         </GameWrapper>
       );
     case AppPage.Editor:

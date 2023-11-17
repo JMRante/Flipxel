@@ -1,12 +1,14 @@
 import styled from "styled-components";
-import { AppPage, IGameTheme } from "../App";
+import { AppPage, IGameTheme, ILevelPack } from "../App";
 import { GameButton } from "./GameButton";
 import { ScrollSelector } from "./ScrollSelector";
 import './MainMenu.css';
 
 export interface IMainMenuProps {
-  theme: IGameTheme
-  setPage: Function
+  theme: IGameTheme,
+  setPage: Function,
+  levelPacks: ILevelPack[],
+  setCurrentLevelPack: Function
 };
 
 const MainMenuTitle = styled.h1<{ color?: string; }>`
@@ -18,20 +20,9 @@ const MainMenuTitle = styled.h1<{ color?: string; }>`
   margin-bottom: 32px;
 `;
 
-const testLevelPackNames = [
-  '5x5 Easy',
-  '5x5 Hard',
-  '5x5 Mindnumbing',
-  '10x10 Easy',
-  '10x10 Hard',
-  '10x10 Mindnumbing',
-  '15x15 Easy',
-  '15x15 Hard',
-  '15x15 Mindnumbing',
-];
-
 export const MainMenu = (props: IMainMenuProps) => {
   const goToLevelPack = (index: number) => {
+    props.setCurrentLevelPack(props.levelPacks[index]);
     props.setPage(AppPage.LevelSelectMenu);
   };
 
@@ -39,10 +30,12 @@ export const MainMenu = (props: IMainMenuProps) => {
     props.setPage(AppPage.SettingsMenu);
   };
 
+  const levelPackNames = props.levelPacks.map(x => x.name);
+
   return (
     <div className="MainMenu">
       <MainMenuTitle color={props.theme.potentialShapeLines}>Flipxel</MainMenuTitle>
-      <ScrollSelector theme={props.theme} items={testLevelPackNames} itemClickHandler={goToLevelPack}/>
+      <ScrollSelector theme={props.theme} items={levelPackNames} itemClickHandler={goToLevelPack}/>
       <div className="MainMenu-button-container">
         <GameButton theme={props.theme}>Load Pack</GameButton>
         <GameButton theme={props.theme} onClick={goToSettings}>Settings</GameButton>

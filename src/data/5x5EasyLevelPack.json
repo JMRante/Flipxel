@@ -2,7 +2,8 @@
   "name": "5 x 5 Easy",
   "levels": [
     {
-      "width": 5,
+      "name": "Level 1",
+      "dimension": 5,
       "goal": [0,0,0,0,0, 0,1,1,1,0, 0,1,0,1,0, 0,1,1,1,0, 0,0,0,0,0],
       "pieces": [
         {

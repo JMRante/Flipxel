@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AppPage, IGameTheme } from "../App";
+import { AppPage, IGameTheme, ILevelPack } from "../App";
 import { GameButton } from "./GameButton";
 import { ScrollSelector } from "./ScrollSelector";
 import './LevelSelectMenu.css';
@@ -7,7 +7,8 @@ import './LevelSelectMenu.css';
 export interface ILevelSelectMenuProps {
   theme: IGameTheme,
   setPage: Function,
-  levelPackName: string
+  levelPack: ILevelPack,
+  setCurrentLevel: Function
 };
 
 const LevelSelectTitle = styled.h1<{ color?: string; }>`
@@ -28,31 +29,9 @@ const LevelSelectPackTitle = styled.h1<{ color?: string; }>`
   margin-bottom: 26px;
 `;
 
-const testLevelNames = [
-  'Level 1',
-  'Level 2',
-  'Level 3',
-  'Level 4',
-  'Level 5',
-  'Level 6',
-  'Level 7',
-  'Level 8',
-  'Level 9',
-  'Level 10',
-  'Level 11',
-  'Level 12',
-  'Level 13',
-  'Level 14',
-  'Level 15',
-  'Level 16',
-  'Level 17',
-  'Level 18',
-  'Level 19',
-  'Level 20'
-];
-
 export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
   const clickOnLevel = (index: number) => {
+    props.setCurrentLevel(props.levelPack.levels[index]);
     props.setPage(AppPage.Game);
   };
 
@@ -60,11 +39,13 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
     props.setPage(AppPage.MainMenu);
   };
 
+  const levelNames = props.levelPack.levels.map(x => x.name);
+
   return (
     <div className="LevelSelectMenu">
       <LevelSelectTitle color={props.theme.potentialShapeLines}>Level Select</LevelSelectTitle>
-      <LevelSelectPackTitle color={props.theme.potentialShapeLines}>{props.levelPackName}</LevelSelectPackTitle>
-      <ScrollSelector theme={props.theme} items={testLevelNames} itemClickHandler={clickOnLevel}/>
+      <LevelSelectPackTitle color={props.theme.potentialShapeLines}>{props.levelPack.name}</LevelSelectPackTitle>
+      <ScrollSelector theme={props.theme} items={levelNames} itemClickHandler={clickOnLevel}/>
       <div className="LevelSelectMenu-button-container">
         <GameButton theme={props.theme} onClick={goBackToMainMenu}>Back</GameButton>
       </div>

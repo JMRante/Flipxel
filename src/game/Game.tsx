@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { GameWindow } from "./GameWindow";
 import { PieceSelector } from "./PieceSelector";
 import './Game.css';
-import { AppPage, IGameTheme } from "../App";
+import { AppPage, IGameTheme, ILevel } from "../App";
 import { GameButton } from "../menus/GameButton";
 
 export enum GameState {
@@ -18,53 +18,32 @@ export interface IPieceInstruction {
 
 export interface IGameProps {
   theme: IGameTheme,
-  setPage: Function
+  setPage: Function,
+  level?: ILevel
 };
 
 export const Game = (props: IGameProps) => {
-  const [cellsWide, setCellsWide] = useState(5);
-  const [cellsHigh, setCellsHigh] = useState(5);
+  let dimension = 5;
+
+  if (props.level) {
+    dimension = props.level.dimension;
+  }
+
+  const [cellsWide, setCellsWide] = useState(dimension);
+  const [cellsHigh, setCellsHigh] = useState(dimension);
 
   const [board, setBoard] = useState<boolean[]>(Array(cellsWide * cellsHigh).fill(false));
 
-  const [boardGoal, setBoardGoal] = useState([
-    false, false, false, false, false,
-    false, true, true, true, false,
-    false, true, false, true, false,
-    false, true, true, true, false,
-    false, false, false, false, false,
-  ]);
+  let boardGoalDefault = Array(cellsWide * cellsHigh).fill(false);
+  let piecesDefault: Array<boolean[]> = [];
 
-  const [pieces, setPieces] = useState([
-    [
-      false, false, false, false, false,
-      false, false, false, false, false,
-      false, true, true, true, false,
-      false, true, false, false, false,
-      false, false, false, false, false,
-    ],
-    [
-      false, false, false, false, false,
-      false, false, true, false, false,
-      false, false, true, false, false,
-      false, false, true, false, false,
-      false, false, false, false, false,
-    ],
-    [
-      false, false, false, false, false,
-      false, false, false, false, false,
-      false, false, true, true, false,
-      false, false, false, false, false,
-      false, false, false, false, false,
-    ],
-    [
-      false, false, false, false, false,
-      false, false, false, false, false,
-      false, false, true, false, false,
-      false, false, false, false, false,
-      false, false, false, false, false,
-    ]
-  ]);
+  if (props.level) {
+    boardGoalDefault = props.level.goal.map(x => x == 0 ? false : true);
+    piecesDefault = props.level.pieces.map(x => x.layout.map(y => y == 0 ? false : true));
+  }
+
+  const [boardGoal, setBoardGoal] = useState(boardGoalDefault);
+  const [pieces, setPieces] = useState(piecesDefault);
 
   const [currentPieceIndex, setCurrentPieceIndex] = useState(0);
   const [playedPieces, setPlayedPieces] = useState<IPieceInstruction[]>([]);
