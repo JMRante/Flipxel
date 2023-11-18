@@ -6,6 +6,7 @@ import { AppPage, IGameTheme, ILevel } from "../App";
 import { GameButton } from "../menus/GameButton";
 import { Modal } from "../menus/Modal";
 import styled from "styled-components";
+import { ModalBox } from "../menus/ModalBox";
 
 export enum GameState {
   Playing,
@@ -21,19 +22,9 @@ export interface IPieceInstruction {
 export interface IGameProps {
   theme: IGameTheme,
   setPage: Function,
-  level?: ILevel
+  level?: ILevel,
+  isEditorMode: boolean
 };
-
-const GameWinBox = styled.div<{ color?: string; }>`
-  background-color: #${props => props.color};
-  padding: 15px;
-  width: 600px;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  margin-right: -50%;
-  transform: translate(-50%, -50%);
-`;
 
 const GameWinText = styled.h1<{ color?: string; }>`
   color: #${props => props.color};
@@ -124,10 +115,10 @@ export const Game = (props: IGameProps) => {
   const renderWinModal = () => {
     return (
       <Modal>
-        <GameWinBox color={props.theme.trueBackground}>
+        <ModalBox color={props.theme.trueBackground}>
           <GameWinText  color={props.theme.potentialShapeLines}>Complete!</GameWinText>
           <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu}>Back to Level Select</GameButton>
-        </GameWinBox>
+        </ModalBox>
       </Modal>
     );
   };
