@@ -48,7 +48,8 @@ export enum AppPage {
   LevelSelectMenu,
   Game,
   Editor,
-  SettingsMenu
+  SettingsMenu,
+  EditorLevelSelectMenu
 };
 
 const App = () => {
@@ -72,13 +73,19 @@ const App = () => {
     case AppPage.LevelSelectMenu:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <LevelSelectMenu theme={theme} setPage={setPage} levelPack={currentLevelPack} setCurrentLevel={setCurrentLevel}/>
+          <LevelSelectMenu theme={theme} setPage={setPage} levelPack={currentLevelPack} setCurrentLevel={setCurrentLevel} isEditorMode={false}/>
         </GameWrapper>
       );
     case AppPage.Game:
       return (
         <GameWrapper color={theme.trueBackground}>
           <Game theme={theme} setPage={setPage} level={currentLevel} isEditorMode={false}/>
+        </GameWrapper>
+      );
+    case AppPage.EditorLevelSelectMenu:
+      return (
+        <GameWrapper color={theme.trueBackground}>
+          <LevelSelectMenu theme={theme} setPage={setPage} levelPack={currentLevelPack} setCurrentLevel={setCurrentLevel} isEditorMode={true}/>
         </GameWrapper>
       );
     case AppPage.Editor:

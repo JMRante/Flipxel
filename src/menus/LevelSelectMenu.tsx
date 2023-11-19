@@ -8,7 +8,8 @@ export interface ILevelSelectMenuProps {
   theme: IGameTheme,
   setPage: Function,
   levelPack: ILevelPack,
-  setCurrentLevel: Function
+  setCurrentLevel: Function,
+  isEditorMode: boolean
 };
 
 const LevelSelectTitle = styled.h1<{ color?: string; }>`

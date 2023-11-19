@@ -7,6 +7,7 @@ import { GameButton } from "../menus/GameButton";
 import { Modal } from "../menus/Modal";
 import styled from "styled-components";
 import { ModalBox } from "../menus/ModalBox";
+import { ModalHeader } from "../menus/ModalHeader";
 
 export enum GameState {
   Playing,
@@ -26,14 +27,6 @@ export interface IGameProps {
   isEditorMode: boolean
 };
 
-const GameWinText = styled.h1<{ color?: string; }>`
-  color: #${props => props.color};
-  font-weight: bold;
-  font-family: 'Courier New', monospace;
-  font-size: 60px;
-  margin-top: 10px;
-  margin-bottom: 10px;
-`;
 
 export const Game = (props: IGameProps) => {
   let dimension = 5;
@@ -116,7 +109,7 @@ export const Game = (props: IGameProps) => {
     return (
       <Modal>
         <ModalBox color={props.theme.trueBackground}>
-          <GameWinText  color={props.theme.potentialShapeLines}>Complete!</GameWinText>
+          <ModalHeader color={props.theme.potentialShapeLines}>Complete!</ModalHeader>
           <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu}>Back to Level Select</GameButton>
         </ModalBox>
       </Modal>
