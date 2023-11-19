@@ -5,7 +5,6 @@ import './Game.css';
 import { AppPage, IGameTheme, ILevel } from "../App";
 import { GameButton } from "../menus/GameButton";
 import { Modal } from "../menus/Modal";
-import styled from "styled-components";
 import { ModalBox } from "../menus/ModalBox";
 import { ModalHeader } from "../menus/ModalHeader";
 

@@ -73,7 +73,7 @@ const App = () => {
     case AppPage.LevelSelectMenu:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <LevelSelectMenu theme={theme} setPage={setPage} levelPack={currentLevelPack} setCurrentLevel={setCurrentLevel} isEditorMode={false}/>
+          <LevelSelectMenu theme={theme} setPage={setPage} levelPack={currentLevelPack} setCurrentLevelPack={setCurrentLevelPack} setCurrentLevel={setCurrentLevel} isEditorMode={false}/>
         </GameWrapper>
       );
     case AppPage.Game:
@@ -85,7 +85,7 @@ const App = () => {
     case AppPage.EditorLevelSelectMenu:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <LevelSelectMenu theme={theme} setPage={setPage} levelPack={currentLevelPack} setCurrentLevel={setCurrentLevel} isEditorMode={true}/>
+          <LevelSelectMenu theme={theme} setPage={setPage} levelPack={currentLevelPack} setCurrentLevelPack={setCurrentLevelPack} setCurrentLevel={setCurrentLevel} isEditorMode={true}/>
         </GameWrapper>
       );
     case AppPage.Editor:

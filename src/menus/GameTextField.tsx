@@ -15,6 +15,7 @@ export const GameTextField = styled.input<{ theme?: IGameTheme; }>`
   font-weight: bold;
   font-family: 'Courier New', monospace;
   flex: 1;
+  box-sizing: border-box;
 
   &: focus {
     border: solid;

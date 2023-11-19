@@ -9,6 +9,7 @@ import { useState } from "react";
 import { ModalBox } from "./ModalBox";
 import { GameFileInput } from "./GameFileInput";
 import { ModalHeader } from "./ModalHeader";
+import { MenuDivider } from "./MenuDivider";
 
 export interface IMainMenuProps {
   theme: IGameTheme,
@@ -26,14 +27,9 @@ const MainMenuTitle = styled.h1<{ color?: string; }>`
   margin-bottom: 32px;
 `;
 
-const MainMenuDivider = styled.div`
-  margin-top: 15px;
-  padding-top: 15px;
-`;
-
 export const MainMenu = (props: IMainMenuProps) => {
   const [enteringEditor, setEnteringEditor] = useState(false);
-  const [newLevelPackName, setNewLevelPackName] = useState("");
+  const [newLevelPackName, setNewLevelPackName] = useState('');
 
   const goToLevelPack = (index: number) => {
     props.setCurrentLevelPack(props.levelPacks[index]);
@@ -53,7 +49,6 @@ export const MainMenu = (props: IMainMenuProps) => {
   };
 
   const onNewLevelPackNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const target = e.target;
     setNewLevelPackName(e.target.value);
   }
 
@@ -77,9 +72,9 @@ export const MainMenu = (props: IMainMenuProps) => {
           <ModalHeader color={props.theme.potentialShapeLines}>Edit Level Pack</ModalHeader>
           <GameTextField theme={props.theme} type="text" onChange={onNewLevelPackNameChange}></GameTextField>
           <GameButton theme={props.theme} disabled={newLevelPackName.length === 0} onClick={createNewLevelPackAndGoToEditorLevelSelect}>New</GameButton>
-          <MainMenuDivider color={props.theme.potentialShapeLines}/>
+          <MenuDivider color={props.theme.potentialShapeLines}/>
           <GameFileInput theme={props.theme}>Load</GameFileInput>
-          <MainMenuDivider color={props.theme.potentialShapeLines}/>
+          <MenuDivider color={props.theme.potentialShapeLines}/>
           <GameButton theme={props.theme} onClick={cancelEditorStart}>Cancel</GameButton>
         </ModalBox>
       </Modal>
