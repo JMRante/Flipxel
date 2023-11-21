@@ -43,7 +43,12 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
 
   const clickOnLevel = (index: number) => {
     props.setCurrentLevel(props.levelPack.levels[index]);
-    props.setPage(AppPage.Game);
+
+    if (props.isEditorMode) {
+      props.setPage(AppPage.Editor);
+    } else {
+      props.setPage(AppPage.Game);
+    }
   };
 
   const goBackToMainMenu = () => {
