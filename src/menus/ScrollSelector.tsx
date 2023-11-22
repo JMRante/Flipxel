@@ -44,7 +44,7 @@ export const ScrollSelector = (props: IScrollSelectorProps) => {
       };
 
       return (
-      <ScrollSelectorButton theme={props.theme} onClick={clickEvent}>
+      <ScrollSelectorButton key={`ScrollSelectorItem${index}`} theme={props.theme} onClick={clickEvent}>
         {item}
       </ScrollSelectorButton>);
     });
