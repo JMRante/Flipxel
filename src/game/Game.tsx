@@ -7,10 +7,12 @@ import { GameButton } from "../menus/GameButton";
 import { Modal } from "../menus/Modal";
 import { ModalBox } from "../menus/ModalBox";
 import { ModalHeader } from "../menus/ModalHeader";
+import styled from "styled-components";
 
 export enum GameState {
   Playing,
-  Won
+  Won,
+  Editing
 };
 
 export interface IPieceInstruction {
@@ -26,6 +28,26 @@ export interface IGameProps {
   isEditorMode: boolean
 };
 
+const CreatePiecePartButton = styled.button<
+{ 
+  theme?: IGameTheme; 
+  selected?: boolean;
+}>`
+  background-color: #${props => props.selected ? props.theme.backgroundBase : props.theme.filledBox};
+  border: none;
+  width: 24px;
+  height: 24px;
+  padding: 2px;
+  margin: 5px;
+  cursor: pointer;
+
+  &: hover {
+    border-style: solid;
+    border-color: #${props => props.theme.potentialShapeLines};
+    border-width: 2px;
+    padding: 0px;
+  }
+`;
 
 export const Game = (props: IGameProps) => {
   let dimension = 5;
@@ -49,8 +71,10 @@ export const Game = (props: IGameProps) => {
   const [currentPieceIndex, setCurrentPieceIndex] = useState(0);
   const [playedPieces, setPlayedPieces] = useState<IPieceInstruction[]>([]);
   const [pieceFutureHistory, setPieceFutureHistory] = useState<IPieceInstruction[]>([]);
-  const [gameState, setGameState] = useState(GameState.Playing);
+  const [gameState, setGameState] = useState(props.isEditorMode ? GameState.Editing : GameState.Playing);
   const [nextPieceToPlay, setNextPieceToPlay] = useState<IPieceInstruction | undefined>(undefined);
+  const [addingPiece, setAddingPiece] = useState(false);
+  const [newPiece, setNewPiece] = useState(Array(25).fill(false));
 
   const undo = (e: React.MouseEvent<HTMLButtonElement>) => {
     const newPlayedPieces = playedPieces.slice();
@@ -84,6 +108,21 @@ export const Game = (props: IGameProps) => {
     props.setPage(AppPage.LevelSelectMenu);
   };
 
+  const openAddPieceModal = () => {
+    setAddingPiece(true);
+  };
+
+  const createPiecePart = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    const newPieceCopy = newPiece.slice();
+    newPieceCopy[parseInt(e.currentTarget.value)] = !newPieceCopy[parseInt(e.currentTarget.value)];
+
+    setNewPiece(newPieceCopy);
+  };
+
+  const closeAddPieceModal = () => {
+    setAddingPiece(false);
+  };
+
   useEffect(() => {
     const checkBoardMeetsGoal = () => {
       for (let i = 0; i < board.length; i++) {
@@ -115,9 +154,76 @@ export const Game = (props: IGameProps) => {
     );
   };
 
+  const renderCreatePiecePartRow = (rowIndex: number) => {
+    return [...Array(5)].map((e, i) => {
+      const partIndex = (rowIndex * 5) + i;
+
+      return (
+        <CreatePiecePartButton key={`CreatePiecePart${partIndex}`} theme={props.theme} selected={newPiece[partIndex]} onClick={createPiecePart} value={partIndex}/>
+      );
+    });
+  }
+
+  const renderCreatePiecePartRows = () => {
+    return [...Array(5)].map((e, i) => {
+      return (
+        <div key={`CreatePiecePartRow${i}`}>
+          {renderCreatePiecePartRow(i)}
+        </div>
+      );
+    });
+  }
+
+  const renderAddPieceModal = () => {
+    return (
+      <Modal>
+        <ModalBox color={props.theme.trueBackground}>
+          <ModalHeader color={props.theme.potentialShapeLines}>Add Piece</ModalHeader>
+          <div className="Game-add-piece-box">
+            {renderCreatePiecePartRows()}
+          </div>
+          <div className="Game-button-container">
+            <GameButton theme={props.theme}>Add</GameButton>
+            <GameButton theme={props.theme} onClick={closeAddPieceModal}>Cancel</GameButton>
+          </div>
+        </ModalBox>
+      </Modal>
+    );
+  };
+
+  const renderGameButtons = () => {
+    return (
+      <div className="Game-button-container">
+        <GameButton theme={props.theme} disabled={playedPieces.length === 0} onClick={undo}>Undo</GameButton>
+        <GameButton theme={props.theme} disabled={pieceFutureHistory.length === 0} onClick={redo}>Redo</GameButton>
+        <GameButton theme={props.theme}>Restart</GameButton>
+        <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu}>Back</GameButton>
+      </div>
+    );
+  };
+
+  const renderEditorButtons = () => {
+    return (
+      <div>
+        <div className="Game-button-container">
+          <GameButton theme={props.theme} onClick={openAddPieceModal}>Add Piece</GameButton>
+          <GameButton theme={props.theme}>Delete</GameButton>
+          <GameButton theme={props.theme}>Rename</GameButton>
+        </div>
+        <div className="Game-button-container">
+          <GameButton theme={props.theme} disabled={playedPieces.length === 0} onClick={undo}>Undo</GameButton>
+          <GameButton theme={props.theme} disabled={pieceFutureHistory.length === 0} onClick={redo}>Redo</GameButton>
+          <GameButton theme={props.theme}>Save</GameButton>
+          <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu}>Back</GameButton>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div>
-      {gameState === GameState.Won && renderWinModal()}
+      {gameState === GameState.Won && !props.isEditorMode && renderWinModal()}
+      {gameState === GameState.Editing && addingPiece &&  renderAddPieceModal()}
       <GameWindow 
         theme={props.theme}
         cellsWide={cellsWide} 
@@ -141,12 +247,8 @@ export const Game = (props: IGameProps) => {
         setCurrentPieceIndex={setCurrentPieceIndex} 
         playedPieces={playedPieces}
       />
-      <div className="Game-button-container">
-        <GameButton theme={props.theme} disabled={playedPieces.length === 0} onClick={undo}>Undo</GameButton>
-        <GameButton theme={props.theme} disabled={pieceFutureHistory.length === 0} onClick={redo}>Redo</GameButton>
-        <GameButton theme={props.theme}>Restart</GameButton>
-        <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu}>Back</GameButton>
-      </div>
+      {gameState !== GameState.Editing && renderGameButtons()}
+      {gameState === GameState.Editing && renderEditorButtons()}
     </div>
   );
 };

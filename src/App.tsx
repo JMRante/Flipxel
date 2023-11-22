@@ -91,7 +91,7 @@ const App = () => {
     case AppPage.Editor:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <Game theme={theme} setPage={setPage} isEditorMode={true}/>
+          <Game theme={theme} setPage={setPage} level={currentLevel} isEditorMode={true}/>
         </GameWrapper>
       );
     case AppPage.SettingsMenu:
