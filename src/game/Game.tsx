@@ -105,7 +105,11 @@ export const Game = (props: IGameProps) => {
   };
 
   const goBackToLevelSelectMenu = () => {
-    props.setPage(AppPage.LevelSelectMenu);
+    if (props.isEditorMode) {
+      props.setPage(AppPage.EditorLevelSelectMenu);
+    } else {
+      props.setPage(AppPage.LevelSelectMenu);
+    }
   };
 
   const openAddPieceModal = () => {
