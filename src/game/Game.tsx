@@ -28,6 +28,14 @@ export interface IGameProps {
   isEditorMode: boolean
 };
 
+const LevelTitle = styled.h1<{ color?: string; }>`
+  color: #${props => props.color};
+  font-weight: bold;
+  font-family: 'Courier New', monospace;
+  font-size: 40px;
+  margin-bottom: 20px;
+`;
+
 const CreatePiecePartButton = styled.button<
 { 
   theme?: IGameTheme; 
@@ -139,6 +147,14 @@ export const Game = (props: IGameProps) => {
     }
   };
 
+  const renameLevel = () => {
+
+  };
+
+  const deleteLevel = () => {
+
+  };
+
   useEffect(() => {
     if (gameState !== GameState.Editing) {
       const checkBoardMeetsGoal = () => {
@@ -241,6 +257,7 @@ export const Game = (props: IGameProps) => {
     <div>
       {gameState === GameState.Won && !props.isEditorMode && renderWinModal()}
       {gameState === GameState.Editing && addingPiece &&  renderAddPieceModal()}
+      <LevelTitle color={props.theme.potentialShapeLines}>{props.level.name}</LevelTitle>
       <GameWindow 
         theme={props.theme}
         cellsWide={cellsWide} 
