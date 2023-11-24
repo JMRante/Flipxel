@@ -37,9 +37,13 @@ const LevelSelectPackTitle = styled.h1<{ color?: string; }>`
   margin-bottom: 26px;
 `;
 
+export const MIN_DIMENSIONS = 5;
+export const MAX_DIMENSIONS = 30;
+
 export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
   const [addingNewLevel, setAddingNewLevel] = useState(false);
   const [newLevelName, setNewLevelName] = useState('');
+  const [newLevelDimensions, setNewLevelDimensions] = useState('5');
 
   const clickOnLevel = (index: number) => {
     props.setCurrentLevel(props.levelPack.levels[index]);
@@ -63,11 +67,26 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
     setNewLevelName(e.target.value);
   };
 
+  const onNewLevelDimensionsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewLevelDimensions(e.target.value);
+  };
+
+  const validateNewDimensions = (dimensions: string) => {
+    const parsedDimensions = parseInt(dimensions);
+    if (parsedDimensions && parsedDimensions >= MIN_DIMENSIONS && parsedDimensions <= MAX_DIMENSIONS) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+
   const createNewLevel = () => {
+    const parsedDimensions = parseInt(newLevelDimensions);
+
     const newLevel: ILevel = {
       name: newLevelName,
-      dimension: 5,
-      goal: Array(25).fill(0),
+      dimension: parsedDimensions,
+      goal: Array(parsedDimensions * parsedDimensions).fill(0),
       pieces: []
     };
 
@@ -90,7 +109,9 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
         <ModalBox color={props.theme.trueBackground}>
           <ModalHeader color={props.theme.potentialShapeLines}>Add New Level</ModalHeader>
           <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange}></GameTextField>
-          <GameButton theme={props.theme} disabled={newLevelName.length === 0} onClick={createNewLevel}>New</GameButton>
+          <GameButton theme={props.theme} disabled={newLevelName.length === 0 || !validateNewDimensions(newLevelDimensions)} onClick={createNewLevel}>New</GameButton>
+          <MenuDivider color={props.theme.potentialShapeLines}/>
+          <GameTextField theme={props.theme} type="text" value={newLevelDimensions} onChange={onNewLevelDimensionsChange}></GameTextField>
           <MenuDivider color={props.theme.potentialShapeLines}/>
           <GameButton theme={props.theme} onClick={cancelAddNewLevel}>Cancel</GameButton>
         </ModalBox>

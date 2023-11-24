@@ -10,6 +10,7 @@ import { ModalHeader } from "../menus/ModalHeader";
 import styled from "styled-components";
 import { GameTextField } from "../menus/GameTextField";
 import { MenuDivider } from "../menus/MenuDivider";
+import { MIN_DIMENSIONS } from "../menus/LevelSelectMenu";
 
 export enum GameState {
   Playing,
@@ -66,7 +67,7 @@ const CreatePiecePartButton = styled.button<
 `;
 
 export const Game = (props: IGameProps) => {
-  let dimension = 5;
+  let dimension = MIN_DIMENSIONS;
 
   dimension = props.level.dimension;
 
