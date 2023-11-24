@@ -1,8 +1,8 @@
 import { Stage } from "@pixi/react";
 import { GameBoard } from "./GameBoard";
-import { GameState, IPieceInstruction } from "./Game";
+import { EditorState, GameState, IPieceInstruction } from "./Game";
 import { Color } from "pixi.js";
-import { IGameTheme } from "../App";
+import { IGameTheme, ILevel } from "../App";
 
 export interface IGameWindowProps {
   theme: IGameTheme,
@@ -11,14 +11,18 @@ export interface IGameWindowProps {
   board: boolean[],
   setBoard: Function,
   boardGoal: boolean[],
+  setBoardGoal: Function,
   pieces: Array<boolean[]>,
   currentPieceIndex: number,
+  setCurrentPieceIndex: Function,
   playedPieces: IPieceInstruction[],
   setPlayedPieces: Function,
   setPieceFutureHistory: Function,
   nextPieceToPlay: IPieceInstruction | undefined,
   setNextPieceToPlay: Function,
-  gameState: GameState
+  gameState: GameState,
+  level: ILevel,
+  editorState: EditorState
 };
 
 export const GameWindow = (props: IGameWindowProps) => {
@@ -45,16 +49,20 @@ export const GameWindow = (props: IGameWindowProps) => {
           setBoard={props.setBoard} 
           windowWidth={width} 
           windowHeight={height} 
-          boardGoal={props.boardGoal} 
+          boardGoal={props.boardGoal}
+          setBoardGoal={props.setBoardGoal}
           theme={props.theme}
           pieces={props.pieces}
           currentPieceIndex={props.currentPieceIndex}
+          setCurrentPieceIndex={props.setCurrentPieceIndex}
           playedPieces={props.playedPieces}
           setPlayedPieces={props.setPlayedPieces}
           setPieceFutureHistory={props.setPieceFutureHistory}
           nextPieceToPlay={props.nextPieceToPlay}
           setNextPieceToPlay={props.setNextPieceToPlay}
           gameState={props.gameState}
+          level={props.level}
+          editorState={props.editorState}
         />
       </Stage>
     </div>

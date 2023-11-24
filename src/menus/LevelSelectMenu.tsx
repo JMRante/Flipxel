@@ -67,7 +67,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
     const newLevel: ILevel = {
       name: newLevelName,
       dimension: 5,
-      goal: [],
+      goal: Array(25).fill(0),
       pieces: []
     };
 

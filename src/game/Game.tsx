@@ -17,6 +17,11 @@ export enum GameState {
   Editing
 };
 
+export enum EditorState {
+  Edit,
+  Test
+};
+
 export interface IPieceInstruction {
   index: number,
   x: number,
@@ -87,7 +92,9 @@ export const Game = (props: IGameProps) => {
 
   const [deletingLevel, setDeletingLevel] = useState(false);
 
-  const undo = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const [editorState, setEdtiorState] = useState(EditorState.Edit);
+
+  const undo = () => {
     const newPlayedPieces = playedPieces.slice();
     const cutPiece = newPlayedPieces.pop();
     setPlayedPieces(newPlayedPieces);
@@ -101,7 +108,7 @@ export const Game = (props: IGameProps) => {
     }
   };
 
-  const redo = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const redo = () => {
     const newPieceFutureHistory = pieceFutureHistory.slice();
     const reusedPiece = newPieceFutureHistory.shift();
     setPieceFutureHistory(newPieceFutureHistory);
@@ -113,6 +120,14 @@ export const Game = (props: IGameProps) => {
       newPlayedPieces.push(reusedPiece);
       setPlayedPieces(newPlayedPieces);
     }
+  };
+
+  const restart = () => {
+    setBoard(Array(cellsWide * cellsHigh).fill(false));
+    setCurrentPieceIndex(0);
+    setPlayedPieces([]);
+    setPieceFutureHistory([]);
+    setNextPieceToPlay(undefined);
   };
 
   const goBackToLevelSelectMenu = () => {
@@ -150,6 +165,16 @@ export const Game = (props: IGameProps) => {
     if (props.level.pieces.length > 0) {
       props.level.pieces.splice(currentPieceIndex, 1);
       setPieces(props.level.pieces.map(x => x.layout.map(y => y === 0 ? false : true)));
+    }
+  };
+
+  const toggleEditorState = () => {
+    if (editorState === EditorState.Edit) {
+      restart();
+      setEdtiorState(EditorState.Test);
+    } else {
+      restart();
+      setEdtiorState(EditorState.Edit);
     }
   };
 
@@ -286,24 +311,37 @@ export const Game = (props: IGameProps) => {
       <div className="Game-button-container">
         <GameButton theme={props.theme} disabled={playedPieces.length === 0} onClick={undo}>Undo</GameButton>
         <GameButton theme={props.theme} disabled={pieceFutureHistory.length === 0} onClick={redo}>Redo</GameButton>
-        <GameButton theme={props.theme}>Restart</GameButton>
+        <GameButton theme={props.theme} onClick={restart}>Restart</GameButton>
         <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu}>Back</GameButton>
       </div>
     );
   };
 
-  const renderEditorButtons = () => {
+  const renderEditorButtonsEditMode = () => {
     return (
       <div>
         <div className="Game-button-container">
           <GameButton theme={props.theme} onClick={openAddPieceModal}>Add Piece</GameButton>
           <GameButton theme={props.theme} onClick={oustPiece}>Oust Piece</GameButton>
-          <GameButton theme={props.theme}>Goal Mode</GameButton>
+          <GameButton theme={props.theme} onClick={toggleEditorState}>Test</GameButton>
         </div>
         <div className="Game-button-container">
           <GameButton theme={props.theme} onClick={openRenameLevelModal}>Rename</GameButton>
           <GameButton theme={props.theme} onClick={openDeleteLevelModal}>Delete</GameButton>
           <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu}>Back</GameButton>
+        </div>
+      </div>
+    );
+  };
+
+  const renderEditorButtonsTestMode = () => {
+    return (
+      <div>
+        <div className="Game-button-container">
+          <GameButton theme={props.theme} disabled={playedPieces.length === 0} onClick={undo}>Undo</GameButton>
+          <GameButton theme={props.theme} disabled={pieceFutureHistory.length === 0} onClick={redo}>Redo</GameButton>
+          <GameButton theme={props.theme} onClick={restart}>Restart</GameButton>
+          <GameButton theme={props.theme} onClick={toggleEditorState}>Edit</GameButton>
         </div>
       </div>
     );
@@ -319,18 +357,22 @@ export const Game = (props: IGameProps) => {
       <GameWindow 
         theme={props.theme}
         cellsWide={cellsWide} 
-        cellsHigh={cellsHigh} 
+        cellsHigh={cellsHigh}
         board={board} 
         boardGoal={boardGoal} 
         setBoard={setBoard} 
+        setBoardGoal={setBoardGoal}
         pieces={pieces} 
         currentPieceIndex={currentPieceIndex}
+        setCurrentPieceIndex={setCurrentPieceIndex}
         playedPieces={playedPieces} 
         setPlayedPieces={setPlayedPieces}
         setPieceFutureHistory={setPieceFutureHistory}
         nextPieceToPlay={nextPieceToPlay}
         setNextPieceToPlay={setNextPieceToPlay}
         gameState={gameState}
+        level={props.level}
+        editorState={editorState}
       />
       <PieceSelector 
         theme={props.theme}
@@ -340,7 +382,7 @@ export const Game = (props: IGameProps) => {
         playedPieces={playedPieces}
       />
       {gameState !== GameState.Editing && renderGameButtons()}
-      {gameState === GameState.Editing && renderEditorButtons()}
+      {gameState === GameState.Editing && (editorState === EditorState.Edit ? renderEditorButtonsEditMode() : renderEditorButtonsTestMode())}
     </div>
   );
 };

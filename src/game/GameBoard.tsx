@@ -1,8 +1,8 @@
 import { Graphics as GraphicsComp, useTick } from '@pixi/react';
 import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js';
 import { useCallback, useRef, useState } from 'react';
-import { GameState, IPieceInstruction } from './Game';
-import { IGameTheme } from '../App';
+import { EditorState, Game, GameState, IPieceInstruction } from './Game';
+import { IGameTheme, ILevel } from '../App';
 
 export interface IGameBoardProps {
   cellsWide: number,
@@ -12,15 +12,19 @@ export interface IGameBoardProps {
   windowWidth: number,
   windowHeight: number,
   boardGoal: boolean[],
+  setBoardGoal: Function,
   theme: IGameTheme,
   pieces: Array<boolean[]>,
   currentPieceIndex: number,
+  setCurrentPieceIndex: Function,
   playedPieces: IPieceInstruction[],
   setPlayedPieces: Function
   setPieceFutureHistory: Function,
   nextPieceToPlay: IPieceInstruction | undefined,
   setNextPieceToPlay: Function,
-  gameState: GameState
+  gameState: GameState,
+  level: ILevel,
+  editorState: EditorState
 };
 
 interface ICoordinate {
@@ -65,13 +69,26 @@ export const GameBoard = (props: IGameBoardProps) =>
   };
 
   const mouseDown = (e: FederatedPointerEvent) => {
-    if (isMouseIn && !isMouseDown.current && flipTimer === 0 && currentPiece !== undefined) {
-      props.setNextPieceToPlay({
-        index: props.currentPieceIndex, 
-        x: cursorPosition.x, 
-        y: cursorPosition.y
-      });
-      props.setPieceFutureHistory([]);
+    if (isMouseIn && !isMouseDown.current) {
+      if (props.editorState === EditorState.Test || props.gameState !== GameState.Editing) {
+        if (flipTimer === 0 && currentPiece !== undefined) {
+          props.setNextPieceToPlay({
+            index: props.currentPieceIndex, 
+            x: cursorPosition.x, 
+            y: cursorPosition.y
+          });
+          props.setPieceFutureHistory([]);
+        }
+      } else {
+        const cursorToCellIndex = cursorPosition.x + (cursorPosition.y * props.cellsWide);
+
+        const modifiedBoardGoal = props.level.goal.slice();
+        modifiedBoardGoal[cursorToCellIndex] = modifiedBoardGoal[cursorToCellIndex] === 0 ? 1 : 0;
+
+        props.level.goal = modifiedBoardGoal;
+        props.setBoardGoal(modifiedBoardGoal.map(x => x === 0 ? false : true));
+      }
+
       isMouseDown.current = true;
     }
   };
@@ -121,13 +138,23 @@ export const GameBoard = (props: IGameBoardProps) =>
   
         setFlipCoordinates(newFlipCoordinates);
   
+        let newPlayedPieces = props.playedPieces.slice();
+
         if (isMouseDown.current) {
-          const newPlayedPieces = props.playedPieces.slice();
           newPlayedPieces.push(props.nextPieceToPlay);
           props.setPlayedPieces(newPlayedPieces);
         }
 
         props.setNextPieceToPlay(undefined);
+
+        props.setCurrentPieceIndex(undefined);
+
+        for (let i = 0; i < props.pieces.length; i++) {
+          if (newPlayedPieces.find(x => x.index === i) === undefined) {
+            props.setCurrentPieceIndex(i);
+            break;
+          }
+        }
       }
     }
   }
@@ -200,7 +227,7 @@ export const GameBoard = (props: IGameBoardProps) =>
       }
 
       // Draw cursor cells
-      if (isMouseIn && currentPiece !== undefined && props.gameState === GameState.Playing) {
+      if (isMouseIn && currentPiece !== undefined && (props.gameState === GameState.Playing || props.editorState === EditorState.Test)) {
         for (let cursorCellX = -2; cursorCellX <= 2; cursorCellX++) {
           for (let cursorCellY = -2; cursorCellY <= 2; cursorCellY++) {
             const pieceCursorCellX = cursorCellX + cursorPosition.x;
@@ -218,6 +245,12 @@ export const GameBoard = (props: IGameBoardProps) =>
             }
           }
         }
+      }
+      
+      // Draw cursor cell for adding goal in editor
+      if (isMouseIn && props.gameState === GameState.Editing && props.editorState === EditorState.Edit) {
+        g.lineStyle(4, props.theme.potentialShapeLines, 1);
+        g.drawRect((cursorPosition.x * cellWidth) + 3, (cursorPosition.y * cellHeight) + 3, cellWidth - 6, cellHeight - 6);
       }
     },
     [props, cursorPosition, isMouseIn, cellWidth, cellHeight, flipTimer, flipCoordinates, currentPiece],
