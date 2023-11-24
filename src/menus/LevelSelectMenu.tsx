@@ -103,6 +103,16 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
     setAddingNewLevel(false);
   };
 
+  const saveLevelPack = () => {
+      let data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(props.levelPack));
+      var virtualLink = document.createElement('a');
+      virtualLink.href = data;
+      virtualLink.download = props.levelPack.name + ".json";
+      document.body.appendChild(virtualLink);
+      virtualLink.click();
+      virtualLink.remove();
+  }
+
   const renderAddingNewLevelModal = () => {
     return (
       <Modal>
@@ -130,7 +140,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
         <ScrollSelector theme={props.theme} items={levelNames} itemClickHandler={clickOnLevel}/>
         <div className="LevelSelectMenu-button-container">
           {props.isEditorMode && <GameButton theme={props.theme} onClick={goToAddNewLevelModal}>Add</GameButton>}
-          {props.isEditorMode && <GameButton theme={props.theme}>Save</GameButton>}
+          {props.isEditorMode && <GameButton theme={props.theme} onClick={saveLevelPack}>Save</GameButton>}
           <GameButton theme={props.theme} onClick={goBackToMainMenu}>Back</GameButton>
         </div>
       </div>
