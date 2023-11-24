@@ -132,6 +132,13 @@ export const Game = (props: IGameProps) => {
     setNewPiece(Array(25).fill(0));
   };
 
+  const oustPiece = () => {
+    if (props.level && props.level.pieces.length > 0) {
+      props.level.pieces.splice(currentPieceIndex, 1);
+      setPieces(props.level.pieces.map(x => x.layout.map(y => y === 0 ? false : true)));
+    }
+  };
+
   useEffect(() => {
     if (gameState !== GameState.Editing) {
       const checkBoardMeetsGoal = () => {
@@ -218,7 +225,7 @@ export const Game = (props: IGameProps) => {
       <div>
         <div className="Game-button-container">
           <GameButton theme={props.theme} onClick={openAddPieceModal}>Add Piece</GameButton>
-          <GameButton theme={props.theme}>Oust Piece</GameButton>
+          <GameButton theme={props.theme} onClick={oustPiece}>Oust Piece</GameButton>
           <GameButton theme={props.theme}>Goal Mode</GameButton>
         </div>
         <div className="Game-button-container">
