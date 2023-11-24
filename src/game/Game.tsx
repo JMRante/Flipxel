@@ -8,6 +8,8 @@ import { Modal } from "../menus/Modal";
 import { ModalBox } from "../menus/ModalBox";
 import { ModalHeader } from "../menus/ModalHeader";
 import styled from "styled-components";
+import { GameTextField } from "../menus/GameTextField";
+import { MenuDivider } from "../menus/MenuDivider";
 
 export enum GameState {
   Playing,
@@ -25,7 +27,8 @@ export interface IGameProps {
   theme: IGameTheme,
   setPage: Function,
   level: ILevel,
-  isEditorMode: boolean
+  isEditorMode: boolean,
+  deleteCurrentLevel?: Function
 };
 
 const LevelTitle = styled.h1<{ color?: string; }>`
@@ -79,6 +82,11 @@ export const Game = (props: IGameProps) => {
   const [addingPiece, setAddingPiece] = useState(false);
   const [newPiece, setNewPiece] = useState(Array(25).fill(0));
 
+  const [changingLevelName, setChangingLevelName] = useState(false);
+  const [newLevelName, setNewLevelName] = useState('');
+
+  const [deletingLevel, setDeletingLevel] = useState(false);
+
   const undo = (e: React.MouseEvent<HTMLButtonElement>) => {
     const newPlayedPieces = playedPieces.slice();
     const cutPiece = newPlayedPieces.pop();
@@ -127,10 +135,8 @@ export const Game = (props: IGameProps) => {
   };
 
   const addPiece = () => {
-    if (props.level) {
-      props.level.pieces.push({layout: newPiece});
-      setPieces(props.level.pieces.map(x => x.layout.map(y => y === 0 ? false : true)));
-    }
+    props.level.pieces.push({layout: newPiece});
+    setPieces(props.level.pieces.map(x => x.layout.map(y => y === 0 ? false : true)));
 
     closeAddPieceModal();
   };
@@ -141,18 +147,42 @@ export const Game = (props: IGameProps) => {
   };
 
   const oustPiece = () => {
-    if (props.level && props.level.pieces.length > 0) {
+    if (props.level.pieces.length > 0) {
       props.level.pieces.splice(currentPieceIndex, 1);
       setPieces(props.level.pieces.map(x => x.layout.map(y => y === 0 ? false : true)));
     }
   };
 
-  const renameLevel = () => {
+  const openRenameLevelModal = () => {
+    setChangingLevelName(true);
+  };
 
+  const onNewLevelNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNewLevelName(e.target.value);
+  };
+
+  const renameLevel = () => {
+    props.level.name = newLevelName;
+    closeRenameLevelModal();
+  };
+
+  const closeRenameLevelModal = () => {
+    setNewLevelName('');
+    setChangingLevelName(false);
+  };
+
+  const openDeleteLevelModal = () => {
+    setDeletingLevel(true);
   };
 
   const deleteLevel = () => {
+    if (props.deleteCurrentLevel) {
+      props.deleteCurrentLevel();
+    }
+  };
 
+  const closeDeleteLevelModal = () => {
+    setDeletingLevel(false);
   };
 
   useEffect(() => {
@@ -225,6 +255,32 @@ export const Game = (props: IGameProps) => {
     );
   };
 
+  const renderRenameLevelModal = () => {
+    return (
+      <Modal>
+        <ModalBox color={props.theme.trueBackground}>
+          <ModalHeader color={props.theme.potentialShapeLines}>Rename Level</ModalHeader>
+          <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange}></GameTextField>
+          <GameButton theme={props.theme} disabled={newLevelName.length === 0} onClick={renameLevel}>Change</GameButton>
+          <MenuDivider color={props.theme.potentialShapeLines}/>
+          <GameButton theme={props.theme} onClick={closeRenameLevelModal}>Cancel</GameButton>
+        </ModalBox>
+      </Modal>
+    );
+  };
+
+  const renderDeleteLevelConfirmModal = () => {
+    return (
+      <Modal>
+      <ModalBox color={props.theme.trueBackground}>
+        <ModalHeader color={props.theme.potentialShapeLines}>Delete Level?</ModalHeader>
+        <GameButton theme={props.theme} onClick={deleteLevel}>Yes</GameButton>
+        <GameButton theme={props.theme} onClick={closeDeleteLevelModal}>No</GameButton>
+      </ModalBox>
+    </Modal>
+    );
+  };
+
   const renderGameButtons = () => {
     return (
       <div className="Game-button-container">
@@ -245,8 +301,8 @@ export const Game = (props: IGameProps) => {
           <GameButton theme={props.theme}>Goal Mode</GameButton>
         </div>
         <div className="Game-button-container">
-          <GameButton theme={props.theme}>Delete</GameButton>
-          <GameButton theme={props.theme}>Rename</GameButton>
+          <GameButton theme={props.theme} onClick={openRenameLevelModal}>Rename</GameButton>
+          <GameButton theme={props.theme} onClick={openDeleteLevelModal}>Delete</GameButton>
           <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu}>Back</GameButton>
         </div>
       </div>
@@ -257,6 +313,8 @@ export const Game = (props: IGameProps) => {
     <div>
       {gameState === GameState.Won && !props.isEditorMode && renderWinModal()}
       {gameState === GameState.Editing && addingPiece &&  renderAddPieceModal()}
+      {gameState === GameState.Editing && changingLevelName &&  renderRenameLevelModal()}
+      {gameState === GameState.Editing && deletingLevel && renderDeleteLevelConfirmModal()}
       <LevelTitle color={props.theme.potentialShapeLines}>{props.level.name}</LevelTitle>
       <GameWindow 
         theme={props.theme}

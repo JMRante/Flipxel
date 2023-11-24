@@ -62,6 +62,13 @@ const App = () => {
   const [currentLevelPack, setCurrentLevelPack] = useState<ILevelPack>(levelPacks[0]);
   const [currentLevel, setCurrentLevel] = useState<ILevel>(currentLevelPack.levels[0]);
 
+  const deleteCurrentLevel = () => {
+    setPage(AppPage.EditorLevelSelectMenu)
+
+    const currentLevelIndex = currentLevelPack.levels.indexOf(currentLevel);
+    currentLevelPack.levels.splice(currentLevelIndex, 1);
+  };
+
   switch (page) {
     default:
     case AppPage.MainMenu:
@@ -91,7 +98,7 @@ const App = () => {
     case AppPage.Editor:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <Game theme={theme} setPage={setPage} level={currentLevel} isEditorMode={true}/>
+          <Game theme={theme} setPage={setPage} level={currentLevel} isEditorMode={true} deleteCurrentLevel={deleteCurrentLevel}/>
         </GameWrapper>
       );
     case AppPage.SettingsMenu:
