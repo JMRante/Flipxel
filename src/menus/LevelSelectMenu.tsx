@@ -109,6 +109,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
         <ScrollSelector theme={props.theme} items={levelNames} itemClickHandler={clickOnLevel}/>
         <div className="LevelSelectMenu-button-container">
           {props.isEditorMode && <GameButton theme={props.theme} onClick={goToAddNewLevelModal}>Add</GameButton>}
+          {props.isEditorMode && <GameButton theme={props.theme}>Save</GameButton>}
           <GameButton theme={props.theme} onClick={goBackToMainMenu}>Back</GameButton>
         </div>
       </div>

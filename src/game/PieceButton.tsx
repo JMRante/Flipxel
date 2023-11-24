@@ -68,6 +68,8 @@ export const PieceButton = (props: IPieceButtonProps) => {
     });
   };
 
+  console.log(props.piece);
+
   return (
     <InnerPieceButton theme={props.theme} onClick={props.clickEvent} disabled={props.used}>
       {generateCells()}
