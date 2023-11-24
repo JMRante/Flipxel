@@ -74,7 +74,7 @@ const App = () => {
     case AppPage.MainMenu:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <MainMenu theme={theme} setPage={setPage} levelPacks={levelPacks} setCurrentLevelPack={setCurrentLevelPack}/>
+          <MainMenu theme={theme} setPage={setPage} levelPacks={levelPacks} setLevelPacks={setLevelPacks} setCurrentLevelPack={setCurrentLevelPack}/>
         </GameWrapper>
       );
     case AppPage.LevelSelectMenu:

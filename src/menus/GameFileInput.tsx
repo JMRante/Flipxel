@@ -30,13 +30,14 @@ const GameFileInputLabel = styled.label<{ theme?: IGameTheme; }>`
 
 export interface IGameFileInputProps {
   theme: IGameTheme,
-  children?: React.ReactNode
+  children?: React.ReactNode,
+  onChange: React.ChangeEventHandler<HTMLInputElement>
 };
 
 export const GameFileInput = (props: IGameFileInputProps) => {
   return (
     <GameFileInputLabel theme={props.theme}>
-      <input type="file" style={{ display: "none" }}></input>
+      <input type="file" style={{ display: "none" }} onChange={props.onChange}></input>
       {props.children}
     </GameFileInputLabel>
   );

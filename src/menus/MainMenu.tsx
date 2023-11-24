@@ -5,7 +5,7 @@ import { ScrollSelector } from "./ScrollSelector";
 import './MainMenu.css';
 import { Modal } from "./Modal";
 import { GameTextField } from "./GameTextField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ModalBox } from "./ModalBox";
 import { GameFileInput } from "./GameFileInput";
 import { ModalHeader } from "./ModalHeader";
@@ -15,6 +15,7 @@ export interface IMainMenuProps {
   theme: IGameTheme,
   setPage: Function,
   levelPacks: ILevelPack[],
+  setLevelPacks: Function,
   setCurrentLevelPack: Function
 };
 
@@ -63,6 +64,56 @@ export const MainMenu = (props: IMainMenuProps) => {
     props.setPage(AppPage.EditorLevelSelectMenu);
   };
 
+  const onLoadLevelPack = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const fileReader = new FileReader();
+
+      fileReader.readAsText(e.target.files[0], "UTF-8");
+      fileReader.onload = (e) => {
+        if (e.target) {
+          const fileText = e.target.result;
+
+          if (typeof fileText === 'string') {
+            const loadedLevelPack: ILevelPack = JSON.parse(fileText);
+
+            const newLevelPacks = props.levelPacks.slice();
+            newLevelPacks.push(loadedLevelPack);
+
+            props.setLevelPacks(newLevelPacks);
+          } else {
+            console.error('Failed to load level pack');
+          }
+        } else {
+          console.error('Failed to load level pack');
+        }
+      };
+    }
+  };
+
+  const onLoadLevelPackForEditor = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const fileReader = new FileReader();
+
+      fileReader.readAsText(e.target.files[0], "UTF-8");
+      fileReader.onload = (e) => {
+        if (e.target) {
+          const fileText = e.target.result;
+
+          if (typeof fileText === 'string') {
+            const loadedLevelPack: ILevelPack = JSON.parse(fileText);
+
+            props.setCurrentLevelPack(loadedLevelPack);
+            props.setPage(AppPage.EditorLevelSelectMenu);
+          } else {
+            console.error('Failed to load level pack');
+          }
+        } else {
+          console.error('Failed to load level pack');
+        }
+      };
+    }
+  };
+
   const levelPackNames = props.levelPacks.map(x => x.name);
 
   const renderEditorStartModal = () => {
@@ -73,7 +124,7 @@ export const MainMenu = (props: IMainMenuProps) => {
           <GameTextField theme={props.theme} type="text" onChange={onNewLevelPackNameChange}></GameTextField>
           <GameButton theme={props.theme} disabled={newLevelPackName.length === 0} onClick={createNewLevelPackAndGoToEditorLevelSelect}>New</GameButton>
           <MenuDivider color={props.theme.potentialShapeLines}/>
-          <GameFileInput theme={props.theme}>Load</GameFileInput>
+          <GameFileInput theme={props.theme} onChange={onLoadLevelPackForEditor}>Load</GameFileInput>
           <MenuDivider color={props.theme.potentialShapeLines}/>
           <GameButton theme={props.theme} onClick={cancelEditorStart}>Cancel</GameButton>
         </ModalBox>
@@ -88,7 +139,7 @@ export const MainMenu = (props: IMainMenuProps) => {
         <MainMenuTitle color={props.theme.potentialShapeLines}>Flipxel</MainMenuTitle>
         <ScrollSelector theme={props.theme} items={levelPackNames} itemClickHandler={goToLevelPack}/>
         <div className="MainMenu-button-container">
-          <GameButton theme={props.theme}>Load Pack</GameButton>
+          <GameFileInput theme={props.theme} onChange={onLoadLevelPack}>Load Pack</GameFileInput>
           <GameButton theme={props.theme} onClick={goToSettings}>Settings</GameButton>
           <GameButton theme={props.theme} onClick={goToEditorStart}>Editor</GameButton>
         </div>
