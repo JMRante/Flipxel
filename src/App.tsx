@@ -62,6 +62,8 @@ const App = () => {
   const [currentLevelPack, setCurrentLevelPack] = useState<ILevelPack>(levelPacks[0]);
   const [currentLevel, setCurrentLevel] = useState<ILevel>(currentLevelPack.levels[0]);
 
+  const [isEditorDirty, setIsEditorDirty] = useState(true);
+
   const deleteCurrentLevel = () => {
     setPage(AppPage.EditorLevelSelectMenu)
 
@@ -74,37 +76,79 @@ const App = () => {
     case AppPage.MainMenu:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <MainMenu theme={theme} setPage={setPage} levelPacks={levelPacks} setLevelPacks={setLevelPacks} setCurrentLevelPack={setCurrentLevelPack}/>
+          <MainMenu 
+            theme={theme} 
+            setPage={setPage} 
+            levelPacks={levelPacks} 
+            setLevelPacks={setLevelPacks} 
+            setCurrentLevelPack={setCurrentLevelPack}
+          />
         </GameWrapper>
       );
     case AppPage.LevelSelectMenu:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <LevelSelectMenu theme={theme} setPage={setPage} levelPack={currentLevelPack} setCurrentLevelPack={setCurrentLevelPack} setCurrentLevel={setCurrentLevel} isEditorMode={false}/>
+          <LevelSelectMenu 
+            theme={theme} 
+            setPage={setPage} 
+            levelPack={currentLevelPack} 
+            setCurrentLevelPack={setCurrentLevelPack} 
+            setCurrentLevel={setCurrentLevel} 
+            isEditorMode={false} 
+            isEditorDirty={isEditorDirty} 
+            setIsEditorDirty={setIsEditorDirty}
+          />
         </GameWrapper>
       );
     case AppPage.Game:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <Game theme={theme} setPage={setPage} level={currentLevel} isEditorMode={false}/>
+          <Game 
+            theme={theme} 
+            setPage={setPage} 
+            level={currentLevel} 
+            isEditorMode={false}
+            deleteCurrentLevel={deleteCurrentLevel}
+            setIsEditorDirty={setIsEditorDirty}
+          />
         </GameWrapper>
       );
     case AppPage.EditorLevelSelectMenu:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <LevelSelectMenu theme={theme} setPage={setPage} levelPack={currentLevelPack} setCurrentLevelPack={setCurrentLevelPack} setCurrentLevel={setCurrentLevel} isEditorMode={true}/>
+          <LevelSelectMenu 
+            theme={theme} 
+            setPage={setPage} 
+            levelPack={currentLevelPack} 
+            setCurrentLevelPack={setCurrentLevelPack} 
+            setCurrentLevel={setCurrentLevel} 
+            isEditorMode={true} 
+            isEditorDirty={isEditorDirty} 
+            setIsEditorDirty={setIsEditorDirty}
+          />
         </GameWrapper>
       );
     case AppPage.Editor:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <Game theme={theme} setPage={setPage} level={currentLevel} isEditorMode={true} deleteCurrentLevel={deleteCurrentLevel}/>
+          <Game 
+            theme={theme} 
+            setPage={setPage} 
+            level={currentLevel} 
+            isEditorMode={true} 
+            deleteCurrentLevel={deleteCurrentLevel}
+            setIsEditorDirty={setIsEditorDirty}
+          />
         </GameWrapper>
       );
     case AppPage.SettingsMenu:
       return (
         <GameWrapper color={theme.trueBackground}>
-          <SettingsMenu theme={theme} setPage={setPage} setTheme={setTheme}/>
+          <SettingsMenu 
+            theme={theme} 
+            setPage={setPage} 
+            setTheme={setTheme}
+          />
         </GameWrapper>
       );
   }

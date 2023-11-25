@@ -34,7 +34,8 @@ export interface IGameProps {
   setPage: Function,
   level: ILevel,
   isEditorMode: boolean,
-  deleteCurrentLevel?: Function
+  deleteCurrentLevel: Function,
+  setIsEditorDirty: Function
 };
 
 const LevelTitle = styled.h1<{ color?: string; }>`
@@ -154,6 +155,7 @@ export const Game = (props: IGameProps) => {
     props.level.pieces.push({layout: newPiece});
     setPieces(props.level.pieces.map(x => x.layout.map(y => y === 0 ? false : true)));
 
+    props.setIsEditorDirty(true);
     closeAddPieceModal();
   };
 
@@ -166,6 +168,7 @@ export const Game = (props: IGameProps) => {
     if (props.level.pieces.length > 0) {
       props.level.pieces.splice(currentPieceIndex, 1);
       setPieces(props.level.pieces.map(x => x.layout.map(y => y === 0 ? false : true)));
+      props.setIsEditorDirty(true);
     }
   };
 
@@ -189,6 +192,7 @@ export const Game = (props: IGameProps) => {
 
   const renameLevel = () => {
     props.level.name = newLevelName;
+    props.setIsEditorDirty(true);
     closeRenameLevelModal();
   };
 
@@ -202,9 +206,8 @@ export const Game = (props: IGameProps) => {
   };
 
   const deleteLevel = () => {
-    if (props.deleteCurrentLevel) {
-      props.deleteCurrentLevel();
-    }
+    props.setIsEditorDirty(true);
+    props.deleteCurrentLevel();
   };
 
   const closeDeleteLevelModal = () => {
@@ -374,6 +377,7 @@ export const Game = (props: IGameProps) => {
         gameState={gameState}
         level={props.level}
         editorState={editorState}
+        setIsEditorDirty={props.setIsEditorDirty}
       />
       <PieceSelector 
         theme={props.theme}

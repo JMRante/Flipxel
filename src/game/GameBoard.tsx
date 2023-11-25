@@ -24,7 +24,8 @@ export interface IGameBoardProps {
   setNextPieceToPlay: Function,
   gameState: GameState,
   level: ILevel,
-  editorState: EditorState
+  editorState: EditorState,
+  setIsEditorDirty: Function
 };
 
 interface ICoordinate {
@@ -87,6 +88,7 @@ export const GameBoard = (props: IGameBoardProps) =>
 
         props.level.goal = modifiedBoardGoal;
         props.setBoardGoal(modifiedBoardGoal.map(x => x === 0 ? false : true));
+        props.setIsEditorDirty(true);
       }
 
       isMouseDown.current = true;

@@ -16,7 +16,9 @@ export interface ILevelSelectMenuProps {
   levelPack: ILevelPack,
   setCurrentLevelPack: Function,
   setCurrentLevel: Function,
-  isEditorMode: boolean
+  isEditorMode: boolean,
+  isEditorDirty: boolean,
+  setIsEditorDirty: Function
 };
 
 const LevelSelectTitle = styled.h1<{ color?: string; }>`
@@ -44,6 +46,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
   const [addingNewLevel, setAddingNewLevel] = useState(false);
   const [newLevelName, setNewLevelName] = useState('');
   const [newLevelDimensions, setNewLevelDimensions] = useState('5');
+  const [confirmingNoSave, setConfirmingNoSave] = useState(false);
 
   const clickOnLevel = (index: number) => {
     props.setCurrentLevel(props.levelPack.levels[index]);
@@ -96,6 +99,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
 
     setNewLevelName('');
     setAddingNewLevel(false);
+    props.setIsEditorDirty(true);
   };
 
   const cancelAddNewLevel = () => {
@@ -111,7 +115,16 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
       document.body.appendChild(virtualLink);
       virtualLink.click();
       virtualLink.remove();
+      props.setIsEditorDirty(false);
   }
+
+  const openNoSaveConfirmModal = () => {
+    setConfirmingNoSave(true);
+  };
+
+  const closeNoSaveConfirmModal = () => {
+    setConfirmingNoSave(false);
+  };
 
   const renderAddingNewLevelModal = () => {
     return (
@@ -129,11 +142,24 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
     )
   }
 
+  const renderNoSaveConfirmModal = () => {
+    return (
+      <Modal>
+      <ModalBox color={props.theme.trueBackground}>
+        <ModalHeader color={props.theme.potentialShapeLines}>Leave Without Saving?</ModalHeader>
+        <GameButton theme={props.theme} onClick={goBackToMainMenu}>Yes</GameButton>
+        <GameButton theme={props.theme} onClick={closeNoSaveConfirmModal}>No</GameButton>
+      </ModalBox>
+    </Modal>
+    );
+  };
+
   const levelNames = props.levelPack.levels.map(x => x.name);
 
   return (
     <div>
       {addingNewLevel && renderAddingNewLevelModal()}
+      {confirmingNoSave && renderNoSaveConfirmModal()}
       <div className="LevelSelectMenu">
         <LevelSelectTitle color={props.theme.potentialShapeLines}>Level Select</LevelSelectTitle>
         <LevelSelectPackTitle color={props.theme.potentialShapeLines}>{props.levelPack.name}</LevelSelectPackTitle>
@@ -141,7 +167,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
         <div className="LevelSelectMenu-button-container">
           {props.isEditorMode && <GameButton theme={props.theme} onClick={goToAddNewLevelModal}>Add</GameButton>}
           {props.isEditorMode && <GameButton theme={props.theme} onClick={saveLevelPack}>Save</GameButton>}
-          <GameButton theme={props.theme} onClick={goBackToMainMenu}>Back</GameButton>
+          <GameButton theme={props.theme} onClick={props.isEditorDirty ? openNoSaveConfirmModal : goBackToMainMenu}>Back</GameButton>
         </div>
       </div>
     </div>

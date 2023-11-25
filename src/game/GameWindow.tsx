@@ -22,7 +22,8 @@ export interface IGameWindowProps {
   setNextPieceToPlay: Function,
   gameState: GameState,
   level: ILevel,
-  editorState: EditorState
+  editorState: EditorState,
+  setIsEditorDirty: Function
 };
 
 export const GameWindow = (props: IGameWindowProps) => {
@@ -63,6 +64,7 @@ export const GameWindow = (props: IGameWindowProps) => {
           gameState={props.gameState}
           level={props.level}
           editorState={props.editorState}
+          setIsEditorDirty={props.setIsEditorDirty}
         />
       </Stage>
     </div>
