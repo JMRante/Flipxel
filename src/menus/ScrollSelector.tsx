@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import { IGameTheme } from "../App";
+import './ScrollSelector.css';
 
 export interface IScrollSelectorProps {
   theme: IGameTheme,
   items: string[],
+  itemsStatus?: boolean[],
   itemClickHandler: (index: number) => void
 };
 
@@ -21,7 +23,6 @@ const ScrollSelectorButton = styled.button<{ theme?: IGameTheme; }>`
   background-color: #${props => props.theme.filledBox};
   color: #${props => props.theme.potentialShapeLines};
   border: none;
-  padding-left: 25px;
   height: 50px;
   min-height: 50px;
   margin: 0px;
@@ -29,6 +30,9 @@ const ScrollSelectorButton = styled.button<{ theme?: IGameTheme; }>`
   font-size: 24px;
   font-weight: bold;
   font-family: 'Courier New', monospace;
+  display: flex;  
+  align-items: center;
+  justify-content: center;
 
   &: hover {
     background-color: #${props => props.theme.potentialShapeLines};
@@ -45,7 +49,8 @@ export const ScrollSelector = (props: IScrollSelectorProps) => {
 
       return (
       <ScrollSelectorButton key={`ScrollSelectorItem${index}`} theme={props.theme} onClick={clickEvent}>
-        {item}
+        {props.itemsStatus && <span className="ScrollSelector-item-status">{props.itemsStatus[index] ? '●' : '○'}</span>}
+        <span className="ScrollSelector-item-text">{item}</span>
       </ScrollSelectorButton>);
     });
   };
