@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { GameWindow } from "./GameWindow";
 import { PieceSelector } from "./PieceSelector";
 import './Game.css';
-import { AppPage, IGameTheme, ILevel } from "../App";
+import { AppPage, IGameTheme, ILevel, ILevelPack, ILevelPackSaveData } from "../App";
 import { GameButton } from "../menus/GameButton";
 import { Modal } from "../menus/Modal";
 import { ModalBox } from "../menus/ModalBox";
@@ -32,6 +32,7 @@ export interface IPieceInstruction {
 export interface IGameProps {
   theme: IGameTheme,
   setPage: Function,
+  levelPack: ILevelPack,
   level: ILevel,
   isEditorMode: boolean,
   deleteCurrentLevel: Function,
@@ -130,6 +131,26 @@ export const Game = (props: IGameProps) => {
     setPlayedPieces([]);
     setPieceFutureHistory([]);
     setNextPieceToPlay(undefined);
+  };
+
+  const completeLevel = () => {
+    const loadedSaveData = localStorage.getItem(`${props.levelPack.name}-save-data`);
+    let saveData: ILevelPackSaveData;
+
+    if (loadedSaveData) {
+      saveData = JSON.parse(atob(loadedSaveData));
+    } else {
+      saveData = {
+        completion: Array(props.levelPack.levels.length).fill(0)
+      };
+    }
+
+    const levelIndex = props.levelPack.levels.findIndex(x => x.name === props.level.name);
+    saveData.completion[levelIndex] = 1;
+    console.log(saveData);
+    localStorage.setItem(`${props.levelPack.name}-save-data`, btoa(JSON.stringify(saveData)));
+
+    goBackToLevelSelectMenu();
   };
 
   const goBackToLevelSelectMenu = () => {
@@ -241,7 +262,7 @@ export const Game = (props: IGameProps) => {
       <Modal>
         <ModalBox color={props.theme.trueBackground}>
           <ModalHeader color={props.theme.potentialShapeLines}>Complete!</ModalHeader>
-          <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu}>Back to Level Select</GameButton>
+          <GameButton theme={props.theme} onClick={completeLevel}>Back to Level Select</GameButton>
         </ModalBox>
       </Modal>
     );

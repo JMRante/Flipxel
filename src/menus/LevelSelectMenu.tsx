@@ -1,9 +1,9 @@
 import styled from "styled-components";
-import { AppPage, IGameTheme, ILevel, ILevelPack } from "../App";
+import { AppPage, IGameTheme, ILevel, ILevelPack, ILevelPackSaveData } from "../App";
 import { GameButton } from "./GameButton";
 import { ScrollSelector } from "./ScrollSelector";
 import './LevelSelectMenu.css';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Modal } from "./Modal";
 import { ModalBox } from "./ModalBox";
 import { ModalHeader } from "./ModalHeader";
@@ -47,6 +47,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
   const [newLevelName, setNewLevelName] = useState('');
   const [newLevelDimensions, setNewLevelDimensions] = useState('5');
   const [confirmingNoSave, setConfirmingNoSave] = useState(false);
+  const [levelPackSaveData, setLevelPackSaveData] = useState<boolean[]>([])
 
   const clickOnLevel = (index: number) => {
     props.setCurrentLevel(props.levelPack.levels[index]);
@@ -126,6 +127,23 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
     setConfirmingNoSave(false);
   };
 
+  useEffect(() => {
+    if (!props.isEditorMode) {
+      const saveData = localStorage.getItem(`${props.levelPack.name}-save-data`);
+
+      if (saveData) {
+        const parsedSaveData: ILevelPackSaveData = JSON.parse(atob(saveData));
+        setLevelPackSaveData(parsedSaveData.completion.map(x => x === 1 ? true : false));
+      } else {
+        const newSaveData: ILevelPackSaveData = {
+          completion: Array(props.levelPack.levels.length).fill(0)
+        };
+        setLevelPackSaveData(newSaveData.completion.map(x => x === 1 ? true : false));
+        localStorage.setItem(`${props.levelPack.name}-save-data`, btoa(JSON.stringify(newSaveData)));
+      }
+    }
+  }, [])
+  
   const renderAddingNewLevelModal = () => {
     return (
       <Modal>
@@ -145,12 +163,12 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
   const renderNoSaveConfirmModal = () => {
     return (
       <Modal>
-      <ModalBox color={props.theme.trueBackground}>
-        <ModalHeader color={props.theme.potentialShapeLines}>Leave Without Saving?</ModalHeader>
-        <GameButton theme={props.theme} onClick={goBackToMainMenu}>Yes</GameButton>
-        <GameButton theme={props.theme} onClick={closeNoSaveConfirmModal}>No</GameButton>
-      </ModalBox>
-    </Modal>
+        <ModalBox color={props.theme.trueBackground}>
+          <ModalHeader color={props.theme.potentialShapeLines}>Leave Without Saving?</ModalHeader>
+          <GameButton theme={props.theme} onClick={goBackToMainMenu}>Yes</GameButton>
+          <GameButton theme={props.theme} onClick={closeNoSaveConfirmModal}>No</GameButton>
+        </ModalBox>
+      </Modal>
     );
   };
 
@@ -163,11 +181,11 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
       <div className="LevelSelectMenu">
         <LevelSelectTitle color={props.theme.potentialShapeLines}>Level Select</LevelSelectTitle>
         <LevelSelectPackTitle color={props.theme.potentialShapeLines}>{props.levelPack.name}</LevelSelectPackTitle>
-        <ScrollSelector theme={props.theme} items={levelNames} itemClickHandler={clickOnLevel}/>
+        <ScrollSelector theme={props.theme} items={levelNames} itemsStatus={levelPackSaveData.length > 0 ? levelPackSaveData : undefined} itemClickHandler={clickOnLevel}/>
         <div className="LevelSelectMenu-button-container">
           {props.isEditorMode && <GameButton theme={props.theme} onClick={goToAddNewLevelModal}>Add</GameButton>}
           {props.isEditorMode && <GameButton theme={props.theme} onClick={saveLevelPack}>Save</GameButton>}
-          <GameButton theme={props.theme} onClick={props.isEditorDirty ? openNoSaveConfirmModal : goBackToMainMenu}>Back</GameButton>
+          <GameButton theme={props.theme} onClick={props.isEditorMode && props.isEditorDirty ? openNoSaveConfirmModal : goBackToMainMenu}>Back</GameButton>
         </div>
       </div>
     </div>

@@ -6,6 +6,7 @@ import { MainMenu } from './menus/MainMenu';
 import { LevelSelectMenu } from './menus/LevelSelectMenu';
 import themes from './data/themes.json';
 import EasyLevelPack5x5 from './data/5x5EasyLevelPack.json';
+import AlphabetLP from './data/lp_alphabet.json';
 
 export interface IGameTheme {
   name: string,
@@ -33,6 +34,10 @@ export interface ILevelPiece {
   layout: number[]
 };
 
+export interface ILevelPackSaveData {
+  completion: number[]
+};
+
 const GameWrapper = styled.div<{ color?: string; }>`
   text-align: center;
   background-color: #${props => props.color};
@@ -57,7 +62,7 @@ const App = () => {
 
   const [theme, setTheme] = useState<IGameTheme>(themes.themes[0]);
 
-  const [levelPacks, setLevelPacks] = useState<Array<ILevelPack>>([EasyLevelPack5x5]);
+  const [levelPacks, setLevelPacks] = useState<Array<ILevelPack>>([EasyLevelPack5x5, AlphabetLP]);
 
   const [currentLevelPack, setCurrentLevelPack] = useState<ILevelPack>(levelPacks[0]);
   const [currentLevel, setCurrentLevel] = useState<ILevel>(currentLevelPack.levels[0]);
@@ -106,6 +111,7 @@ const App = () => {
           <Game 
             theme={theme} 
             setPage={setPage} 
+            levelPack={currentLevelPack} 
             level={currentLevel} 
             isEditorMode={false}
             deleteCurrentLevel={deleteCurrentLevel}
@@ -134,6 +140,7 @@ const App = () => {
           <Game 
             theme={theme} 
             setPage={setPage} 
+            levelPack={currentLevelPack} 
             level={currentLevel} 
             isEditorMode={true} 
             deleteCurrentLevel={deleteCurrentLevel}
@@ -148,6 +155,7 @@ const App = () => {
             theme={theme} 
             setPage={setPage} 
             setTheme={setTheme}
+            levelPacks={levelPacks}
           />
         </GameWrapper>
       );
