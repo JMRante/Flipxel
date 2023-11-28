@@ -11,21 +11,120 @@
     },
     {
       "name": "Rusty Red",
-      "trueBackground": "531a1a",
-      "backgroundBase": "c45d5d",
-      "backgroundLines": "a03d3d",
-      "targetBoxLines": "651919",
-      "filledBox": "902b2b",
-      "potentialShapeLines": "e3c5c5"
+      "trueBackground": "220f09",
+      "backgroundBase": "9a5e4b",
+      "backgroundLines": "854a37",
+      "targetBoxLines": "3a1b11",
+      "filledBox": "54281a",
+      "potentialShapeLines": "f7d8ce"
     },
     {
       "name": "Grotto Green",
-      "trueBackground": "072812",
-      "backgroundBase": "67cd8b",
-      "backgroundLines": "52b374",
-      "targetBoxLines": "0e4421",
-      "filledBox": "1a6c37",
-      "potentialShapeLines": "c0e2cc"
+      "trueBackground": "17221d",
+      "backgroundBase": "92b5a4",
+      "backgroundLines": "729483",
+      "targetBoxLines": "2b3f36",
+      "filledBox": "3d5549",
+      "potentialShapeLines": "d5efe2"
+    },
+    {
+      "name": "Relaxing Violet",
+      "trueBackground": "1a1520",
+      "backgroundBase": "9487a5",
+      "backgroundLines": "716381",
+      "targetBoxLines": "2e2738",
+      "filledBox": "433950",
+      "potentialShapeLines": "e1d6ef"
+    },
+    {
+      "name": "Stormy Aqua",
+      "trueBackground": "162122",
+      "backgroundBase": "92a8ab",
+      "backgroundLines": "698185",
+      "targetBoxLines": "263538",
+      "filledBox": "3e5154",
+      "potentialShapeLines": "e0f1f4"
+    },
+    {
+      "name": "Nostalgic Tint",
+      "trueBackground": "1a1c11",
+      "backgroundBase": "989c83",
+      "backgroundLines": "777b63",
+      "targetBoxLines": "393c2a",
+      "filledBox": "4e513c",
+      "potentialShapeLines": "f3f6e1"
+    },
+    {
+      "name": "Monochrome Gradient",
+      "trueBackground": "161616",
+      "backgroundBase": "b7b7b7",
+      "backgroundLines": "929292",
+      "targetBoxLines": "383838",
+      "filledBox": "565656",
+      "potentialShapeLines": "fafafa"
+    },
+    {
+      "name": "Flowery Pink",
+      "trueBackground": "1c131b",
+      "backgroundBase": "a489a2",
+      "backgroundLines": "7f657d",
+      "targetBoxLines": "392a38",
+      "filledBox": "584656",
+      "potentialShapeLines": "f6e4f5"
+    },
+    {
+      "name": "Musty Mustard",
+      "trueBackground": "2e2611",
+      "backgroundBase": "b09e69",
+      "backgroundLines": "9a8856",
+      "targetBoxLines": "4a3f1f",
+      "filledBox": "695c34",
+      "potentialShapeLines": "f6e5b4"
+    },
+    {
+      "name": "Deep Emerald",
+      "trueBackground": "0e180c",
+      "backgroundBase": "89a584",
+      "backgroundLines": "698664",
+      "targetBoxLines": "23381f",
+      "filledBox": "314c2c",
+      "potentialShapeLines": "e9f9e6"
+    },
+    {
+      "name": "Lush Indigo",
+      "trueBackground": "0f1225",
+      "backgroundBase": "8288b3",
+      "backgroundLines": "585d86",
+      "targetBoxLines": "1f233f",
+      "filledBox": "363b5f",
+      "potentialShapeLines": "d4d8f5"
+    },
+    {
+      "name": "Soft Rose",
+      "trueBackground": "221014",
+      "backgroundBase": "aa7480",
+      "backgroundLines": "80525b",
+      "targetBoxLines": "42242a",
+      "filledBox": "59343c",
+      "potentialShapeLines": "f7e3e8"
+    },
+    {
+      "name": "Mystical Palette",
+      "trueBackground": "000000",
+      "backgroundBase": "02220b",
+      "backgroundLines": "03ff5e",
+      "targetBoxLines": "ffd500",
+      "filledBox": "0089ff",
+      "potentialShapeLines": "ffffff"
+    },
+    {
+      "name": "Blinding Misery",
+      "trueBackground": "00ffec",
+      "backgroundBase": "ffffff",
+      "backgroundLines": "000000",
+      "targetBoxLines": "ffdd00",
+      "filledBox": "fb00ff",
+      "potentialShapeLines": "898989"
     }
   ]
 }
