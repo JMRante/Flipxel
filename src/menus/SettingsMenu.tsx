@@ -48,6 +48,7 @@ export const SettingsMenu = (props: ISettingsMenuProps) => {
 
   const clickOnTheme = (index: number) => {
     props.setTheme(themeList[index]);
+    localStorage.setItem('theme', index.toString());
   };
 
   const openClearSaveDataConfirmation = () => {

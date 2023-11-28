@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Game } from './game/Game';
 import styled from 'styled-components';
 import { SettingsMenu } from './menus/SettingsMenu';
@@ -75,6 +75,15 @@ const App = () => {
     const currentLevelIndex = currentLevelPack.levels.indexOf(currentLevel);
     currentLevelPack.levels.splice(currentLevelIndex, 1);
   };
+
+  useEffect(() => {
+    const savedThemeIndex = localStorage.getItem('theme');
+
+    if (savedThemeIndex) {
+      const parsedThemeIndex = parseInt(savedThemeIndex);
+      setTheme(themes.themes[parsedThemeIndex]);
+    }
+  }, []);
 
   switch (page) {
     default:
