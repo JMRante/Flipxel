@@ -40,7 +40,7 @@ const LevelSelectPackTitle = styled.h1<{ color?: string; }>`
 `;
 
 export const MIN_DIMENSIONS = 5;
-export const MAX_DIMENSIONS = 30;
+export const MAX_DIMENSIONS = 20;
 
 export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
   const [addingNewLevel, setAddingNewLevel] = useState(false);
@@ -180,7 +180,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
       {confirmingNoSave && renderNoSaveConfirmModal()}
       <div className="LevelSelectMenu">
         <LevelSelectTitle color={props.theme.potentialShapeLines}>Level Select</LevelSelectTitle>
-        <LevelSelectPackTitle color={props.theme.potentialShapeLines}>{props.levelPack.name}</LevelSelectPackTitle>
+        <LevelSelectPackTitle color={props.theme.potentialShapeLines} data-testid="LevelSelectPackTitle">{props.levelPack.name}</LevelSelectPackTitle>
         <ScrollSelector theme={props.theme} items={levelNames} itemsStatus={levelPackSaveData.length > 0 ? levelPackSaveData : undefined} itemClickHandler={clickOnLevel}/>
         <div className="LevelSelectMenu-button-container">
           {props.isEditorMode && <GameButton theme={props.theme} onClick={goToAddNewLevelModal}>Add</GameButton>}

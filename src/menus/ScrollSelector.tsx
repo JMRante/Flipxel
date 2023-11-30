@@ -48,15 +48,15 @@ export const ScrollSelector = (props: IScrollSelectorProps) => {
       };
 
       return (
-      <ScrollSelectorButton key={`ScrollSelectorItem${index}`} theme={props.theme} onClick={clickEvent}>
+      <ScrollSelectorButton key={`ScrollSelectorItem${index}`} theme={props.theme} onClick={clickEvent} data-testid={`ScrollSelectorItemButton${index}`}>
         {props.itemsStatus && <span className="ScrollSelector-item-status">{props.itemsStatus[index] ? '●' : '○'}</span>}
-        <span className="ScrollSelector-item-text">{item}</span>
+        <span className="ScrollSelector-item-text" data-testid={`ScrollSelectorItemText${index}`}>{item}</span>
       </ScrollSelectorButton>);
     });
   };
 
   return (
-    <ScrollSelectorBox theme={props.theme}>
+    <ScrollSelectorBox theme={props.theme} data-testid="ScrollSelector">
       {generateItems()}
     </ScrollSelectorBox>
   )

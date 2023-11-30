@@ -122,11 +122,11 @@ export const MainMenu = (props: IMainMenuProps) => {
         <ModalBox color={props.theme.trueBackground}>
           <ModalHeader color={props.theme.potentialShapeLines}>Edit Level Pack</ModalHeader>
           <GameTextField theme={props.theme} type="text" onChange={onNewLevelPackNameChange}></GameTextField>
-          <GameButton theme={props.theme} disabled={newLevelPackName.length === 0} onClick={createNewLevelPackAndGoToEditorLevelSelect}>New</GameButton>
+          <GameButton theme={props.theme} disabled={newLevelPackName.length === 0} onClick={createNewLevelPackAndGoToEditorLevelSelect} data-testid="NewLevelPackButton">New</GameButton>
           <MenuDivider color={props.theme.potentialShapeLines}/>
-          <GameFileInput theme={props.theme} onChange={onLoadLevelPackForEditor}>Load</GameFileInput>
+          <GameFileInput theme={props.theme} onChange={onLoadLevelPackForEditor} internalTestId="LoadLevelPackToEditInput">Load</GameFileInput>
           <MenuDivider color={props.theme.potentialShapeLines}/>
-          <GameButton theme={props.theme} onClick={cancelEditorStart}>Cancel</GameButton>
+          <GameButton theme={props.theme} onClick={cancelEditorStart} data-testid="CancelEditorStartButton">Cancel</GameButton>
         </ModalBox>
       </Modal>
     )
@@ -139,9 +139,9 @@ export const MainMenu = (props: IMainMenuProps) => {
         <MainMenuTitle color={props.theme.potentialShapeLines}>Flipxel</MainMenuTitle>
         <ScrollSelector theme={props.theme} items={levelPackNames} itemClickHandler={goToLevelPack}/>
         <div className="MainMenu-button-container">
-          <GameFileInput theme={props.theme} onChange={onLoadLevelPack}>Load Pack</GameFileInput>
-          <GameButton theme={props.theme} onClick={goToSettings}>Settings</GameButton>
-          <GameButton theme={props.theme} onClick={goToEditorStart}>Editor</GameButton>
+          <GameFileInput theme={props.theme} onChange={onLoadLevelPack} internalTestId="LoadLevelPackInput">Load Pack</GameFileInput>
+          <GameButton theme={props.theme} onClick={goToSettings} data-testid="SettingsButton">Settings</GameButton>
+          <GameButton theme={props.theme} onClick={goToEditorStart} data-testid="EditorButton">Editor</GameButton>
         </div>
       </div>
     </div>
