@@ -33,19 +33,20 @@ describe('Main Menu Tests', () => {
   });
 
   test('Default level packs load', () => {
-    const firstLevelItem = screen.getByTestId('ScrollSelectorItemText0');
+    const firstLevelPackItem = screen.getByTestId('ScrollSelectorItemText0');
 
-    expect(firstLevelItem).toHaveTextContent('5 x 5 Easy');
+    expect(firstLevelPackItem).toHaveTextContent('5 x 5 Easy');
   });
 
   describe('Menu buttons function correctly', () => {
     test('Clicking a level pack goes to the right level select page', () => {
-      const firstLevelButton = screen.getByTestId('ScrollSelectorItemButton0');
+      const firstLevelPackButton = screen.getByTestId('ScrollSelectorItemButton0');
+      fireEvent.click(firstLevelPackButton);
 
-      fireEvent.click(firstLevelButton);
-
+      const levelSelectMenu = screen.getByTestId('LevelSelectMenu');
       const levelPackTitle = screen.getByTestId('LevelSelectPackTitle');
 
+      expect(levelSelectMenu).toBeInTheDocument();
       expect(levelPackTitle).toHaveTextContent('5 x 5 Easy');
     });
   
@@ -61,33 +62,72 @@ describe('Main Menu Tests', () => {
     });
 
     test('Clicking settings goes to the settings page', () => {
+      const settingsButton = screen.getByTestId('SettingsButton');
+      fireEvent.click(settingsButton);
 
+      const settingsMenu = screen.getByTestId('SettingsMenu');
+
+      expect(settingsMenu).toBeInTheDocument();
     });
   
     test('Clicking editor opens the entering editor modal', () => {
+      const editorButton = screen.getByTestId('EditorButton');
+      fireEvent.click(editorButton);
 
-    });
-  
-    test('Clicking editor opens the entering editor modal', () => {
+      const editorStartModal = screen.getByTestId('EditorStartModal');
 
+      expect(editorStartModal).toBeInTheDocument();
     });
   });
 
   describe('Editor modal has correctly functioning buttons', () => {
-    test('Cannot create a new level pack with an invalid name', () => {
+    beforeEach(() => {
+      const editorButton = screen.getByTestId('EditorButton');
+      fireEvent.click(editorButton);
+    });
   
+    test('Cannot create a new level pack with an invalid name', () => {
+      const newLevelPackButton = screen.getByTestId('NewLevelPackButton');
+
+      expect(newLevelPackButton).toBeDisabled();
     });
 
     test('Can create a new level pack with a valid name', () => {
-  
+      const editorNewLevelPackNameInput = screen.getByTestId('EditorStartLevelPackNameInput');
+      fireEvent.change(editorNewLevelPackNameInput, {
+        target: {
+          value: 'Test Level Pack'
+        }
+      });
+
+      const newLevelPackButton = screen.getByTestId('NewLevelPackButton');
+      fireEvent.click(newLevelPackButton);
+
+      const levelSelectMenu = screen.getByTestId('LevelSelectMenu');
+      const levelPackTitle = screen.getByTestId('LevelSelectPackTitle');
+
+      expect(levelSelectMenu).toBeInTheDocument();
+      expect(levelPackTitle).toHaveTextContent('Test Level Pack');
     });
 
-    test('Clicking load prompts to load a level pack for editing', () => {
-  
+    test('Clicking load prompts to load a level pack for editing and loads it properly', async () => {
+      const mockLevelPackData = JSON.stringify(mockLevelPackFileData);
+      const mockLevelPackFile = new File([mockLevelPackData], "lp_mock.json", { type: "application/json" });
+
+      const loadLevelPackInput: HTMLInputElement = screen.getByTestId('LoadLevelPackToEditInput');
+      
+      await userEvent.upload(loadLevelPackInput, mockLevelPackFile);
+
+      expect(loadLevelPackInput.files).toHaveLength(1);
     });
 
     test('Canceling the modal goes back to the main menu', () => {
-  
+      const cancelButton = screen.getByTestId('CancelEditorStartButton');
+      fireEvent.click(cancelButton);
+
+      const editorStartModal= screen.queryByTestId('EditorStartModal');
+
+      expect(editorStartModal).not.toBeInTheDocument();
     });
   });
 });

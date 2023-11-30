@@ -259,7 +259,7 @@ export const Game = (props: IGameProps) => {
 
   const renderWinModal = () => {
     return (
-      <Modal>
+      <Modal internalTestId="WinModal">
         <ModalBox color={props.theme.trueBackground}>
           <ModalHeader color={props.theme.potentialShapeLines}>Complete!</ModalHeader>
           <GameButton theme={props.theme} onClick={completeLevel}>Back to Level Select</GameButton>
@@ -290,7 +290,7 @@ export const Game = (props: IGameProps) => {
 
   const renderAddPieceModal = () => {
     return (
-      <Modal>
+      <Modal internalTestId="AddPieceModal">
         <ModalBox color={props.theme.trueBackground}>
           <ModalHeader color={props.theme.potentialShapeLines}>Add Piece</ModalHeader>
           <div className="Game-add-piece-box">
@@ -307,7 +307,7 @@ export const Game = (props: IGameProps) => {
 
   const renderRenameLevelModal = () => {
     return (
-      <Modal>
+      <Modal internalTestId="RenameLevelModal">
         <ModalBox color={props.theme.trueBackground}>
           <ModalHeader color={props.theme.potentialShapeLines}>Rename Level</ModalHeader>
           <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange}></GameTextField>
@@ -321,7 +321,7 @@ export const Game = (props: IGameProps) => {
 
   const renderDeleteLevelConfirmModal = () => {
     return (
-      <Modal>
+      <Modal internalTestId="DeleteLevelConfirmModal">
       <ModalBox color={props.theme.trueBackground}>
         <ModalHeader color={props.theme.potentialShapeLines}>Delete Level?</ModalHeader>
         <GameButton theme={props.theme} onClick={deleteLevel}>Yes</GameButton>
@@ -373,12 +373,12 @@ export const Game = (props: IGameProps) => {
   };
 
   return (
-    <div>
+    <div data-testid={props.isEditorMode ? 'Editor' : 'Game'}>
       {gameState === GameState.Won && !props.isEditorMode && renderWinModal()}
       {gameState === GameState.Editing && addingPiece &&  renderAddPieceModal()}
       {gameState === GameState.Editing && changingLevelName &&  renderRenameLevelModal()}
       {gameState === GameState.Editing && deletingLevel && renderDeleteLevelConfirmModal()}
-      <LevelTitle color={props.theme.potentialShapeLines}>{props.level.name}</LevelTitle>
+      <LevelTitle color={props.theme.potentialShapeLines} data-testid="LevelTitle">{props.level.name}</LevelTitle>
       <GameWindow 
         theme={props.theme}
         cellsWide={cellsWide} 

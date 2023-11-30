@@ -11,6 +11,8 @@
     "@types/node": "^16.18.60",
     "@types/react": "^18.2.34",
     "@types/react-dom": "^18.2.14",
+    "canvas": "^2.11.2",
+    "jest-webgl-canvas-mock": "^2.5.3",
     "pixi.js": "^7.3.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
@@ -49,11 +51,11 @@
   },
   "jest": {
     "collectCoverageFrom": [
-      "**/*.{ts,tsx}",
+      "**/*.tsx",
       "!**/node_modules/**",
       "!**/coverage/**",
       "!**/serviceWorker.js",
-      "!**/index.js"
+      "!**/index.tsx"
     ],
     "coveragePathIgnorePatterns": [
       "/node_modules/",
@@ -68,6 +70,8 @@
         "statements": 90
       }
     },
-    "coverageReporters": ["text"]
+    "coverageReporters": [
+      "text"
+    ]
   }
 }

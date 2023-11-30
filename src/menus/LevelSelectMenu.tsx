@@ -146,15 +146,15 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
   
   const renderAddingNewLevelModal = () => {
     return (
-      <Modal>
+      <Modal internalTestId="AddingNewLevelModal">
         <ModalBox color={props.theme.trueBackground}>
           <ModalHeader color={props.theme.potentialShapeLines}>Add New Level</ModalHeader>
-          <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange}></GameTextField>
-          <GameButton theme={props.theme} disabled={newLevelName.length === 0 || !validateNewDimensions(newLevelDimensions)} onClick={createNewLevel}>New</GameButton>
+          <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange} data-testid="NewLevelNameInput"></GameTextField>
+          <GameButton theme={props.theme} disabled={newLevelName.length === 0 || !validateNewDimensions(newLevelDimensions)} onClick={createNewLevel} data-testid="AddNewLevelButton">New</GameButton>
           <MenuDivider color={props.theme.potentialShapeLines}/>
-          <GameTextField theme={props.theme} type="text" value={newLevelDimensions} onChange={onNewLevelDimensionsChange}></GameTextField>
+          <GameTextField theme={props.theme} type="text" value={newLevelDimensions} onChange={onNewLevelDimensionsChange} data-testid="NewLevelSizeInput"></GameTextField>
           <MenuDivider color={props.theme.potentialShapeLines}/>
-          <GameButton theme={props.theme} onClick={cancelAddNewLevel}>Cancel</GameButton>
+          <GameButton theme={props.theme} onClick={cancelAddNewLevel} data-testid="AddNewLevelCancelButton">Cancel</GameButton>
         </ModalBox>
       </Modal>
     )
@@ -162,11 +162,11 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
 
   const renderNoSaveConfirmModal = () => {
     return (
-      <Modal>
+      <Modal internalTestId="NoSaveConfirmModal">
         <ModalBox color={props.theme.trueBackground}>
           <ModalHeader color={props.theme.potentialShapeLines}>Leave Without Saving?</ModalHeader>
-          <GameButton theme={props.theme} onClick={goBackToMainMenu}>Yes</GameButton>
-          <GameButton theme={props.theme} onClick={closeNoSaveConfirmModal}>No</GameButton>
+          <GameButton theme={props.theme} onClick={goBackToMainMenu} data-testid="NoSaveConfirmYesButton">Yes</GameButton>
+          <GameButton theme={props.theme} onClick={closeNoSaveConfirmModal} data-testid="NoSaveConfirmNoButton">No</GameButton>
         </ModalBox>
       </Modal>
     );
@@ -175,7 +175,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
   const levelNames = props.levelPack.levels.map(x => x.name);
 
   return (
-    <div>
+    <div data-testid="LevelSelectMenu">
       {addingNewLevel && renderAddingNewLevelModal()}
       {confirmingNoSave && renderNoSaveConfirmModal()}
       <div className="LevelSelectMenu">
@@ -183,9 +183,9 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
         <LevelSelectPackTitle color={props.theme.potentialShapeLines} data-testid="LevelSelectPackTitle">{props.levelPack.name}</LevelSelectPackTitle>
         <ScrollSelector theme={props.theme} items={levelNames} itemsStatus={levelPackSaveData.length > 0 ? levelPackSaveData : undefined} itemClickHandler={clickOnLevel}/>
         <div className="LevelSelectMenu-button-container">
-          {props.isEditorMode && <GameButton theme={props.theme} onClick={goToAddNewLevelModal}>Add</GameButton>}
-          {props.isEditorMode && <GameButton theme={props.theme} onClick={saveLevelPack}>Save</GameButton>}
-          <GameButton theme={props.theme} onClick={props.isEditorMode && props.isEditorDirty ? openNoSaveConfirmModal : goBackToMainMenu}>Back</GameButton>
+          {props.isEditorMode && <GameButton theme={props.theme} onClick={goToAddNewLevelModal} data-testid="AddButton">Add</GameButton>}
+          {props.isEditorMode && <GameButton theme={props.theme} onClick={saveLevelPack} data-testid="SaveButton">Save</GameButton>}
+          <GameButton theme={props.theme} onClick={props.isEditorMode && props.isEditorDirty ? openNoSaveConfirmModal : goBackToMainMenu} data-testid="BackButton">Back</GameButton>
         </div>
       </div>
     </div>

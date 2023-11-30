@@ -118,10 +118,10 @@ export const MainMenu = (props: IMainMenuProps) => {
 
   const renderEditorStartModal = () => {
     return (
-      <Modal>
+      <Modal internalTestId="EditorStartModal">
         <ModalBox color={props.theme.trueBackground}>
           <ModalHeader color={props.theme.potentialShapeLines}>Edit Level Pack</ModalHeader>
-          <GameTextField theme={props.theme} type="text" onChange={onNewLevelPackNameChange}></GameTextField>
+          <GameTextField theme={props.theme} type="text" onChange={onNewLevelPackNameChange} data-testid="EditorStartLevelPackNameInput"></GameTextField>
           <GameButton theme={props.theme} disabled={newLevelPackName.length === 0} onClick={createNewLevelPackAndGoToEditorLevelSelect} data-testid="NewLevelPackButton">New</GameButton>
           <MenuDivider color={props.theme.potentialShapeLines}/>
           <GameFileInput theme={props.theme} onChange={onLoadLevelPackForEditor} internalTestId="LoadLevelPackToEditInput">Load</GameFileInput>
@@ -133,7 +133,7 @@ export const MainMenu = (props: IMainMenuProps) => {
   }
 
   return (
-    <div>
+    <div data-testid="MainMenu">
       {enteringEditor && renderEditorStartModal()}
       <div className="MainMenu">
         <MainMenuTitle color={props.theme.potentialShapeLines}>Flipxel</MainMenuTitle>

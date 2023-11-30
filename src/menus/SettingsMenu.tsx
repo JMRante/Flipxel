@@ -70,26 +70,26 @@ export const SettingsMenu = (props: ISettingsMenuProps) => {
 
   const renderSaveClearConfirmModal = () => {
     return (
-      <Modal>
+      <Modal internalTestId="SaveClearConfirmModal">
         <ModalBox color={props.theme.trueBackground}>
           <ModalHeader color={props.theme.potentialShapeLines}>Clear All Save Data?</ModalHeader>
-          <GameButton theme={props.theme} onClick={clearSaveData}>Yes</GameButton>
-          <GameButton theme={props.theme} onClick={closeClearSaveDataConfirmation}>No</GameButton>
+          <GameButton theme={props.theme} onClick={clearSaveData} data-testid="ClearSaveDataYesButton">Yes</GameButton>
+          <GameButton theme={props.theme} onClick={closeClearSaveDataConfirmation} data-testid="ClearSaveDataNoButton">No</GameButton>
         </ModalBox>
       </Modal>
     );
   };
 
   return (
-    <div>
+    <div data-testid="SettingsMenu">
       {confirmingSaveDelete && renderSaveClearConfirmModal()}
       <div className="SettingsMenu">
         <SettingsMenuTitle color={props.theme.potentialShapeLines}>Settings</SettingsMenuTitle>
         <SettingsMenuSubTitle color={props.theme.potentialShapeLines}>Change Theme</SettingsMenuSubTitle>
         <ScrollSelector theme={props.theme} items={themeNameList} itemClickHandler={clickOnTheme}/>
         <div className="SettingsMenu-button-container">
-          <GameButton theme={props.theme} onClick={openClearSaveDataConfirmation}>Clear Save Data</GameButton>
-          <GameButton theme={props.theme} onClick={goBackToMainMenu}>Back</GameButton>
+          <GameButton theme={props.theme} onClick={openClearSaveDataConfirmation} data-testid="ClearSaveDataButton">Clear Save Data</GameButton>
+          <GameButton theme={props.theme} onClick={goBackToMainMenu} data-testid="BackButton">Back</GameButton>
         </div>
       </div>
     </div>
