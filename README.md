@@ -2,7 +2,7 @@
 
 A web-based puzzle game about flipping panels with shapes to create a picture.
 
-Designed as a "functional game," where game state is mutated in a deterministic, non-realtime manner.
+Designed as a "functional game," where game state is mutated in a deterministic, non-realtime manner. Heavily inspired by nonograms (Picross).
 
 Comes with a built-in puzzle editor and can be expanded with custom puzzle packs.
 
