@@ -6,7 +6,6 @@ import { MainMenu } from './menus/MainMenu';
 import { LevelSelectMenu } from './menus/LevelSelectMenu';
 import themes from './data/themes.json';
 import EasyLevelPack5x5 from './data/lp_5x5easy.json';
-import AlphabetLP from './data/lp_alphabet.json';
 
 export interface IGameTheme {
   name: string,
@@ -62,7 +61,7 @@ const App = () => {
 
   const [theme, setTheme] = useState<IGameTheme>(themes.themes[0]);
 
-  const [levelPacks, setLevelPacks] = useState<Array<ILevelPack>>([EasyLevelPack5x5, AlphabetLP]);
+  const [levelPacks, setLevelPacks] = useState<Array<ILevelPack>>([EasyLevelPack5x5]);
 
   const [currentLevelPack, setCurrentLevelPack] = useState<ILevelPack>(levelPacks[0]);
   const [currentLevel, setCurrentLevel] = useState<ILevel>(currentLevelPack.levels[0]);
