@@ -255,7 +255,7 @@ export const Game = (props: IGameProps) => {
         setGameState(GameState.Won);
       }
     }
-  }, [board, boardGoal, playedPieces.length, pieces.length]);
+  }, [board, boardGoal, playedPieces.length, pieces.length, gameState]);
 
   const renderWinModal = () => {
     return (

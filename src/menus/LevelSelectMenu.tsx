@@ -142,7 +142,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
         localStorage.setItem(`${props.levelPack.name}-save-data`, btoa(JSON.stringify(newSaveData)));
       }
     }
-  }, [])
+  }, [props])
   
   const renderAddingNewLevelModal = () => {
     return (

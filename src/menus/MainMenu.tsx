@@ -5,7 +5,7 @@ import { ScrollSelector } from "./ScrollSelector";
 import './MainMenu.css';
 import { Modal } from "./Modal";
 import { GameTextField } from "./GameTextField";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ModalBox } from "./ModalBox";
 import { GameFileInput } from "./GameFileInput";
 import { ModalHeader } from "./ModalHeader";
