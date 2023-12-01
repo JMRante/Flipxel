@@ -16,6 +16,20 @@ const ScrollSelectorBox = styled.div<{ theme?: IGameTheme; }>`
   height: 600px;
   flex-wrap: no-wrap;
   overflow-y: scroll;
+  scrollbar-width: thin;
+  scrollbar-color: #${props => props.theme.backgroundBase} #${props => props.theme.filledBox};
+
+  &:: -webkit-scrollbar {
+    width: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #${props => props.theme.filledBox};
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: #${props => props.theme.backgroundBase};
+  }
 `;
 
 const ScrollSelectorButton = styled.button<{ theme?: IGameTheme; }>`

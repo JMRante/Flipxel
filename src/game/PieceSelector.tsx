@@ -11,7 +11,7 @@ export interface IPieceSelectorProps {
   playedPieces: IPieceInstruction[]
 };
 
-const PieceSelectorContainer = styled.div`
+const PieceSelectorContainer = styled.div<{ theme?: IGameTheme; }>`
   width: 750px;
   height: 125px;
   display: flex;
@@ -20,6 +20,22 @@ const PieceSelectorContainer = styled.div`
   margin-top: 8px;
   margin-left: auto;
   margin-right: auto;
+
+  scrollbar-width: thin;
+  scrollbar-color: #${props => props.theme.backgroundBase} #${props => props.theme.filledBox};
+
+  &:: -webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #${props => props.theme.filledBox};
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background-color: #${props => props.theme.backgroundBase};
+  }
 `;
 
 export const PieceSelector = (props: IPieceSelectorProps) => {
@@ -36,7 +52,7 @@ export const PieceSelector = (props: IPieceSelectorProps) => {
   };
 
   return (
-    <PieceSelectorContainer>
+    <PieceSelectorContainer theme={props.theme}>
       {generatePieceButtons()}
     </PieceSelectorContainer>
   );
