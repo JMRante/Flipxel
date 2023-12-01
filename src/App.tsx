@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Game } from './game/Game';
 import styled from 'styled-components';
 import { SettingsMenu } from './menus/SettingsMenu';
 import { MainMenu } from './menus/MainMenu';
 import { LevelSelectMenu } from './menus/LevelSelectMenu';
 import themes from './data/themes.json';
-import EasyLevelPack5x5 from './data/5x5EasyLevelPack.json';
+import EasyLevelPack5x5 from './data/lp_5x5easy.json';
 import AlphabetLP from './data/lp_alphabet.json';
 
 export interface IGameTheme {

@@ -35,7 +35,7 @@ describe('Main Menu Tests', () => {
   test('Default level packs load', () => {
     const firstLevelPackItem = screen.getByTestId('ScrollSelectorItemText0');
 
-    expect(firstLevelPackItem).toHaveTextContent('5 x 5 Easy');
+    expect(firstLevelPackItem).toHaveTextContent('5x5 Easy');
   });
 
   describe('Menu buttons function correctly', () => {
@@ -47,7 +47,7 @@ describe('Main Menu Tests', () => {
       const levelPackTitle = screen.getByTestId('LevelSelectPackTitle');
 
       expect(levelSelectMenu).toBeInTheDocument();
-      expect(levelPackTitle).toHaveTextContent('5 x 5 Easy');
+      expect(levelPackTitle).toHaveTextContent('5x5 Easy');
     });
   
     test('Clicking load pack prompts to load a file and loads it properly', async () => {
