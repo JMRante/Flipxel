@@ -3,13 +3,13 @@ import { GameWindow } from "./GameWindow";
 import { PieceSelector } from "./PieceSelector";
 import './Game.css';
 import { AppPage, IGameTheme, ILevel, ILevelPack, ILevelPackSaveData } from "../App";
-import { GameButton } from "../menus/GameButton";
-import { Modal } from "../menus/Modal";
-import { ModalBox } from "../menus/ModalBox";
-import { ModalHeader } from "../menus/ModalHeader";
+import { GameButton } from "../menus/elements/input/GameButton";
+import { Modal } from "../menus/elements/modal/Modal";
+import { ModalBox } from "../menus/elements/modal/ModalBox";
+import { ModalHeader } from "../menus/elements/modal/ModalHeader";
 import styled from "styled-components";
-import { GameTextField } from "../menus/GameTextField";
-import { MenuDivider } from "../menus/MenuDivider";
+import { GameTextField } from "../menus/elements/input/GameTextField";
+import { MenuDivider } from "../menus/elements/MenuDivider";
 import { MIN_DIMENSIONS } from "../menus/LevelSelectMenu";
 
 export enum GameState {

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { IGameTheme } from "../App";
+import { IGameTheme } from "../../../App";
 
 export const GameTextField = styled.input<{ theme?: IGameTheme; }>`
   background-color: #${props => props.theme.trueBackground};

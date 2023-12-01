@@ -1,14 +1,14 @@
 import styled from "styled-components";
 import { AppPage, IGameTheme, ILevel, ILevelPack, ILevelPackSaveData } from "../App";
-import { GameButton } from "./GameButton";
-import { ScrollSelector } from "./ScrollSelector";
+import { GameButton } from "./elements/input/GameButton";
+import { ScrollSelector } from "./elements/ScrollSelector";
 import './LevelSelectMenu.css';
 import { useEffect, useState } from "react";
-import { Modal } from "./Modal";
-import { ModalBox } from "./ModalBox";
-import { ModalHeader } from "./ModalHeader";
-import { GameTextField } from "./GameTextField";
-import { MenuDivider } from "./MenuDivider";
+import { Modal } from "./elements/modal/Modal";
+import { ModalBox } from "./elements/modal/ModalBox";
+import { ModalHeader } from "./elements/modal/ModalHeader";
+import { GameTextField } from "./elements/input/GameTextField";
+import { MenuDivider } from "./elements/MenuDivider";
 
 export interface ILevelSelectMenuProps {
   theme: IGameTheme,

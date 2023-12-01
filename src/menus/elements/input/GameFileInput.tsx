@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { IGameTheme } from "../App";
+import { IGameTheme } from "../../../App";
 
 const GameFileInputLabel = styled.label<{ theme?: IGameTheme; }>`
   background-color: #${props => props.theme.backgroundLines};

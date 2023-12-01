@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { IGameTheme } from "../App";
+import { IGameTheme } from "../../../App";
 
 export const GameButton = styled.button<{ theme?: IGameTheme; }>`
   background-color: #${props => props.theme.backgroundLines};

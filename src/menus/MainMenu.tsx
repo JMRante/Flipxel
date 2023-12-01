@@ -1,15 +1,15 @@
 import styled from "styled-components";
 import { AppPage, IGameTheme, ILevelPack } from "../App";
-import { GameButton } from "./GameButton";
-import { ScrollSelector } from "./ScrollSelector";
+import { GameButton } from "./elements/input/GameButton";
+import { ScrollSelector } from "./elements/ScrollSelector";
 import './MainMenu.css';
-import { Modal } from "./Modal";
-import { GameTextField } from "./GameTextField";
+import { Modal } from "./elements/modal/Modal";
+import { GameTextField } from "./elements/input/GameTextField";
 import { useState } from "react";
-import { ModalBox } from "./ModalBox";
-import { GameFileInput } from "./GameFileInput";
-import { ModalHeader } from "./ModalHeader";
-import { MenuDivider } from "./MenuDivider";
+import { ModalBox } from "./elements/modal/ModalBox";
+import { GameFileInput } from "./elements/input/GameFileInput";
+import { ModalHeader } from "./elements/modal/ModalHeader";
+import { MenuDivider } from "./elements/MenuDivider";
 
 export interface IMainMenuProps {
   theme: IGameTheme,

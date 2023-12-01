@@ -2,12 +2,12 @@ import styled from "styled-components";
 import { AppPage, IGameTheme, ILevelPack } from "../App";
 import './SettingsMenu.css';
 import themes from '../data/themes.json';
-import { ScrollSelector } from "./ScrollSelector";
-import { GameButton } from "./GameButton";
+import { ScrollSelector } from "./elements/ScrollSelector";
+import { GameButton } from "./elements/input/GameButton";
 import { useState } from "react";
-import { Modal } from "./Modal";
-import { ModalBox } from "./ModalBox";
-import { ModalHeader } from "./ModalHeader";
+import { Modal } from "./elements/modal/Modal";
+import { ModalBox } from "./elements/modal/ModalBox";
+import { ModalHeader } from "./elements/modal/ModalHeader";
 
 export interface ISettingsMenuProps {
   theme: IGameTheme,

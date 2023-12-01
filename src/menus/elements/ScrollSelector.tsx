@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { IGameTheme } from "../App";
+import { IGameTheme } from "../../App";
 import './ScrollSelector.css';
 
 export interface IScrollSelectorProps {
