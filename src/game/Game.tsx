@@ -38,8 +38,8 @@ export interface IGameProps {
   setIsEditorDirty: Function
 };
 
-const LevelTitle = styled.h1<{ color?: string; }>`
-  color: #${props => props.color};
+const LevelTitle = styled.h1<{ theme?: IGameTheme; }>`
+  color: #${props => props.theme.potentialShapeLines};
   font-weight: bold;
   font-family: 'Courier New', monospace;
   font-size: 40px;
@@ -267,8 +267,8 @@ export const Game = (props: IGameProps) => {
   const renderWinModal = () => {
     return (
       <Modal internalTestId="WinModal">
-        <ModalBox color={props.theme.trueBackground}>
-          <ModalHeader color={props.theme.potentialShapeLines}>Complete!</ModalHeader>
+        <ModalBox theme={props.theme}>
+          <ModalHeader theme={props.theme}>Complete!</ModalHeader>
           <GameButton theme={props.theme} onClick={completeLevel}>Back to Level Select</GameButton>
         </ModalBox>
       </Modal>
@@ -298,8 +298,8 @@ export const Game = (props: IGameProps) => {
   const renderAddPieceModal = () => {
     return (
       <Modal internalTestId="AddPieceModal">
-        <ModalBox color={props.theme.trueBackground}>
-          <ModalHeader color={props.theme.potentialShapeLines}>Add Piece</ModalHeader>
+        <ModalBox theme={props.theme}>
+          <ModalHeader theme={props.theme}>Add Piece</ModalHeader>
           <AddPieceContainer>
             {renderCreatePiecePartRows()}
           </AddPieceContainer>
@@ -315,11 +315,11 @@ export const Game = (props: IGameProps) => {
   const renderRenameLevelModal = () => {
     return (
       <Modal internalTestId="RenameLevelModal">
-        <ModalBox color={props.theme.trueBackground}>
-          <ModalHeader color={props.theme.potentialShapeLines}>Rename Level</ModalHeader>
+        <ModalBox theme={props.theme}>
+          <ModalHeader theme={props.theme}>Rename Level</ModalHeader>
           <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange} data-testid="LevelNameInput"></GameTextField>
           <GameButton theme={props.theme} disabled={newLevelName.length === 0} onClick={renameLevel} data-testid="ChangeLevelNameButton">Change</GameButton>
-          <MenuDivider color={props.theme.potentialShapeLines}/>
+          <MenuDivider/>
           <GameButton theme={props.theme} onClick={closeRenameLevelModal} data-testid="CancelRenameLevelButton">Cancel</GameButton>
         </ModalBox>
       </Modal>
@@ -329,8 +329,8 @@ export const Game = (props: IGameProps) => {
   const renderDeleteLevelConfirmModal = () => {
     return (
       <Modal internalTestId="DeleteLevelConfirmModal">
-        <ModalBox color={props.theme.trueBackground}>
-          <ModalHeader color={props.theme.potentialShapeLines}>Delete Level?</ModalHeader>
+        <ModalBox theme={props.theme}>
+          <ModalHeader theme={props.theme}>Delete Level?</ModalHeader>
           <GameButton theme={props.theme} onClick={deleteLevel} data-testid="DeleteLevelConfirmYesButton">Yes</GameButton>
           <GameButton theme={props.theme} onClick={closeDeleteLevelModal} data-testid="DeleteLevelConfirmNoButton">No</GameButton>
         </ModalBox>
@@ -385,7 +385,7 @@ export const Game = (props: IGameProps) => {
       {gameState === GameState.Editing && addingPiece &&  renderAddPieceModal()}
       {gameState === GameState.Editing && changingLevelName &&  renderRenameLevelModal()}
       {gameState === GameState.Editing && deletingLevel && renderDeleteLevelConfirmModal()}
-      <LevelTitle color={props.theme.potentialShapeLines} data-testid="LevelTitle">{props.level.name}</LevelTitle>
+      <LevelTitle theme={props.theme} data-testid="LevelTitle">{props.level.name}</LevelTitle>
       <GameWindow 
         theme={props.theme}
         cellsWide={cellsWide} 

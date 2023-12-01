@@ -17,8 +17,8 @@ export interface ISettingsMenuProps {
   levelPacks: ILevelPack[]
 };
 
-const SettingsMenuTitle = styled.h1<{ color?: string; }>`
-  color: #${props => props.color};
+const SettingsMenuTitle = styled.h1<{ theme?: IGameTheme; }>`
+  color: #${props => props.theme.potentialShapeLines};
   font-weight: bold;
   font-family: 'Courier New', monospace;
   font-size: 64px;
@@ -26,8 +26,8 @@ const SettingsMenuTitle = styled.h1<{ color?: string; }>`
   margin-bottom: 5px;
 `;
 
-const SettingsMenuSubTitle = styled.h1<{ color?: string; }>`
-  color: #${props => props.color};
+const SettingsMenuSubTitle = styled.h1<{ theme?: IGameTheme; }>`
+  color: #${props => props.theme.potentialShapeLines};
   font-weight: bold;
   font-family: 'Courier New', monospace;
   font-size: 40px;
@@ -72,8 +72,8 @@ export const SettingsMenu = (props: ISettingsMenuProps) => {
   const renderSaveClearConfirmModal = () => {
     return (
       <Modal internalTestId="SaveClearConfirmModal">
-        <ModalBox color={props.theme.trueBackground}>
-          <ModalHeader color={props.theme.potentialShapeLines}>Clear All Save Data?</ModalHeader>
+        <ModalBox theme={props.theme}>
+          <ModalHeader theme={props.theme}>Clear All Save Data?</ModalHeader>
           <GameButton theme={props.theme} onClick={clearSaveData} data-testid="ClearSaveDataYesButton">Yes</GameButton>
           <GameButton theme={props.theme} onClick={closeClearSaveDataConfirmation} data-testid="ClearSaveDataNoButton">No</GameButton>
         </ModalBox>
@@ -85,8 +85,8 @@ export const SettingsMenu = (props: ISettingsMenuProps) => {
     <div data-testid="SettingsMenu">
       {confirmingSaveDelete && renderSaveClearConfirmModal()}
       <MenuContainer>
-        <SettingsMenuTitle color={props.theme.potentialShapeLines}>Settings</SettingsMenuTitle>
-        <SettingsMenuSubTitle color={props.theme.potentialShapeLines}>Change Theme</SettingsMenuSubTitle>
+        <SettingsMenuTitle theme={props.theme}>Settings</SettingsMenuTitle>
+        <SettingsMenuSubTitle theme={props.theme}>Change Theme</SettingsMenuSubTitle>
         <ScrollSelector theme={props.theme} items={themeNameList} itemClickHandler={clickOnTheme}/>
         <MenuButtonContainer>
           <GameButton theme={props.theme} onClick={openClearSaveDataConfirmation} data-testid="ClearSaveDataButton">Clear Save Data</GameButton>

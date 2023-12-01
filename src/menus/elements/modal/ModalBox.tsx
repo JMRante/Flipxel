@@ -1,7 +1,8 @@
 import styled from "styled-components";
+import { IGameTheme } from "../../../App";
 
-export const ModalBox = styled.div<{ color?: string; }>`
-  background-color: #${props => props.color};
+export const ModalBox = styled.div<{ theme?: IGameTheme; }>`
+  background-color: #${props => props.theme.trueBackground};
   padding: 15px;
   width: 600px;
   position: absolute;
