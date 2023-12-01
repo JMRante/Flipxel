@@ -20,7 +20,7 @@ export const PieceSelector = (props: IPieceSelectorProps) => {
 
       const pieceUsed = props.playedPieces.find(playedPiece => playedPiece.index === index) ? true : false;
 
-      return <PieceButton theme={props.theme} key={`PieceButton${index}`} piece={piece} selected={!pieceUsed && index === props.currentPieceIndex} used={pieceUsed} clickEvent={clickEvent}></PieceButton>
+      return <PieceButton theme={props.theme} key={`PieceButton${index}`} piece={piece} selected={!pieceUsed && index === props.currentPieceIndex} used={pieceUsed} clickEvent={clickEvent} internalTestId={`PieceButton${index}`}></PieceButton>
     });
   };
 

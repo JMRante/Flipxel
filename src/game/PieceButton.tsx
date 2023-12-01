@@ -6,7 +6,8 @@ export interface IPieceButtonProps {
   piece: boolean[],
   selected: boolean,
   used: boolean,
-  clickEvent: React.MouseEventHandler<HTMLButtonElement>
+  clickEvent: React.MouseEventHandler<HTMLButtonElement>,
+  internalTestId: string
 };
 
 const ButtonInnerCellFilled = styled.div<{ color?: string; }>`
@@ -69,7 +70,7 @@ export const PieceButton = (props: IPieceButtonProps) => {
   };
 
   return (
-    <InnerPieceButton theme={props.theme} onClick={props.clickEvent} disabled={props.used}>
+    <InnerPieceButton theme={props.theme} onClick={props.clickEvent} disabled={props.used} data-testid={props.internalTestId}>
       {generateCells()}
     </InnerPieceButton>
   )

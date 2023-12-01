@@ -1,49 +1,37 @@
+import { fireEvent, render, screen } from "@testing-library/react";
+import { setupJestCanvasMock } from "jest-webgl-canvas-mock";
+import App from "../App";
+
 describe('Game Tests', () => {
-  test('Default level packs load', () => {
+  beforeEach(() => {
+    jest.resetAllMocks();
+    setupJestCanvasMock();
+
+    render(<App/>)
   
+    const firstLevelPackButton = screen.getByTestId('ScrollSelectorItemButton0');
+    fireEvent.click(firstLevelPackButton);
+
+    const firstLevelButton = screen.getByTestId('ScrollSelectorItemButton0');
+    fireEvent.click(firstLevelButton);
   });
 
-  describe('Menu buttons function correctly', () => {
-    test('Clicking a level pack goes to the level select page', () => {
-  
-    });
-  
-    test('Clicking load pack prompts to load a file', () => {
-  
-    });
+  describe('Game menu buttons function correctly', () => {
+    test('When no move made, undo and redo cannot be clicked', () => {
+      const undoButton = screen.getByTestId('UndoButton');
+      const redoButton = screen.getByTestId('RedoButton');
 
-    test('Clicking settings goes to the settings page', () => {
-  
+      expect(undoButton).toBeDisabled();
+      expect(redoButton).toBeDisabled();
     });
   
-    test('Clicking editor opens the entering editor modal', () => {
-  
-    });
-  
-    test('Clicking editor opens the entering editor modal', () => {
-  
-    });
-  });
+    test('Clicking back returns to the level select menu', () => {
+      const backButton = screen.getByTestId('BackButton');
+      fireEvent.click(backButton);
 
-  describe('Editor modal has correctly functioning buttons', () => {
-    test('Cannot create a new level pack with an invalid name', () => {
-  
-    });
+      const levelSelectMenu = screen.getByTestId('LevelSelectMenu');
 
-    test('Can create a new level pack with a valid name', () => {
-  
-    });
-
-    test('Cannot create a new level pack with an invalid name', () => {
-  
-    });
-
-    test('Clicking load prompts to load a level pack for editing', () => {
-  
-    });
-
-    test('Canceling the modal goes back to the main menu', () => {
-  
+      expect(levelSelectMenu).toBeInTheDocument();
     });
   });
 });
