@@ -5,7 +5,7 @@ import { SettingsMenu } from './menus/SettingsMenu';
 import { MainMenu } from './menus/MainMenu';
 import { LevelSelectMenu } from './menus/LevelSelectMenu';
 import themes from './data/themes.json';
-import EasyLevelPack5x5 from './data/lp_5x5easy.json';
+import EasyLevelPack5x5 from './data/p_5x5easy.json';
 
 export interface IGameTheme {
   name: string,

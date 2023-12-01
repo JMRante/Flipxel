@@ -121,7 +121,7 @@ export const MainMenu = (props: IMainMenuProps) => {
     return (
       <Modal internalTestId="EditorStartModal">
         <ModalBox theme={props.theme}>
-          <ModalHeader theme={props.theme}>Edit Level Pack</ModalHeader>
+          <ModalHeader theme={props.theme}>Edit Pack</ModalHeader>
           <GameTextField theme={props.theme} type="text" onChange={onNewLevelPackNameChange} data-testid="EditorStartLevelPackNameInput"></GameTextField>
           <GameButton theme={props.theme} disabled={newLevelPackName.length === 0} onClick={createNewLevelPackAndGoToEditorLevelSelect} data-testid="NewLevelPackButton">New</GameButton>
           <MenuDivider/>

@@ -47,7 +47,7 @@ describe('Level Select Tests', () => {
         const levelTitle = screen.getByTestId('LevelTitle');
 
         expect(game).toBeInTheDocument();
-        expect(levelTitle).toHaveTextContent('Level 1');
+        expect(levelTitle).toHaveTextContent('Puzzle 1');
       });
     
       test('Clicking back goes to the main menu', () => {

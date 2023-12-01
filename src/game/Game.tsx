@@ -269,7 +269,7 @@ export const Game = (props: IGameProps) => {
       <Modal internalTestId="WinModal">
         <ModalBox theme={props.theme}>
           <ModalHeader theme={props.theme}>Complete!</ModalHeader>
-          <GameButton theme={props.theme} onClick={completeLevel}>Back to Level Select</GameButton>
+          <GameButton theme={props.theme} onClick={completeLevel}>Back to Puzzle Select</GameButton>
         </ModalBox>
       </Modal>
     );
@@ -316,7 +316,7 @@ export const Game = (props: IGameProps) => {
     return (
       <Modal internalTestId="RenameLevelModal">
         <ModalBox theme={props.theme}>
-          <ModalHeader theme={props.theme}>Rename Level</ModalHeader>
+          <ModalHeader theme={props.theme}>Rename Puzzle</ModalHeader>
           <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange} data-testid="LevelNameInput"></GameTextField>
           <GameButton theme={props.theme} disabled={newLevelName.length === 0} onClick={renameLevel} data-testid="ChangeLevelNameButton">Change</GameButton>
           <MenuDivider/>
@@ -330,7 +330,7 @@ export const Game = (props: IGameProps) => {
     return (
       <Modal internalTestId="DeleteLevelConfirmModal">
         <ModalBox theme={props.theme}>
-          <ModalHeader theme={props.theme}>Delete Level?</ModalHeader>
+          <ModalHeader theme={props.theme}>Delete Puzzle?</ModalHeader>
           <GameButton theme={props.theme} onClick={deleteLevel} data-testid="DeleteLevelConfirmYesButton">Yes</GameButton>
           <GameButton theme={props.theme} onClick={closeDeleteLevelModal} data-testid="DeleteLevelConfirmNoButton">No</GameButton>
         </ModalBox>

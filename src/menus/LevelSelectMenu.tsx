@@ -149,7 +149,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
     return (
       <Modal internalTestId="AddingNewLevelModal">
         <ModalBox theme={props.theme}>
-          <ModalHeader theme={props.theme}>Add New Level</ModalHeader>
+          <ModalHeader theme={props.theme}>Add New Puzzle</ModalHeader>
           <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange} data-testid="NewLevelNameInput"></GameTextField>
           <GameButton theme={props.theme} disabled={newLevelName.length === 0 || !validateNewDimensions(newLevelDimensions)} onClick={createNewLevel} data-testid="AddNewLevelButton">New</GameButton>
           <MenuDivider/>
@@ -180,7 +180,7 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
       {addingNewLevel && renderAddingNewLevelModal()}
       {confirmingNoSave && renderNoSaveConfirmModal()}
       <MenuContainer>
-        <LevelSelectTitle theme={props.theme}>Level Select</LevelSelectTitle>
+        <LevelSelectTitle theme={props.theme}>Puzzle Select</LevelSelectTitle>
         <LevelSelectPackTitle theme={props.theme} data-testid="LevelSelectPackTitle">{props.levelPack.name}</LevelSelectPackTitle>
         <ScrollSelector theme={props.theme} items={levelNames} itemsStatus={levelPackSaveData.length > 0 ? levelPackSaveData : undefined} itemClickHandler={clickOnLevel}/>
         <MenuButtonContainer>
