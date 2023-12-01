@@ -2,14 +2,15 @@ import styled from "styled-components";
 import { AppPage, IGameTheme, ILevelPack } from "../App";
 import { GameButton } from "./elements/input/GameButton";
 import { ScrollSelector } from "./elements/ScrollSelector";
-import './MainMenu.css';
 import { Modal } from "./elements/modal/Modal";
 import { GameTextField } from "./elements/input/GameTextField";
 import { useState } from "react";
 import { ModalBox } from "./elements/modal/ModalBox";
 import { GameFileInput } from "./elements/input/GameFileInput";
 import { ModalHeader } from "./elements/modal/ModalHeader";
-import { MenuDivider } from "./elements/MenuDivider";
+import { MenuDivider } from "./elements/layout/MenuDivider";
+import { MenuContainer } from "./elements/layout/MenuContainer";
+import { MenuButtonContainer } from "./elements/layout/MenuButtonContainer";
 
 export interface IMainMenuProps {
   theme: IGameTheme,
@@ -135,15 +136,15 @@ export const MainMenu = (props: IMainMenuProps) => {
   return (
     <div data-testid="MainMenu">
       {enteringEditor && renderEditorStartModal()}
-      <div className="MainMenu">
+      <MenuContainer>
         <MainMenuTitle color={props.theme.potentialShapeLines}>Flipxel</MainMenuTitle>
         <ScrollSelector theme={props.theme} items={levelPackNames} itemClickHandler={goToLevelPack}/>
-        <div className="MainMenu-button-container">
+        <MenuButtonContainer>
           <GameFileInput theme={props.theme} onChange={onLoadLevelPack} internalTestId="LoadLevelPackInput">Load Pack</GameFileInput>
           <GameButton theme={props.theme} onClick={goToSettings} data-testid="SettingsButton">Settings</GameButton>
           <GameButton theme={props.theme} onClick={goToEditorStart} data-testid="EditorButton">Editor</GameButton>
-        </div>
-      </div>
+        </MenuButtonContainer>
+      </MenuContainer>
     </div>
   )
 };

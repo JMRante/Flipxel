@@ -1,14 +1,24 @@
-import './Modal.css';
+import styled from 'styled-components';
 
 export interface IModalProps {
   children?: React.ReactNode,
   internalTestId: string
 };
 
+const ModalBackground = styled.span`
+  background-color: rgba(0, 0, 0, 0.4);
+  width: 100vw;
+  height: 100vh;
+  left: 0px;
+  top: 0px;
+  z-index: 10;
+  position: absolute;
+`;
+
 export const Modal = (props: IModalProps) => {
   return (
-    <div className="Modal" data-testid={props.internalTestId}>
+    <ModalBackground data-testid={props.internalTestId}>
       {props.children}
-    </div>
+    </ModalBackground>
   );
 };

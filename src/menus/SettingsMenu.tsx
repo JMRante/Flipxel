@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { AppPage, IGameTheme, ILevelPack } from "../App";
-import './SettingsMenu.css';
 import themes from '../data/themes.json';
 import { ScrollSelector } from "./elements/ScrollSelector";
 import { GameButton } from "./elements/input/GameButton";
@@ -8,6 +7,8 @@ import { useState } from "react";
 import { Modal } from "./elements/modal/Modal";
 import { ModalBox } from "./elements/modal/ModalBox";
 import { ModalHeader } from "./elements/modal/ModalHeader";
+import { MenuContainer } from "./elements/layout/MenuContainer";
+import { MenuButtonContainer } from "./elements/layout/MenuButtonContainer";
 
 export interface ISettingsMenuProps {
   theme: IGameTheme,
@@ -83,15 +84,15 @@ export const SettingsMenu = (props: ISettingsMenuProps) => {
   return (
     <div data-testid="SettingsMenu">
       {confirmingSaveDelete && renderSaveClearConfirmModal()}
-      <div className="SettingsMenu">
+      <MenuContainer>
         <SettingsMenuTitle color={props.theme.potentialShapeLines}>Settings</SettingsMenuTitle>
         <SettingsMenuSubTitle color={props.theme.potentialShapeLines}>Change Theme</SettingsMenuSubTitle>
         <ScrollSelector theme={props.theme} items={themeNameList} itemClickHandler={clickOnTheme}/>
-        <div className="SettingsMenu-button-container">
+        <MenuButtonContainer>
           <GameButton theme={props.theme} onClick={openClearSaveDataConfirmation} data-testid="ClearSaveDataButton">Clear Save Data</GameButton>
           <GameButton theme={props.theme} onClick={goBackToMainMenu} data-testid="BackButton">Back</GameButton>
-        </div>
-      </div>
+        </MenuButtonContainer>
+      </MenuContainer>
     </div>
   )
 };

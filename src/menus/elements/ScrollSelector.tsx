@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { IGameTheme } from "../../App";
-import './ScrollSelector.css';
 
 export interface IScrollSelectorProps {
   theme: IGameTheme,
@@ -40,6 +39,16 @@ const ScrollSelectorButton = styled.button<{ theme?: IGameTheme; }>`
   }
 `;
 
+const ScrollSelectorItemStatus = styled.span`
+  margin-right: auto; 
+  width: 32px;
+`;
+
+const ScrollSelectorItemText = styled.span`
+  margin-right: auto;
+  width: 100%;
+`;
+
 export const ScrollSelector = (props: IScrollSelectorProps) => {
   const generateItems = () => {
     return props.items.map((item, index) => {
@@ -49,8 +58,8 @@ export const ScrollSelector = (props: IScrollSelectorProps) => {
 
       return (
       <ScrollSelectorButton key={`ScrollSelectorItem${index}`} theme={props.theme} onClick={clickEvent} data-testid={`ScrollSelectorItemButton${index}`}>
-        {props.itemsStatus && <span className="ScrollSelector-item-status">{props.itemsStatus[index] ? '●' : '○'}</span>}
-        <span className="ScrollSelector-item-text" data-testid={`ScrollSelectorItemText${index}`}>{item}</span>
+        {props.itemsStatus && <ScrollSelectorItemStatus>{props.itemsStatus[index] ? '●' : '○'}</ScrollSelectorItemStatus>}
+        <ScrollSelectorItemText data-testid={`ScrollSelectorItemText${index}`}>{item}</ScrollSelectorItemText>
       </ScrollSelectorButton>);
     });
   };

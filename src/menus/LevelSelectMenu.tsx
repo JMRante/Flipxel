@@ -2,13 +2,14 @@ import styled from "styled-components";
 import { AppPage, IGameTheme, ILevel, ILevelPack, ILevelPackSaveData } from "../App";
 import { GameButton } from "./elements/input/GameButton";
 import { ScrollSelector } from "./elements/ScrollSelector";
-import './LevelSelectMenu.css';
 import { useEffect, useState } from "react";
 import { Modal } from "./elements/modal/Modal";
 import { ModalBox } from "./elements/modal/ModalBox";
 import { ModalHeader } from "./elements/modal/ModalHeader";
 import { GameTextField } from "./elements/input/GameTextField";
-import { MenuDivider } from "./elements/MenuDivider";
+import { MenuDivider } from "./elements/layout/MenuDivider";
+import { MenuContainer } from "./elements/layout/MenuContainer";
+import { MenuButtonContainer } from "./elements/layout/MenuButtonContainer";
 
 export interface ILevelSelectMenuProps {
   theme: IGameTheme,
@@ -178,16 +179,16 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
     <div data-testid="LevelSelectMenu">
       {addingNewLevel && renderAddingNewLevelModal()}
       {confirmingNoSave && renderNoSaveConfirmModal()}
-      <div className="LevelSelectMenu">
+      <MenuContainer>
         <LevelSelectTitle color={props.theme.potentialShapeLines}>Level Select</LevelSelectTitle>
         <LevelSelectPackTitle color={props.theme.potentialShapeLines} data-testid="LevelSelectPackTitle">{props.levelPack.name}</LevelSelectPackTitle>
         <ScrollSelector theme={props.theme} items={levelNames} itemsStatus={levelPackSaveData.length > 0 ? levelPackSaveData : undefined} itemClickHandler={clickOnLevel}/>
-        <div className="LevelSelectMenu-button-container">
+        <MenuButtonContainer>
           {props.isEditorMode && <GameButton theme={props.theme} onClick={goToAddNewLevelModal} data-testid="AddButton">Add</GameButton>}
           {props.isEditorMode && <GameButton theme={props.theme} onClick={saveLevelPack} data-testid="SaveButton">Save</GameButton>}
           <GameButton theme={props.theme} onClick={props.isEditorMode && props.isEditorDirty ? openNoSaveConfirmModal : goBackToMainMenu} data-testid="BackButton">Back</GameButton>
-        </div>
-      </div>
+        </MenuButtonContainer>
+      </MenuContainer>
     </div>
   )
 };

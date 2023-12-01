@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { GameWindow } from "./GameWindow";
 import { PieceSelector } from "./PieceSelector";
-import './Game.css';
 import { AppPage, IGameTheme, ILevel, ILevelPack, ILevelPackSaveData } from "../App";
 import { GameButton } from "../menus/elements/input/GameButton";
 import { Modal } from "../menus/elements/modal/Modal";
@@ -9,7 +8,7 @@ import { ModalBox } from "../menus/elements/modal/ModalBox";
 import { ModalHeader } from "../menus/elements/modal/ModalHeader";
 import styled from "styled-components";
 import { GameTextField } from "../menus/elements/input/GameTextField";
-import { MenuDivider } from "../menus/elements/MenuDivider";
+import { MenuDivider } from "../menus/elements/layout/MenuDivider";
 import { MIN_DIMENSIONS } from "../menus/LevelSelectMenu";
 
 export enum GameState {
@@ -66,6 +65,14 @@ const CreatePiecePartButton = styled.button<
     border-width: 2px;
     padding: 0px;
   }
+`;
+
+const GameButtonContainer = styled.div`
+  display: flex;
+`;
+
+const AddPieceContainer = styled.div`
+  margin-bottom: 20px;
 `;
 
 export const Game = (props: IGameProps) => {
@@ -293,13 +300,13 @@ export const Game = (props: IGameProps) => {
       <Modal internalTestId="AddPieceModal">
         <ModalBox color={props.theme.trueBackground}>
           <ModalHeader color={props.theme.potentialShapeLines}>Add Piece</ModalHeader>
-          <div className="Game-add-piece-box">
+          <AddPieceContainer>
             {renderCreatePiecePartRows()}
-          </div>
-          <div className="Game-button-container">
+          </AddPieceContainer>
+          <GameButtonContainer>
             <GameButton theme={props.theme} disabled={!newPiece.find(x => x === 1)} onClick={addPiece} data-testid="ConfirmAddPieceButton">Add</GameButton>
             <GameButton theme={props.theme} onClick={closeAddPieceModal} data-testid="CancelAddPieceButton">Cancel</GameButton>
-          </div>
+          </GameButtonContainer>
         </ModalBox>
       </Modal>
     );
@@ -333,28 +340,28 @@ export const Game = (props: IGameProps) => {
 
   const renderGameButtons = () => {
     return (
-      <div className="Game-button-container">
+      <GameButtonContainer>
         <GameButton theme={props.theme} disabled={playedPieces.length === 0} onClick={undo} data-testid="UndoButton">Undo</GameButton>
         <GameButton theme={props.theme} disabled={pieceFutureHistory.length === 0} onClick={redo} data-testid="RedoButton">Redo</GameButton>
         <GameButton theme={props.theme} onClick={restart} data-testid="RestartButton">Restart</GameButton>
         <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu} data-testid="BackButton">Back</GameButton>
-      </div>
+      </GameButtonContainer>
     );
   };
 
   const renderEditorButtonsEditMode = () => {
     return (
       <div>
-        <div className="Game-button-container">
+        <GameButtonContainer>
           <GameButton theme={props.theme} onClick={openAddPieceModal} data-testid="AddPieceButton">Add Piece</GameButton>
           <GameButton theme={props.theme} disabled={pieces.length === 0} onClick={oustPiece} data-testid="OustButton">Oust Piece</GameButton>
           <GameButton theme={props.theme} onClick={toggleEditorState} data-testid="TestButton">Test</GameButton>
-        </div>
-        <div className="Game-button-container">
+        </GameButtonContainer>
+        <GameButtonContainer>
           <GameButton theme={props.theme} onClick={openRenameLevelModal} data-testid="RenameButton">Rename</GameButton>
           <GameButton theme={props.theme} onClick={openDeleteLevelModal} data-testid="DeleteButton">Delete</GameButton>
           <GameButton theme={props.theme} onClick={goBackToLevelSelectMenu} data-testid="BackButton">Back</GameButton>
-        </div>
+        </GameButtonContainer>
       </div>
     );
   };
@@ -362,12 +369,12 @@ export const Game = (props: IGameProps) => {
   const renderEditorButtonsTestMode = () => {
     return (
       <div>
-        <div className="Game-button-container">
+        <GameButtonContainer>
           <GameButton theme={props.theme} disabled={playedPieces.length === 0} onClick={undo} data-testid="UndoButton">Undo</GameButton>
           <GameButton theme={props.theme} disabled={pieceFutureHistory.length === 0} onClick={redo} data-testid="RedoButton">Redo</GameButton>
           <GameButton theme={props.theme} onClick={restart} data-testid="RestartButton">Restart</GameButton>
           <GameButton theme={props.theme} onClick={toggleEditorState} data-testid="EditButton">Edit</GameButton>
-        </div>
+        </GameButtonContainer>
       </div>
     );
   };

@@ -1,7 +1,7 @@
-import './PieceSelector.css';
 import { PieceButton } from "./PieceButton";
 import { IPieceInstruction } from './Game';
 import { IGameTheme } from '../App';
+import styled from 'styled-components';
 
 export interface IPieceSelectorProps {
   theme: IGameTheme,
@@ -10,6 +10,17 @@ export interface IPieceSelectorProps {
   setCurrentPieceIndex: Function,
   playedPieces: IPieceInstruction[]
 };
+
+const PieceSelectorContainer = styled.div`
+  width: 750px;
+  height: 125px;
+  display: flex;
+  flex-wrap: no-wrap;
+  overflow-x: auto;
+  margin-top: 8px;
+  margin-left: auto;
+  margin-right: auto;
+`;
 
 export const PieceSelector = (props: IPieceSelectorProps) => {
   const generatePieceButtons = () => {
@@ -25,8 +36,8 @@ export const PieceSelector = (props: IPieceSelectorProps) => {
   };
 
   return (
-    <div className="PieceSelector">
+    <PieceSelectorContainer>
       {generatePieceButtons()}
-    </div>
+    </PieceSelectorContainer>
   );
 };
