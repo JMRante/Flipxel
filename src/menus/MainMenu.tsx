@@ -11,6 +11,7 @@ import { ModalHeader } from "./elements/modal/ModalHeader";
 import { MenuDivider } from "./elements/layout/MenuDivider";
 import { MenuContainer } from "./elements/layout/MenuContainer";
 import { MenuButtonContainer } from "./elements/layout/MenuButtonContainer";
+import { PageHeader } from "./elements/layout/PageHeader";
 
 export interface IMainMenuProps {
   theme: IGameTheme,
@@ -24,9 +25,9 @@ const MainMenuTitle = styled.h1<{ theme?: IGameTheme; }>`
   color: #${props => props.theme.potentialShapeLines};
   font-weight: bold;
   font-family: 'Courier New', monospace;
-  font-size: 120px;
-  margin-top: 0px;
-  margin-bottom: 32px;
+  font-size: min(14vw, 6em);
+  margin-top: 0em;
+  margin-bottom: 0em;
 `;
 
 export const MainMenu = (props: IMainMenuProps) => {
@@ -122,10 +123,13 @@ export const MainMenu = (props: IMainMenuProps) => {
       <Modal internalTestId="EditorStartModal">
         <ModalBox theme={props.theme}>
           <ModalHeader theme={props.theme}>Edit Pack</ModalHeader>
-          <GameTextField theme={props.theme} type="text" onChange={onNewLevelPackNameChange} data-testid="EditorStartLevelPackNameInput"></GameTextField>
-          <GameButton theme={props.theme} disabled={newLevelPackName.length === 0} onClick={createNewLevelPackAndGoToEditorLevelSelect} data-testid="NewLevelPackButton">New</GameButton>
-          <MenuDivider/>
-          <GameFileInput theme={props.theme} onChange={onLoadLevelPackForEditor} internalTestId="LoadLevelPackToEditInput">Load</GameFileInput>
+          <MenuButtonContainer>
+            <GameTextField theme={props.theme} type="text" onChange={onNewLevelPackNameChange} data-testid="EditorStartLevelPackNameInput"></GameTextField>
+            <GameButton theme={props.theme} disabled={newLevelPackName.length === 0} onClick={createNewLevelPackAndGoToEditorLevelSelect} data-testid="NewLevelPackButton">New</GameButton>
+          </MenuButtonContainer>
+          <MenuButtonContainer>
+            <GameFileInput theme={props.theme} onChange={onLoadLevelPackForEditor} internalTestId="LoadLevelPackToEditInput">Load</GameFileInput>
+          </MenuButtonContainer>
           <MenuDivider/>
           <GameButton theme={props.theme} onClick={cancelEditorStart} data-testid="CancelEditorStartButton">Cancel</GameButton>
         </ModalBox>
@@ -137,7 +141,9 @@ export const MainMenu = (props: IMainMenuProps) => {
     <div data-testid="MainMenu">
       {enteringEditor && renderEditorStartModal()}
       <MenuContainer>
-        <MainMenuTitle theme={props.theme}>Flipxel</MainMenuTitle>
+        <PageHeader>
+          <MainMenuTitle theme={props.theme}>Flipxel</MainMenuTitle>
+        </PageHeader>
         <ScrollSelector theme={props.theme} items={levelPackNames} itemClickHandler={goToLevelPack}/>
         <MenuButtonContainer>
           <GameFileInput theme={props.theme} onChange={onLoadLevelPack} internalTestId="LoadLevelPackInput">Load Pack</GameFileInput>

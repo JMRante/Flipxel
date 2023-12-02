@@ -3,6 +3,8 @@ import { GameBoard } from "./GameBoard";
 import { EditorState, GameState, IPieceInstruction } from "./Game";
 import { Color } from "pixi.js";
 import { IGameTheme, ILevel } from "../App";
+import styled from "styled-components";
+import { useLayoutEffect, useState } from "react";
 
 export interface IGameWindowProps {
   theme: IGameTheme,
@@ -29,10 +31,32 @@ export interface IGameWindowProps {
   setRedoTriggered: Function,
 };
 
-export const GameWindow = (props: IGameWindowProps) => {
+const GameWindowContainer = styled.div<{ currentpieceindex: number | undefined, height: number, width: number }>`
+  cursor: ${props => props.currentpieceindex !== undefined ? 'pointer' : 'default'}
+  width: ${props => props.width};
+  height: ${props => props.height};
+`;
 
-  const width = 800;
-  const height = 800;
+const useWindowSize = () => {
+  const [size, setSize] = useState([0, 0]);
+
+  useLayoutEffect(() => {
+    const updateSize = () => {
+      const finalDimensions = Math.min(800, window.innerWidth - (window.innerWidth / 10))
+      setSize([finalDimensions, finalDimensions]);
+    }
+
+    window.addEventListener('resize', updateSize);
+    updateSize();
+
+    return () => window.removeEventListener('resize', updateSize);
+  }, []);
+
+  return size;
+}
+
+export const GameWindow = (props: IGameWindowProps) => {
+  const [width, height] = useWindowSize();
 
   const stageProps = {
     height,
@@ -44,7 +68,7 @@ export const GameWindow = (props: IGameWindowProps) => {
   };
 
   return (
-    <div style={{cursor: props.currentPieceIndex !== undefined ? 'pointer' : 'default', width: `${width}px` , height: `${height}px`}}>
+    <GameWindowContainer currentpieceindex={props.currentPieceIndex} width={width} height={height}>
       <Stage {...stageProps} style={{WebkitTapHighlightColor: 'transparent'}}>
         <GameBoard 
           cellsWide={props.cellsWide} 
@@ -73,6 +97,6 @@ export const GameWindow = (props: IGameWindowProps) => {
           setRedoTriggered={props.setRedoTriggered}
         />
       </Stage>
-    </div>
+    </GameWindowContainer>
   );
 };

@@ -13,43 +13,48 @@ export interface IPieceButtonProps {
 const ButtonInnerCellFilled = styled.div<{ color?: string; }>`
   border: none;
   background-color: #${props => props.color};
-  width: 20px;
-  height: 20px;
-  padding: 0px;
+  width: 1.6em;
+  height: 1.6em;
+  padding: 0em;
 `;
 
 const ButtonInnerCellUnfilled = styled.div<{ color?: string; }>`
   border-color: #${props => props.color};
   border-style: solid;
-  border-width: 1px;
-  width: 18px;
-  height: 18px;
-  padding: 0px;
+  border-width: 0.1em;
+  box-sizing: border-box;
+  width: 1.6em;
+  height: 1.6em;
+  padding: 0em;
+`;
+
+const ButtonInnerCellContainer = styled.div<{ theme?: IGameTheme; }>`
+  background-color: #${props => props.theme.backgroundLines};
+  border: none;
+  width: 8em;
+  height: 8em;
+  padding: 0em;
+  margin: auto auto;
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
 `;
 
 const InnerPieceButton = styled.button<{ theme?: IGameTheme; }>`
   background-color: #${props => props.theme.backgroundLines};
   border: none;
-  display: flex;
-  flex-wrap: wrap;
-  width: 104px;
-  height: 104px;
-  padding: 2px;
-  margin: 5px;
+  padding: 0.25em;
+  margin: 0.5em;
   cursor: pointer;
-  flex: 0 0 auto;
 
   &: hover {
-    border-style: solid;
-    border-color: #${props => props.theme.potentialShapeLines};
-    border-width: 2px;
-    padding: 0px;
+    border-style: none;
+    background-color: #${props => props.theme.potentialShapeLines};
   }
 
   &: disabled {
     opacity: 0.25;
     border-style: none;
-    padding: 2px;
     cursor: default;
   }
 `;
@@ -71,7 +76,9 @@ export const PieceButton = (props: IPieceButtonProps) => {
 
   return (
     <InnerPieceButton theme={props.theme} onClick={props.clickEvent} disabled={props.used} data-testid={props.internalTestId}>
-      {generateCells()}
+      <ButtonInnerCellContainer theme={props.theme}>
+        {generateCells()}
+      </ButtonInnerCellContainer>
     </InnerPieceButton>
   )
 };

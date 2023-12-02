@@ -9,6 +9,7 @@ import { ModalBox } from "./elements/modal/ModalBox";
 import { ModalHeader } from "./elements/modal/ModalHeader";
 import { MenuContainer } from "./elements/layout/MenuContainer";
 import { MenuButtonContainer } from "./elements/layout/MenuButtonContainer";
+import { PageHeader } from "./elements/layout/PageHeader";
 
 export interface ISettingsMenuProps {
   theme: IGameTheme,
@@ -21,18 +22,18 @@ const SettingsMenuTitle = styled.h1<{ theme?: IGameTheme; }>`
   color: #${props => props.theme.potentialShapeLines};
   font-weight: bold;
   font-family: 'Courier New', monospace;
-  font-size: 64px;
-  margin-top: 20px;
-  margin-bottom: 5px;
+  font-size: min(8vw, 3.5em);
+  margin-top: 0em;
+  margin-bottom: 0em;
 `;
 
 const SettingsMenuSubTitle = styled.h1<{ theme?: IGameTheme; }>`
   color: #${props => props.theme.potentialShapeLines};
   font-weight: bold;
   font-family: 'Courier New', monospace;
-  font-size: 40px;
-  margin-top: 5px;
-  margin-bottom: 26px;
+  font-size: min(6vw, 2.5em);
+  margin-top: 0em;
+  margin-bottom: 0em;
 `;
 
 export const SettingsMenu = (props: ISettingsMenuProps) => {
@@ -74,8 +75,10 @@ export const SettingsMenu = (props: ISettingsMenuProps) => {
       <Modal internalTestId="SaveClearConfirmModal">
         <ModalBox theme={props.theme}>
           <ModalHeader theme={props.theme}>Clear All Save Data?</ModalHeader>
-          <GameButton theme={props.theme} onClick={clearSaveData} data-testid="ClearSaveDataYesButton">Yes</GameButton>
-          <GameButton theme={props.theme} onClick={closeClearSaveDataConfirmation} data-testid="ClearSaveDataNoButton">No</GameButton>
+          <MenuButtonContainer>
+            <GameButton theme={props.theme} onClick={clearSaveData} data-testid="ClearSaveDataYesButton">Yes</GameButton>
+            <GameButton theme={props.theme} onClick={closeClearSaveDataConfirmation} data-testid="ClearSaveDataNoButton">No</GameButton>
+          </MenuButtonContainer>
         </ModalBox>
       </Modal>
     );
@@ -85,8 +88,10 @@ export const SettingsMenu = (props: ISettingsMenuProps) => {
     <div data-testid="SettingsMenu">
       {confirmingSaveDelete && renderSaveClearConfirmModal()}
       <MenuContainer>
-        <SettingsMenuTitle theme={props.theme}>Settings</SettingsMenuTitle>
-        <SettingsMenuSubTitle theme={props.theme}>Change Theme</SettingsMenuSubTitle>
+        <PageHeader>
+          <SettingsMenuTitle theme={props.theme}>Settings</SettingsMenuTitle>
+          <SettingsMenuSubTitle theme={props.theme}>Change Theme</SettingsMenuSubTitle>
+        </PageHeader>
         <ScrollSelector theme={props.theme} items={themeNameList} itemClickHandler={clickOnTheme}/>
         <MenuButtonContainer>
           <GameButton theme={props.theme} onClick={openClearSaveDataConfirmation} data-testid="ClearSaveDataButton">Clear Save Data</GameButton>

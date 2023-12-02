@@ -9,8 +9,8 @@ const ModalBackground = styled.span`
   background-color: rgba(0, 0, 0, 0.4);
   width: 100vw;
   height: 100vh;
-  left: 0px;
-  top: 0px;
+  left: 0em;
+  top: 0em;
   z-index: 10;
   position: absolute;
 `;

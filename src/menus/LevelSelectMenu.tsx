@@ -10,6 +10,7 @@ import { GameTextField } from "./elements/input/GameTextField";
 import { MenuDivider } from "./elements/layout/MenuDivider";
 import { MenuContainer } from "./elements/layout/MenuContainer";
 import { MenuButtonContainer } from "./elements/layout/MenuButtonContainer";
+import { PageHeader } from "./elements/layout/PageHeader";
 
 export interface ILevelSelectMenuProps {
   theme: IGameTheme,
@@ -26,18 +27,18 @@ const LevelSelectTitle = styled.h1<{ theme?: IGameTheme; }>`
   color: #${props => props.theme.potentialShapeLines};
   font-weight: bold;
   font-family: 'Courier New', monospace;
-  font-size: 64px;
-  margin-top: 20px;
-  margin-bottom: 5px;
+  font-size: min(8vw, 3.5em);
+  margin-top: 0em;
+  margin-bottom: 0em;
 `;
 
 const LevelSelectPackTitle = styled.h1<{ theme?: IGameTheme; }>`
   color: #${props => props.theme.potentialShapeLines};
   font-weight: bold;
   font-family: 'Courier New', monospace;
-  font-size: 40px;
-  margin-top: 5px;
-  margin-bottom: 26px;
+  font-size: min(6vw, 2.5em);
+  margin-top: 0em;
+  margin-bottom: 0em;
 `;
 
 export const MIN_DIMENSIONS = 5;
@@ -150,10 +151,13 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
       <Modal internalTestId="AddingNewLevelModal">
         <ModalBox theme={props.theme}>
           <ModalHeader theme={props.theme}>Add New Puzzle</ModalHeader>
-          <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange} data-testid="NewLevelNameInput"></GameTextField>
-          <GameButton theme={props.theme} disabled={newLevelName.length === 0 || !validateNewDimensions(newLevelDimensions)} onClick={createNewLevel} data-testid="AddNewLevelButton">New</GameButton>
+          <MenuButtonContainer>
+            <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange} data-testid="NewLevelNameInput"></GameTextField>
+            <GameButton theme={props.theme} disabled={newLevelName.length === 0 || !validateNewDimensions(newLevelDimensions)} onClick={createNewLevel} data-testid="AddNewLevelButton">New</GameButton>
+          </MenuButtonContainer>
           <MenuDivider/>
-          <GameTextField theme={props.theme} type="text" value={newLevelDimensions} onChange={onNewLevelDimensionsChange} data-testid="NewLevelSizeInput"></GameTextField>
+          <LevelSelectPackTitle theme={props.theme}>Size</LevelSelectPackTitle>
+          <GameTextField theme={props.theme} type="text" value={newLevelDimensions} style={{ width: '3em' }} onChange={onNewLevelDimensionsChange} data-testid="NewLevelSizeInput"></GameTextField>
           <MenuDivider/>
           <GameButton theme={props.theme} onClick={cancelAddNewLevel} data-testid="AddNewLevelCancelButton">Cancel</GameButton>
         </ModalBox>
@@ -166,8 +170,10 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
       <Modal internalTestId="NoSaveConfirmModal">
         <ModalBox theme={props.theme}>
           <ModalHeader theme={props.theme}>Leave Without Saving?</ModalHeader>
-          <GameButton theme={props.theme} onClick={goBackToMainMenu} data-testid="NoSaveConfirmYesButton">Yes</GameButton>
-          <GameButton theme={props.theme} onClick={closeNoSaveConfirmModal} data-testid="NoSaveConfirmNoButton">No</GameButton>
+          <MenuButtonContainer>
+            <GameButton theme={props.theme} onClick={goBackToMainMenu} data-testid="NoSaveConfirmYesButton">Yes</GameButton>
+            <GameButton theme={props.theme} onClick={closeNoSaveConfirmModal} data-testid="NoSaveConfirmNoButton">No</GameButton>
+          </MenuButtonContainer>
         </ModalBox>
       </Modal>
     );
@@ -180,8 +186,10 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
       {addingNewLevel && renderAddingNewLevelModal()}
       {confirmingNoSave && renderNoSaveConfirmModal()}
       <MenuContainer>
-        <LevelSelectTitle theme={props.theme}>Puzzle Select</LevelSelectTitle>
-        <LevelSelectPackTitle theme={props.theme} data-testid="LevelSelectPackTitle">{props.levelPack.name}</LevelSelectPackTitle>
+        <PageHeader>
+          <LevelSelectTitle theme={props.theme}>Puzzle Select</LevelSelectTitle>
+          <LevelSelectPackTitle theme={props.theme} data-testid="LevelSelectPackTitle">{props.levelPack.name}</LevelSelectPackTitle>
+        </PageHeader>
         <ScrollSelector theme={props.theme} items={levelNames} itemsStatus={levelPackSaveData.length > 0 ? levelPackSaveData : undefined} itemClickHandler={clickOnLevel}/>
         <MenuButtonContainer>
           {props.isEditorMode && <GameButton theme={props.theme} onClick={goToAddNewLevelModal} data-testid="AddButton">Add</GameButton>}

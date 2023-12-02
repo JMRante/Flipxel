@@ -10,6 +10,8 @@ import styled from "styled-components";
 import { GameTextField } from "../menus/elements/input/GameTextField";
 import { MenuDivider } from "../menus/elements/layout/MenuDivider";
 import { MIN_DIMENSIONS } from "../menus/LevelSelectMenu";
+import { MenuButtonContainer } from "../menus/elements/layout/MenuButtonContainer";
+import { PageHeader } from "../menus/elements/layout/PageHeader";
 
 export enum GameState {
   Playing,
@@ -42,8 +44,8 @@ const LevelTitle = styled.h1<{ theme?: IGameTheme; }>`
   color: #${props => props.theme.potentialShapeLines};
   font-weight: bold;
   font-family: 'Courier New', monospace;
-  font-size: 40px;
-  margin-bottom: 20px;
+  font-size: min(8vw, 3.5em);
+  margin-bottom: 0em;
 `;
 
 const CreatePiecePartButton = styled.button<
@@ -53,17 +55,17 @@ const CreatePiecePartButton = styled.button<
 }>`
   background-color: #${props => props.selected ? props.theme.backgroundBase : props.theme.filledBox};
   border: none;
-  width: 24px;
-  height: 24px;
-  padding: 2px;
-  margin: 5px;
+  width: 2em;
+  height: 2em;
+  padding: 0.25em;
+  margin: 0.25em;
   cursor: pointer;
 
   &: hover {
     border-style: solid;
     border-color: #${props => props.theme.potentialShapeLines};
-    border-width: 2px;
-    padding: 0px;
+    border-width: 0.25em;
+    padding: 0em;
   }
 `;
 
@@ -72,7 +74,7 @@ const GameButtonContainer = styled.div`
 `;
 
 const AddPieceContainer = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 1.3em;
 `;
 
 export const Game = (props: IGameProps) => {
@@ -254,7 +256,9 @@ export const Game = (props: IGameProps) => {
       <Modal internalTestId="WinModal">
         <ModalBox theme={props.theme}>
           <ModalHeader theme={props.theme}>Complete!</ModalHeader>
-          <GameButton theme={props.theme} onClick={completeLevel}>Back to Puzzle Select</GameButton>
+          <MenuButtonContainer>
+            <GameButton theme={props.theme} onClick={completeLevel}>Back to Puzzle Select</GameButton>
+          </MenuButtonContainer>
         </ModalBox>
       </Modal>
     );
@@ -288,10 +292,10 @@ export const Game = (props: IGameProps) => {
           <AddPieceContainer>
             {renderCreatePiecePartRows()}
           </AddPieceContainer>
-          <GameButtonContainer>
+          <MenuButtonContainer>
             <GameButton theme={props.theme} disabled={!newPiece.find(x => x === 1)} onClick={addPiece} data-testid="ConfirmAddPieceButton">Add</GameButton>
             <GameButton theme={props.theme} onClick={closeAddPieceModal} data-testid="CancelAddPieceButton">Cancel</GameButton>
-          </GameButtonContainer>
+          </MenuButtonContainer>
         </ModalBox>
       </Modal>
     );
@@ -302,8 +306,10 @@ export const Game = (props: IGameProps) => {
       <Modal internalTestId="RenameLevelModal">
         <ModalBox theme={props.theme}>
           <ModalHeader theme={props.theme}>Rename Puzzle</ModalHeader>
-          <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange} data-testid="LevelNameInput"></GameTextField>
-          <GameButton theme={props.theme} disabled={newLevelName.length === 0} onClick={renameLevel} data-testid="ChangeLevelNameButton">Change</GameButton>
+          <MenuButtonContainer>
+            <GameTextField theme={props.theme} type="text" onChange={onNewLevelNameChange} data-testid="LevelNameInput"></GameTextField>
+            <GameButton theme={props.theme} disabled={newLevelName.length === 0} onClick={renameLevel} data-testid="ChangeLevelNameButton">Change</GameButton>
+          </MenuButtonContainer>
           <MenuDivider/>
           <GameButton theme={props.theme} onClick={closeRenameLevelModal} data-testid="CancelRenameLevelButton">Cancel</GameButton>
         </ModalBox>
@@ -316,8 +322,10 @@ export const Game = (props: IGameProps) => {
       <Modal internalTestId="DeleteLevelConfirmModal">
         <ModalBox theme={props.theme}>
           <ModalHeader theme={props.theme}>Delete Puzzle?</ModalHeader>
-          <GameButton theme={props.theme} onClick={deleteLevel} data-testid="DeleteLevelConfirmYesButton">Yes</GameButton>
-          <GameButton theme={props.theme} onClick={closeDeleteLevelModal} data-testid="DeleteLevelConfirmNoButton">No</GameButton>
+          <MenuButtonContainer>
+            <GameButton theme={props.theme} onClick={deleteLevel} data-testid="DeleteLevelConfirmYesButton">Yes</GameButton>
+            <GameButton theme={props.theme} onClick={closeDeleteLevelModal} data-testid="DeleteLevelConfirmNoButton">No</GameButton>
+          </MenuButtonContainer>
         </ModalBox>
       </Modal>
     );
@@ -338,8 +346,8 @@ export const Game = (props: IGameProps) => {
     return (
       <div>
         <GameButtonContainer>
-          <GameButton theme={props.theme} onClick={openAddPieceModal} data-testid="AddPieceButton">Add Piece</GameButton>
-          <GameButton theme={props.theme} disabled={pieces.length === 0} onClick={oustPiece} data-testid="OustButton">Oust Piece</GameButton>
+          <GameButton theme={props.theme} onClick={openAddPieceModal} data-testid="AddPieceButton">+ Piece</GameButton>
+          <GameButton theme={props.theme} disabled={pieces.length === 0} onClick={oustPiece} data-testid="OustButton">- Piece</GameButton>
           <GameButton theme={props.theme} onClick={toggleEditorState} data-testid="TestButton">Test</GameButton>
         </GameButtonContainer>
         <GameButtonContainer>
@@ -370,7 +378,9 @@ export const Game = (props: IGameProps) => {
       {gameState === GameState.Editing && addingPiece &&  renderAddPieceModal()}
       {gameState === GameState.Editing && changingLevelName &&  renderRenameLevelModal()}
       {gameState === GameState.Editing && deletingLevel && renderDeleteLevelConfirmModal()}
-      <LevelTitle theme={props.theme} data-testid="LevelTitle">{props.level.name}</LevelTitle>
+      <PageHeader>
+        <LevelTitle theme={props.theme} data-testid="LevelTitle">{props.level.name}</LevelTitle>
+      </PageHeader>
       <GameWindow 
         theme={props.theme}
         cellsWide={cellsWide} 

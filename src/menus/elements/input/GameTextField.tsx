@@ -7,14 +7,14 @@ export const GameTextField = styled.input<{ theme?: IGameTheme; }>`
   border: solid;
   border-color: #${props => props.theme.backgroundBase};
   border-width: 2px;
-  padding-left: 25px;
-  padding-right: 25px;
-  height: 50px;
-  margin: 5px;
-  font-size: 30px;
+  padding-left: 0.8em;
+  padding-right: 0.8em;
+  height: min(9vw, 2em);
+  margin: 0.2em;
+  font-size: min(4.1vw, 1.5em);
   font-weight: bold;
   font-family: 'Courier New', monospace;
-  flex: 1;
+  flex: 3;
   box-sizing: border-box;
 
   &: focus {
@@ -22,5 +22,18 @@ export const GameTextField = styled.input<{ theme?: IGameTheme; }>`
     border-color: #${props => props.theme.potentialShapeLines};
     border-width: 2px;
     outline: 0;
+  }
+
+  &: first-child {
+    margin-left: 0em;
+  }
+
+  &: last-child {
+    margin-right: 0em;
+  }
+
+  &: only-child {
+    margin-left: 0em;
+    margin-right: 0em;
   }
 `;

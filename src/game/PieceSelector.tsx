@@ -12,12 +12,12 @@ export interface IPieceSelectorProps {
 };
 
 const PieceSelectorContainer = styled.div<{ theme?: IGameTheme; }>`
-  width: 750px;
-  height: 125px;
+  width: min(85vw, 750px);
   display: flex;
-  flex-wrap: no-wrap;
+  flex-wrap: nowrap;
   overflow-x: scroll;
-  margin-top: 8px;
+  margin-top: 0.3em;
+  margin-bottom: 0.3em;
   margin-left: auto;
   margin-right: auto;
 
@@ -25,8 +25,8 @@ const PieceSelectorContainer = styled.div<{ theme?: IGameTheme; }>`
   scrollbar-color: #${props => props.theme.backgroundBase} #${props => props.theme.filledBox};
 
   &:: -webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 0.3em;
+    height: 0.5em;
   }
 
   &::-webkit-scrollbar-track {

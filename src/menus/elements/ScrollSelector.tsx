@@ -13,14 +13,15 @@ const ScrollSelectorBox = styled.div<{ theme?: IGameTheme; }>`
   background-color: #${props => props.theme.filledBox};
   display: flex;
   flex-direction: column;
-  height: 600px;
-  flex-wrap: no-wrap;
+  height: 60vh;
+  max-height: 600px;
+  flex-wrap: nowrap;
   overflow-y: scroll;
   scrollbar-width: thin;
   scrollbar-color: #${props => props.theme.backgroundBase} #${props => props.theme.filledBox};
-
+  
   &:: -webkit-scrollbar {
-    width: 6px;
+    width: 0.3em;
   }
 
   &::-webkit-scrollbar-track {
@@ -36,11 +37,11 @@ const ScrollSelectorButton = styled.button<{ theme?: IGameTheme; }>`
   background-color: #${props => props.theme.filledBox};
   color: #${props => props.theme.potentialShapeLines};
   border: none;
-  height: 50px;
-  min-height: 50px;
-  margin: 0px;
+  height: min(9vw, 2em);
+  min-height: min(9vw, 2em);
+  margin: 0em;
   cursor: pointer;
-  font-size: 24px;
+  font-size: min(4.1vw, 1.5em);
   font-weight: bold;
   font-family: 'Courier New', monospace;
   display: flex;  
@@ -55,7 +56,7 @@ const ScrollSelectorButton = styled.button<{ theme?: IGameTheme; }>`
 
 const ScrollSelectorItemStatus = styled.span`
   margin-right: auto; 
-  width: 32px;
+  width: 2em;
 `;
 
 const ScrollSelectorItemText = styled.span`

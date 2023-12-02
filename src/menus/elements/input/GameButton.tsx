@@ -5,12 +5,12 @@ export const GameButton = styled.button<{ theme?: IGameTheme; }>`
   background-color: #${props => props.theme.backgroundLines};
   color: #${props => props.theme.trueBackground};
   border: none;
-  padding-left: 25px;
-  padding-right: 25px;
-  height: 50px;
-  margin: 5px;
+  padding-left: 0.8em;
+  padding-right: 0.8em;
+  height: min(9vw, 2em);
+  margin: 0.2em;
   cursor: pointer;
-  font-size: 30px;
+  font-size: min(4.1vw, 1.5em);
   font-weight: bold;
   font-family: 'Courier New', monospace;
   flex: 1;
@@ -23,5 +23,18 @@ export const GameButton = styled.button<{ theme?: IGameTheme; }>`
     background-color: #${props => props.theme.filledBox};
     color: #${props => props.theme.backgroundLines};
     cursor: default;
+  }
+
+  &: first-child {
+    margin-left: 0em;
+  }
+
+  &: last-child {
+    margin-right: 0em;
+  }
+
+  &: only-child {
+    margin-left: 0em;
+    margin-right: 0em;
   }
 `;
