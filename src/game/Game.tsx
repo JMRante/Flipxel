@@ -92,7 +92,9 @@ export const Game = (props: IGameProps) => {
   const [playedPieces, setPlayedPieces] = useState<IPieceInstruction[]>([]);
   const [pieceFutureHistory, setPieceFutureHistory] = useState<IPieceInstruction[]>([]);
   const [gameState, setGameState] = useState(props.isEditorMode ? GameState.Editing : GameState.Playing);
-  const [nextPieceToPlay, setNextPieceToPlay] = useState<IPieceInstruction | undefined>(undefined);
+
+  const [undoTriggered, setUndoTriggered] = useState(false);
+  const [redoTriggered, setRedoTriggered] = useState(false);
 
   const [addingPiece, setAddingPiece] = useState(false);
   const [newPiece, setNewPiece] = useState(Array(25).fill(0));
@@ -104,40 +106,23 @@ export const Game = (props: IGameProps) => {
 
   const [editorState, setEdtiorState] = useState(EditorState.Edit);
 
-  const undo = () => {
-    const newPlayedPieces = playedPieces.slice();
-    const cutPiece = newPlayedPieces.pop();
-    setPlayedPieces(newPlayedPieces);
-
-    if (cutPiece !== undefined) {
-      setNextPieceToPlay(cutPiece);
-
-      const newPieceFutureHistory = pieceFutureHistory.slice();
-      newPieceFutureHistory.unshift(cutPiece);
-      setPieceFutureHistory(newPieceFutureHistory);
-    }
-  };
-
-  const redo = () => {
-    const newPieceFutureHistory = pieceFutureHistory.slice();
-    const reusedPiece = newPieceFutureHistory.shift();
-    setPieceFutureHistory(newPieceFutureHistory);
-
-    if (reusedPiece !== undefined) {
-      setNextPieceToPlay(reusedPiece);
-
-      const newPlayedPieces = playedPieces.slice();
-      newPlayedPieces.push(reusedPiece);
-      setPlayedPieces(newPlayedPieces);
-    }
-  };
-
   const restart = () => {
     setBoard(Array(cellsWide * cellsHigh).fill(false));
     setCurrentPieceIndex(0);
     setPlayedPieces([]);
     setPieceFutureHistory([]);
-    setNextPieceToPlay(undefined);
+  };
+
+  const undo = () => {
+    if (!undoTriggered) {
+      setUndoTriggered(true);
+    }
+  };
+
+  const redo = () => {
+    if (!redoTriggered) {
+      setRedoTriggered(true);
+    }
   };
 
   const completeLevel = () => {
@@ -399,13 +384,16 @@ export const Game = (props: IGameProps) => {
         setCurrentPieceIndex={setCurrentPieceIndex}
         playedPieces={playedPieces} 
         setPlayedPieces={setPlayedPieces}
+        pieceFutureHistory={pieceFutureHistory}
         setPieceFutureHistory={setPieceFutureHistory}
-        nextPieceToPlay={nextPieceToPlay}
-        setNextPieceToPlay={setNextPieceToPlay}
         gameState={gameState}
         level={props.level}
         editorState={editorState}
         setIsEditorDirty={props.setIsEditorDirty}
+        undoTriggered={undoTriggered}
+        setUndoTriggered={setUndoTriggered}
+        redoTriggered={redoTriggered}
+        setRedoTriggered={setRedoTriggered}
       />
       <PieceSelector 
         theme={props.theme}

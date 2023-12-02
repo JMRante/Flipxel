@@ -1,6 +1,6 @@
 import { Graphics as GraphicsComp, useTick } from '@pixi/react';
 import { FederatedPointerEvent, Graphics, Rectangle } from 'pixi.js';
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { EditorState, GameState, IPieceInstruction } from './Game';
 import { IGameTheme, ILevel } from '../App';
 
@@ -19,13 +19,16 @@ export interface IGameBoardProps {
   setCurrentPieceIndex: Function,
   playedPieces: IPieceInstruction[],
   setPlayedPieces: Function
+  pieceFutureHistory: IPieceInstruction[],
   setPieceFutureHistory: Function,
-  nextPieceToPlay: IPieceInstruction | undefined,
-  setNextPieceToPlay: Function,
   gameState: GameState,
   level: ILevel,
   editorState: EditorState,
-  setIsEditorDirty: Function
+  setIsEditorDirty: Function,
+  undoTriggered: boolean,
+  setUndoTriggered: Function,
+  redoTriggered: boolean
+  setRedoTriggered: Function,
 };
 
 interface ICoordinate {
@@ -40,10 +43,13 @@ function lerp(start: number, end: number, t: number){
 export const GameBoard = (props: IGameBoardProps) =>
 {
   const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
-  const [isMouseIn, setIsMouseIn] = useState(false);
+  const [isPointerIn, setIsPointerIn] = useState(false);
   const isMouseDown = useRef(false);
+  const lastMoveWasPlay = useRef(false);
   const [flipTimer, setFlipTimer] = useState(0);
   const [flipCoordinates, setFlipCoordinates] = useState<ICoordinate[]>([]);
+  // const [nextPieceToPlay, setNextPieceToPlay] = useState<IPieceInstruction | undefined>(undefined);
+  const nextPieceToPlay = useRef<IPieceInstruction | undefined>(undefined);
 
   const cellWidth = props.windowWidth / props.cellsWide;
   const cellHeight = props.windowHeight / props.cellsHigh;
@@ -52,16 +58,40 @@ export const GameBoard = (props: IGameBoardProps) =>
 
   const flipTime = 10;
 
+  const placePiece = () => {
+    if (props.editorState === EditorState.Test || props.gameState !== GameState.Editing) {
+      if (flipTimer === 0 && currentPiece !== undefined) {
+        nextPieceToPlay.current = {
+          index: props.currentPieceIndex, 
+          x: cursorPosition.x, 
+          y: cursorPosition.y
+        };
+        props.setPieceFutureHistory([]);
+        lastMoveWasPlay.current = true;
+      }
+    } else {
+      const cursorToCellIndex = cursorPosition.x + (cursorPosition.y * props.cellsWide);
+
+      const modifiedBoardGoal = props.level.goal.slice();
+      modifiedBoardGoal[cursorToCellIndex] = modifiedBoardGoal[cursorToCellIndex] === 0 ? 1 : 0;
+
+      props.level.goal = modifiedBoardGoal;
+      props.setBoardGoal(modifiedBoardGoal.map(x => x === 0 ? false : true));
+      props.setIsEditorDirty(true);
+    }
+  }
+
+  // Mouse controls
   const mouseOver = (e: FederatedPointerEvent) => {
-    setIsMouseIn(true);
+    setIsPointerIn(true);
   };
 
   const mouseOut = (e: FederatedPointerEvent) => {
-    setIsMouseIn(false);
+    setIsPointerIn(false);
   };
 
   const mouseMove = (e: FederatedPointerEvent) => {
-    if (isMouseIn) {
+    if (isPointerIn) {
       setCursorPosition({ 
         x: Math.floor(e.global.x / cellWidth), 
         y: Math.floor(e.global.y / cellHeight) 
@@ -70,26 +100,8 @@ export const GameBoard = (props: IGameBoardProps) =>
   };
 
   const mouseDown = (e: FederatedPointerEvent) => {
-    if (isMouseIn && !isMouseDown.current) {
-      if (props.editorState === EditorState.Test || props.gameState !== GameState.Editing) {
-        if (flipTimer === 0 && currentPiece !== undefined) {
-          props.setNextPieceToPlay({
-            index: props.currentPieceIndex, 
-            x: cursorPosition.x, 
-            y: cursorPosition.y
-          });
-          props.setPieceFutureHistory([]);
-        }
-      } else {
-        const cursorToCellIndex = cursorPosition.x + (cursorPosition.y * props.cellsWide);
-
-        const modifiedBoardGoal = props.level.goal.slice();
-        modifiedBoardGoal[cursorToCellIndex] = modifiedBoardGoal[cursorToCellIndex] === 0 ? 1 : 0;
-
-        props.level.goal = modifiedBoardGoal;
-        props.setBoardGoal(modifiedBoardGoal.map(x => x === 0 ? false : true));
-        props.setIsEditorDirty(true);
-      }
+    if (isPointerIn && !isMouseDown.current) {
+      placePiece();
 
       isMouseDown.current = true;
     }
@@ -100,12 +112,81 @@ export const GameBoard = (props: IGameBoardProps) =>
       isMouseDown.current = false;
     }
   };
+  
+  // Touch controls
+  const touchStart = (e: FederatedPointerEvent) => {
+    setIsPointerIn(true);
+    
+    setCursorPosition({ 
+      x: Math.floor(e.global.x / cellWidth), 
+      y: Math.floor(e.global.y / cellHeight) 
+    });
+  };
 
-  if (props.nextPieceToPlay !== undefined) {
+  const touchMove = (e: FederatedPointerEvent) => {
+    if (isPointerIn) {
+      setCursorPosition({ 
+        x: Math.floor(e.global.x / cellWidth), 
+        y: Math.floor(e.global.y / cellHeight) 
+      });
+    }
+  };
+
+  const touchEnd = (e: FederatedPointerEvent) => {
+    if (isPointerIn) {
+      placePiece();
+    }
+
+    setIsPointerIn(false);
+  };
+
+  const touchEndOutside = (e: FederatedPointerEvent) => {
+    setIsPointerIn(false);
+  };
+
+  let newPlayedPieces: IPieceInstruction[] = [];
+
+  if (props.undoTriggered) {
+    if (props.playedPieces.length > 0 && flipTimer === 0) {
+      newPlayedPieces = props.playedPieces.slice();
+      const cutPiece = newPlayedPieces.pop();
+      props.setPlayedPieces(newPlayedPieces);
+  
+      if (cutPiece !== undefined) {
+        nextPieceToPlay.current = cutPiece;
+  
+        const newPieceFutureHistory = props.pieceFutureHistory.slice();
+        newPieceFutureHistory.unshift(cutPiece);
+        props.setPieceFutureHistory(newPieceFutureHistory);
+      }
+    }
+
+    props.setUndoTriggered(false);
+  };
+
+  if (props.redoTriggered) {
+    if (props.playedPieces.length < props.pieces.length && props.pieceFutureHistory.length > 0 && flipTimer === 0) {
+      const newPieceFutureHistory = props.pieceFutureHistory.slice();
+      const reusedPiece = newPieceFutureHistory.shift();
+      props.setPieceFutureHistory(newPieceFutureHistory);
+  
+      if (reusedPiece !== undefined) {
+        nextPieceToPlay.current = reusedPiece;
+  
+        newPlayedPieces = props.playedPieces.slice();
+        newPlayedPieces.push(reusedPiece);
+        props.setPlayedPieces(newPlayedPieces);
+      }
+    }
+
+    props.setRedoTriggered(false);
+  };
+
+  if (nextPieceToPlay !== undefined) {
     if (flipTimer !== 0) {
-      props.setNextPieceToPlay(undefined);
-    } else {
-      const nextPiece = props.pieces[props.nextPieceToPlay.index];
+      nextPieceToPlay.current = undefined;
+    } else if (nextPieceToPlay.current) {
+      const nextPiece = props.pieces[nextPieceToPlay.current.index];
 
       if (nextPiece !== undefined) {
         const modifiedBoard = props.board.slice();
@@ -113,8 +194,8 @@ export const GameBoard = (props: IGameBoardProps) =>
   
         for (let cursorCellX = -2; cursorCellX <= 2; cursorCellX++) {
           for (let cursorCellY = -2; cursorCellY <= 2; cursorCellY++) {
-            const pieceCursorCellX: number = cursorCellX + props.nextPieceToPlay.x;
-            const pieceCursorCellY: number = cursorCellY + props.nextPieceToPlay.y;
+            const pieceCursorCellX: number = cursorCellX + nextPieceToPlay.current.x;
+            const pieceCursorCellY: number = cursorCellY + nextPieceToPlay.current.y;
   
             const currentPieceIndex = (cursorCellX + 2) + ((cursorCellY + 2) * 5);
   
@@ -140,14 +221,15 @@ export const GameBoard = (props: IGameBoardProps) =>
   
         setFlipCoordinates(newFlipCoordinates);
   
-        let newPlayedPieces = props.playedPieces.slice();
+        if (lastMoveWasPlay.current) {
+          newPlayedPieces = props.playedPieces.slice();
 
-        if (isMouseDown.current) {
-          newPlayedPieces.push(props.nextPieceToPlay);
+          newPlayedPieces.push(nextPieceToPlay.current);
           props.setPlayedPieces(newPlayedPieces);
+          lastMoveWasPlay.current = false;
         }
 
-        props.setNextPieceToPlay(undefined);
+        nextPieceToPlay.current = undefined;
 
         props.setCurrentPieceIndex(undefined);
 
@@ -173,6 +255,8 @@ export const GameBoard = (props: IGameBoardProps) =>
       }
     }
   });
+
+  useEffect(() => {}, [props.undoTriggered, props.redoTriggered]);
 
   const draw = useCallback(
     (g: Graphics) => {
@@ -229,7 +313,7 @@ export const GameBoard = (props: IGameBoardProps) =>
       }
 
       // Draw cursor cells
-      if (isMouseIn && currentPiece !== undefined && (props.gameState === GameState.Playing || props.editorState === EditorState.Test)) {
+      if (isPointerIn && currentPiece !== undefined && (props.gameState === GameState.Playing || props.editorState === EditorState.Test)) {
         for (let cursorCellX = -2; cursorCellX <= 2; cursorCellX++) {
           for (let cursorCellY = -2; cursorCellY <= 2; cursorCellY++) {
             const pieceCursorCellX = cursorCellX + cursorPosition.x;
@@ -250,12 +334,12 @@ export const GameBoard = (props: IGameBoardProps) =>
       }
       
       // Draw cursor cell for adding goal in editor
-      if (isMouseIn && props.gameState === GameState.Editing && props.editorState === EditorState.Edit) {
+      if (isPointerIn && props.gameState === GameState.Editing && props.editorState === EditorState.Edit) {
         g.lineStyle(4, props.theme.potentialShapeLines, 1);
         g.drawRect((cursorPosition.x * cellWidth) + 3, (cursorPosition.y * cellHeight) + 3, cellWidth - 6, cellHeight - 6);
       }
     },
-    [props, cursorPosition, isMouseIn, cellWidth, cellHeight, flipTimer, flipCoordinates, currentPiece],
+    [props, cursorPosition, isPointerIn, cellWidth, cellHeight, flipTimer, flipCoordinates, currentPiece],
   );
 
   return (
@@ -268,6 +352,10 @@ export const GameBoard = (props: IGameBoardProps) =>
       mousemove={mouseMove}
       mousedown={mouseDown}
       mouseup={mouseUp}
+      touchstart={touchStart}
+      touchmove={touchMove}
+      touchend={touchEnd}
+      touchendoutside={touchEndOutside}
     />
   );
 };

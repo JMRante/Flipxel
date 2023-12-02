@@ -17,13 +17,16 @@ export interface IGameWindowProps {
   setCurrentPieceIndex: Function,
   playedPieces: IPieceInstruction[],
   setPlayedPieces: Function,
+  pieceFutureHistory: IPieceInstruction[],
   setPieceFutureHistory: Function,
-  nextPieceToPlay: IPieceInstruction | undefined,
-  setNextPieceToPlay: Function,
   gameState: GameState,
   level: ILevel,
   editorState: EditorState,
-  setIsEditorDirty: Function
+  setIsEditorDirty: Function,
+  undoTriggered: boolean,
+  setUndoTriggered: Function,
+  redoTriggered: boolean
+  setRedoTriggered: Function,
 };
 
 export const GameWindow = (props: IGameWindowProps) => {
@@ -42,7 +45,7 @@ export const GameWindow = (props: IGameWindowProps) => {
 
   return (
     <div style={{cursor: props.currentPieceIndex !== undefined ? 'pointer' : 'default', width: `${width}px` , height: `${height}px`}}>
-      <Stage {...stageProps}>
+      <Stage {...stageProps} style={{WebkitTapHighlightColor: 'transparent'}}>
         <GameBoard 
           cellsWide={props.cellsWide} 
           cellsHigh={props.cellsHigh} 
@@ -58,13 +61,16 @@ export const GameWindow = (props: IGameWindowProps) => {
           setCurrentPieceIndex={props.setCurrentPieceIndex}
           playedPieces={props.playedPieces}
           setPlayedPieces={props.setPlayedPieces}
+          pieceFutureHistory={props.pieceFutureHistory}
           setPieceFutureHistory={props.setPieceFutureHistory}
-          nextPieceToPlay={props.nextPieceToPlay}
-          setNextPieceToPlay={props.setNextPieceToPlay}
           gameState={props.gameState}
           level={props.level}
           editorState={props.editorState}
           setIsEditorDirty={props.setIsEditorDirty}
+          undoTriggered={props.undoTriggered}
+          setUndoTriggered={props.setUndoTriggered}
+          redoTriggered={props.redoTriggered}
+          setRedoTriggered={props.setRedoTriggered}
         />
       </Stage>
     </div>

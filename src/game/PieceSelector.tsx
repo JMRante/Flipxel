@@ -16,7 +16,7 @@ const PieceSelectorContainer = styled.div<{ theme?: IGameTheme; }>`
   height: 125px;
   display: flex;
   flex-wrap: no-wrap;
-  overflow-x: auto;
+  overflow-x: scroll;
   margin-top: 8px;
   margin-left: auto;
   margin-right: auto;
