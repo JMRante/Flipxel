@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { GameWindow } from "./GameWindow";
 import { PieceSelector } from "./PieceSelector";
-import { AppPage, IGameTheme, ILevel, ILevelPack, ILevelPackSaveData } from "../App";
+import { AppPage, IGameTheme, ILevel, ILevelPack, ILevelPackSaveData, ISaveData } from "../App";
 import { GameButton } from "../menus/elements/input/GameButton";
 import { Modal } from "../menus/elements/modal/Modal";
 import { ModalBox } from "../menus/elements/modal/ModalBox";
@@ -128,21 +128,28 @@ export const Game = (props: IGameProps) => {
   };
 
   const completeLevel = () => {
-    const loadedSaveData = localStorage.getItem(`${props.levelPack.name}-save-data`);
-    let saveData: ILevelPackSaveData;
+    const loadedSaveData = localStorage.getItem('save-data');
+    let saveData: ISaveData;
 
     if (loadedSaveData) {
       saveData = JSON.parse(atob(loadedSaveData));
     } else {
       saveData = {
-        completion: Array(props.levelPack.levels.length).fill(0)
+        levelPackSaveData: [{
+          name: props.levelPack.name,
+          completion: Array(props.levelPack.levels.length).fill(0)
+        }]
       };
     }
 
     const levelIndex = props.levelPack.levels.findIndex(x => x.name === props.level.name);
-    saveData.completion[levelIndex] = 1;
-    console.log(saveData);
-    localStorage.setItem(`${props.levelPack.name}-save-data`, btoa(JSON.stringify(saveData)));
+    const levelPackSaveData = saveData.levelPackSaveData.find(x => x.name === props.levelPack.name);
+
+    if (levelPackSaveData) {
+      levelPackSaveData.completion[levelIndex] = 1;
+    }
+
+    localStorage.setItem('save-data', btoa(JSON.stringify(saveData)));
 
     goBackToLevelSelectMenu();
   };

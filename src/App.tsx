@@ -33,7 +33,12 @@ export interface ILevelPiece {
   layout: number[]
 };
 
+export interface ISaveData {
+  levelPackSaveData: ILevelPackSaveData[]
+}
+
 export interface ILevelPackSaveData {
+  name: string,
   completion: number[]
 };
 

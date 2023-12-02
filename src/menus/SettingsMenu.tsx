@@ -58,7 +58,7 @@ export const SettingsMenu = (props: ISettingsMenuProps) => {
   };
 
   const clearSaveData = () => {
-    props.levelPacks.forEach(x => localStorage.removeItem(`${x.name}-save-data`));
+    props.levelPacks.forEach(x => localStorage.removeItem('save-data'));
     setConfirmingSaveDelete(false);
   };
 

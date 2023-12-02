@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AppPage, IGameTheme, ILevel, ILevelPack, ILevelPackSaveData } from "../App";
+import { AppPage, IGameTheme, ILevel, ILevelPack, ILevelPackSaveData, ISaveData } from "../App";
 import { GameButton } from "./elements/input/GameButton";
 import { ScrollSelector } from "./elements/ScrollSelector";
 import { useEffect, useState } from "react";
@@ -131,17 +131,29 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
 
   useEffect(() => {
     if (!props.isEditorMode) {
-      const saveData = localStorage.getItem(`${props.levelPack.name}-save-data`);
+      const saveData = localStorage.getItem('save-data');
 
       if (saveData) {
-        const parsedSaveData: ILevelPackSaveData = JSON.parse(atob(saveData));
-        setLevelPackSaveData(parsedSaveData.completion.map(x => x === 1 ? true : false));
+        const parsedSaveData: ISaveData = JSON.parse(atob(saveData));
+        const levelPackSaveData = parsedSaveData.levelPackSaveData.find(x => x.name === props.levelPack.name);
+
+        if (levelPackSaveData) {
+          setLevelPackSaveData(levelPackSaveData.completion.map(x => x === 1 ? true : false));
+        }
       } else {
-        const newSaveData: ILevelPackSaveData = {
-          completion: Array(props.levelPack.levels.length).fill(0)
+        const newSaveData: ISaveData = {
+          levelPackSaveData: [{
+            name: props.levelPack.name,
+            completion: Array(props.levelPack.levels.length).fill(0)
+          }]
         };
-        setLevelPackSaveData(newSaveData.completion.map(x => x === 1 ? true : false));
-        localStorage.setItem(`${props.levelPack.name}-save-data`, btoa(JSON.stringify(newSaveData)));
+
+        const levelPackSaveData = newSaveData.levelPackSaveData.find(x => x.name === props.levelPack.name);
+
+        if (levelPackSaveData) {
+          setLevelPackSaveData(levelPackSaveData.completion.map(x => x === 1 ? true : false));
+          localStorage.setItem('save-data', btoa(JSON.stringify(newSaveData)));
+        }
       }
     }
   }, [props])
