@@ -42,7 +42,7 @@ const LevelSelectPackTitle = styled.h1<{ theme?: IGameTheme; }>`
 `;
 
 export const MIN_DIMENSIONS = 5;
-export const MAX_DIMENSIONS = 20;
+export const MAX_DIMENSIONS = 15;
 
 export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
   const [addingNewLevel, setAddingNewLevel] = useState(false);
