@@ -46,7 +46,7 @@ describe('Settings Menu Tests', () => {
     });
 
     test('Clicking yes clears out the save data', async () => {
-      await localStorage.setItem('5x5 Easy-save-data', 'test');
+      await localStorage.setItem('save-data', 'test');
 
       const yesButton = screen.getByTestId('ClearSaveDataYesButton');
       fireEvent.click(yesButton);
@@ -54,11 +54,11 @@ describe('Settings Menu Tests', () => {
       const saveClearConfirmModal = screen.queryByTestId('SaveClearConfirmModal');
 
       expect(saveClearConfirmModal).not.toBeInTheDocument();
-      expect(await localStorage.getItem('5x5 Easy-save-data')).toBeNull();
+      expect(await localStorage.getItem('save-data')).toBeNull();
     });
 
     test('Canceling the modal goes back to the settings menu', async () => {
-      await localStorage.setItem('5x5 Easy-save-data', 'test');
+      await localStorage.setItem('save-data', 'test');
 
       const noButton = screen.getByTestId('ClearSaveDataNoButton');
       fireEvent.click(noButton);
@@ -66,7 +66,7 @@ describe('Settings Menu Tests', () => {
       const saveClearConfirmModal = screen.queryByTestId('SaveClearConfirmModal');
 
       expect(saveClearConfirmModal).not.toBeInTheDocument();
-      expect(await localStorage.getItem('5x5 Easy-save-data')).toBe('test');
+      expect(await localStorage.getItem('save-data')).toBe('test');
     });
   });
 });

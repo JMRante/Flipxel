@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { AppPage, IGameTheme, ILevel, ILevelPack, ILevelPackSaveData, ISaveData } from "../App";
+import { AppPage, IGameTheme, ILevel, ILevelPack, ISaveData } from "../App";
 import { GameButton } from "./elements/input/GameButton";
 import { ScrollSelector } from "./elements/ScrollSelector";
 import { useEffect, useState } from "react";
@@ -139,6 +139,16 @@ export const LevelSelectMenu = (props: ILevelSelectMenuProps) => {
 
         if (levelPackSaveData) {
           setLevelPackSaveData(levelPackSaveData.completion.map(x => x === 1 ? true : false));
+        } else {
+          const newLevelPackSaveData = {
+            name: props.levelPack.name,
+            completion: Array(props.levelPack.levels.length).fill(0)
+          };
+
+          parsedSaveData.levelPackSaveData.push(newLevelPackSaveData);
+          setLevelPackSaveData(newLevelPackSaveData.completion.map(x => x === 1 ? true : false));
+
+          localStorage.setItem('save-data', btoa(JSON.stringify(parsedSaveData)));
         }
       } else {
         const newSaveData: ISaveData = {
