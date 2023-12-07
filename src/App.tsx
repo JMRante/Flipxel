@@ -6,6 +6,14 @@ import { MainMenu } from './menus/MainMenu';
 import { LevelSelectMenu } from './menus/LevelSelectMenu';
 import themes from './data/themes.json';
 import EasyLevelPack5x5 from './data/p_5x5easy.json';
+import EasyLevelPack7x7 from './data/p_7x7easy.json';
+import EasyLevelPack10x10 from './data/p_10x10easy.json';
+import MediumLevelPack5x5 from './data/p_5x5medium.json';
+import MediumLevelPack7x7 from './data/p_7x7medium.json';
+import MediumLevelPack10x10 from './data/p_10x10medium.json';
+import HardLevelPack5x5 from './data/p_5x5hard.json';
+import HardLevelPack7x7 from './data/p_7x7hard.json';
+import HardLevelPack10x10 from './data/p_10x10hard.json';
 
 export interface IGameTheme {
   name: string,
@@ -66,7 +74,17 @@ const App = () => {
 
   const [theme, setTheme] = useState<IGameTheme>(themes.themes[0]);
 
-  const [levelPacks, setLevelPacks] = useState<Array<ILevelPack>>([EasyLevelPack5x5]);
+  const [levelPacks, setLevelPacks] = useState<Array<ILevelPack>>([
+    EasyLevelPack5x5,
+    EasyLevelPack7x7,
+    EasyLevelPack10x10,
+    MediumLevelPack5x5,
+    MediumLevelPack7x7,
+    MediumLevelPack10x10,
+    HardLevelPack5x5,
+    HardLevelPack7x7,
+    HardLevelPack10x10
+  ]);
 
   const [currentLevelPack, setCurrentLevelPack] = useState<ILevelPack>(levelPacks[0]);
   const [currentLevel, setCurrentLevel] = useState<ILevel>(currentLevelPack.levels[0]);
